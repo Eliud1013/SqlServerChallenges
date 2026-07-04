@@ -1,0 +1,6 @@
+﻿services:
+  sqlserverchallenges.web:
+    image: sqlserverchallenges.web
+    build:
+      context: .
+      dockerfile: src/SqlServerChallenges.Web/Dockerfile
