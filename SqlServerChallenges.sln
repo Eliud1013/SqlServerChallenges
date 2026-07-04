@@ -3,9 +3,12 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{F8DA78A6-F1B2-4575-B7C0-ACC4BF9874FB}"
 	ProjectSection(SolutionItems) = preProject
 		compose.yaml = compose.yaml
+		Directory.Build.props = Directory.Build.props
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SqlServerChallenges.Web", "src\SqlServerChallenges.Web\SqlServerChallenges.Web.csproj", "{4EEDA8E7-4B4D-412B-B32B-6242A91BAC72}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SqlServerChallenges.Core", "src\SqlServerChallenges.Core\SqlServerChallenges.Core.csproj", "{6654B5EB-866C-4D9C-A02A-97652AFAD90D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,5 +20,9 @@ Global
 		{4EEDA8E7-4B4D-412B-B32B-6242A91BAC72}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4EEDA8E7-4B4D-412B-B32B-6242A91BAC72}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4EEDA8E7-4B4D-412B-B32B-6242A91BAC72}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6654B5EB-866C-4D9C-A02A-97652AFAD90D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6654B5EB-866C-4D9C-A02A-97652AFAD90D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6654B5EB-866C-4D9C-A02A-97652AFAD90D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6654B5EB-866C-4D9C-A02A-97652AFAD90D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
