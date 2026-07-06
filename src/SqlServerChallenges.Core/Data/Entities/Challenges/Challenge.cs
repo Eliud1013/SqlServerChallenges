@@ -1,3 +1,5 @@
+using SqlServerChallenges.Core.Data.Entities.Categories;
+
 namespace SqlServerChallenges.Core.Data.Entities;
 
 public sealed class Challenge
@@ -8,4 +10,6 @@ public sealed class Challenge
     public required string SolutionQuery { get; init; }
     public required DateTime CreatedAt { get; init; }
     public required DateTime UpdatedAt { get; init; }
+    
+    public ICollection<Category>? Categories { get; init; }
 }
