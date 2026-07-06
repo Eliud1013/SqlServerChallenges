@@ -1,0 +1,42 @@
+@{
+    var currentPage = ViewContext.RouteData.Values["page"]?.ToString();
+    
+    var indexPage = "/Index";
+    var challengesPage = "/Challenges";
+    var tutorialsPage = "/Tutorials";
+}
+
+<header>
+    <nav class="navbar navbar-expand-sm navbar-toggleable-sm box-shadow">
+        <div class="container-fluid mx-5">`
+            <a class="navbar-brand" asp-area="" asp-page="/Index">
+                <span class="text-light fw-bold">Query</span><span class="text-success fw-bold">Forge</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse"
+                    aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="navbar-collapse collapse d-sm-inline-flex mx-sm-5">
+                <ul class="navbar-nav flex-grow-1 gap-1">
+                    <li class="nav-item @(currentPage == indexPage ? "active" : "")">
+                        <a class="nav-link active" asp-area="" asp-page="@indexPage">Home</a>
+                    </li>
+                    <li class="nav-item @(currentPage == challengesPage ? "active" : "")">
+                        <a class="nav-link " asp-area="" asp-page="@challengesPage">Challenges</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link @(currentPage == tutorialsPage ? "active" : "")" asp-page="@tutorialsPage">Tutorials</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav d-flex justify-content-sm-end flex-grow-1 ">
+                    <li class="nav-item align-self-lg-end">
+                        <a class="nav-link" asp-page="/Login">Log In</a>
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+
+    </nav>
+</header>
