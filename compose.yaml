@@ -4,3 +4,27 @@
     build:
       context: .
       dockerfile: src/SqlServerChallenges.Web/Dockerfile
+  
+  app_db:
+    image: mcr.microsoft.com/mssql/server:2025-latest
+    environment:
+      ACCEPT_EULA: Y
+      SA_PASSWORD: password123!@#
+    ports:
+      - 1433:1433
+    volumes:
+      - app_data:/var/opt/mssql
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P $$SA_PASSWORD -C -Q 'SELECT 1'",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+      
+volumes:
+  app_data:
+    driver: local
