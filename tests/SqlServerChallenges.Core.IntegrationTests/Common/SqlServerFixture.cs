@@ -17,23 +17,33 @@ public class SqlServerFixture : IAsyncLifetime
 
     public ApplicationDbContext CreateDbContext()
     {
-        var ConnectionString = _container.GetConnectionString();
+        var connectionString = _container.GetConnectionString();
 
         var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-            .UseSqlServer(ConnectionString);
+            .UseSqlServer(connectionString);
 
         return new ApplicationDbContext(options.Options);
+    }
+
+    public async Task ClearDatabaseAsync(ApplicationDbContext dbContext)
+    {
+        try
+        {
+            await dbContext.Challenges.ExecuteDeleteAsync();
+            await dbContext.Categories.ExecuteDeleteAsync();
+        }
+        finally
+        {
+            await dbContext.DisposeAsync();
+        }
     }
 
     public async Task InitializeAsync()
     {
         await _container.StartAsync();
-        
+
         await using ApplicationDbContext dbContext = CreateDbContext();
-        await dbContext.Database.EnsureCreatedAsync();
         await dbContext.Database.MigrateAsync();
-        
-        await Task.CompletedTask;
     }
 
     public Task DisposeAsync()
