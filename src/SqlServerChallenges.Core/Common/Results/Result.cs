@@ -30,7 +30,7 @@ public class Result
 
     public static Result<TValue> Create<TValue>(TValue? value, Error error)
     {
-        if ((value is not null) == (error == Error.None))
+        if (value is null == (error == Error.None))
         {
             throw new InvalidOperationException(
                 "Provide either a value for a successful result or a non-None error for a failed result.");
