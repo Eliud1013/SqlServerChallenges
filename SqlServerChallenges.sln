@@ -4,6 +4,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		compose.yaml = compose.yaml
 		Directory.Build.props = Directory.Build.props
+		adventureworks_setup.sh = adventureworks_setup.sh
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SqlServerChallenges.Web", "src\SqlServerChallenges.Web\SqlServerChallenges.Web.csproj", "{4EEDA8E7-4B4D-412B-B32B-6242A91BAC72}"
