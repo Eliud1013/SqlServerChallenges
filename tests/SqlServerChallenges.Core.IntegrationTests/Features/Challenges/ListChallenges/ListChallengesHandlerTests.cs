@@ -1,5 +1,4 @@
 using FluentAssertions;
-using Org.BouncyCastle.Asn1.Cms;
 using SqlServerChallenges.Core.Data;
 using SqlServerChallenges.Core.Data.Entities;
 using SqlServerChallenges.Core.Data.Entities.Categories;
@@ -47,6 +46,7 @@ public class ListChallengesHandlerTests : IClassFixture<SqlServerFixture>, IAsyn
             CancellationToken.None);
 
         result.Succeeded.Should().BeTrue();
+        result.Value.Should().BeOfType<List<ChallengeEntry>>();
         result.Value.Should().ContainSingle(c => c.Title == "Basic SELECT");
     }
 
@@ -77,7 +77,57 @@ public class ListChallengesHandlerTests : IClassFixture<SqlServerFixture>, IAsyn
 
         var result = await handler.Handle(new ListChallengesQuery(null, "Basic SELECT", null), CancellationToken.None);
         
-        result.Should().NotBeNull();
+        result.Succeeded.Should().BeTrue();
         result.Value.Should().ContainSingle(c => c.Title == "Basic SELECT");
+        result.Value.Select(v => v.Categories).Should().NotBeEmpty();
+    }
+
+    [Fact]
+    public async Task ShouldFilterByTitle_WhenTitleIsProvided()
+    {
+        _dbContext.Challenges.Add(new Challenge
+        {
+            Id = Guid.NewGuid(),
+            Title = "Basic SELECT",
+            TaskDescription = "Write a SELECT query",
+            SolutionQuery = "SELECT 1",
+            Difficulty = ChallengeDifficulty.Easy,
+            CreatedAt = DateTime.UtcNow,
+            UpdatedAt = DateTime.UtcNow,
+        });
+
+        await _dbContext.SaveChangesAsync();
+
+        var handler = new ListChallengesHandler(_dbContext);
+
+        var result = await handler.Handle(new ListChallengesQuery("Basic", null, null), CancellationToken.None);
+
+        result.Succeeded.Should().BeTrue();
+        result.Value.Should().ContainSingle(c => c.Title == "Basic SELECT");
+    }
+
+    [Fact]
+    public async Task ShouldFilterByDifficulty_WhenDifficultyIsProvided()
+    {
+        _dbContext.Challenges.Add(new Challenge
+        {
+            Id = Guid.NewGuid(),
+            Title = "Basic SELECT",
+            TaskDescription = "Write a SELECT query",
+            SolutionQuery = "SELECT 1",
+            Difficulty = ChallengeDifficulty.Medium,
+            CreatedAt = DateTime.UtcNow,
+            UpdatedAt = DateTime.UtcNow,
+        });
+
+        await _dbContext.SaveChangesAsync();
+
+        var handler = new ListChallengesHandler(_dbContext);
+
+        var result = await handler.Handle(new ListChallengesQuery(null, null, ChallengeDifficulty.Medium),
+            CancellationToken.None);
+
+        result.Succeeded.Should().BeTrue();
+        result.Value.Should().ContainSingle(c => c.Title == "Basic SELECT" && c.Difficulty == ChallengeDifficulty.Medium);
     }
 }
