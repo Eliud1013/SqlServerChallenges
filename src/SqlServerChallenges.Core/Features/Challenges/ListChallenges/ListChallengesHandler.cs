@@ -25,7 +25,7 @@ public class ListChallengesHandler : IQueryHandler<ListChallengesQuery, IReadOnl
             query = query.Where(c => c.Difficulty == request.Difficulty);
 
         if (!string.IsNullOrEmpty(request.CategoryName))
-            query = query.Where(c => c.Categories.Select(c => c.Name).Contains(request.CategoryName));
+            query = query.Where(c => c.Categories.Select(cat => cat.Name).Contains(request.CategoryName));
 
         if (!string.IsNullOrEmpty(request.Title))
             query = query.Where(c => c.Title.Contains(request.Title));
