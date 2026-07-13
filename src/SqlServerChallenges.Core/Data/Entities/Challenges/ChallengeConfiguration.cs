@@ -22,10 +22,6 @@ public class ChallengeConfiguration : IEntityTypeConfiguration<Challenge>
         builder.Property(x => x.TaskDescription)
             .HasMaxLength(200)
             .IsRequired();
-
-        builder.Property(x => x.SolutionQuery)
-            .HasMaxLength(300)
-            .IsRequired();
         
         builder.Property(x => x.Difficulty)
             .HasConversion<string>()
@@ -37,6 +33,10 @@ public class ChallengeConfiguration : IEntityTypeConfiguration<Challenge>
         builder.Property(x => x.UpdatedAt)
             .HasDefaultValueSql("getutcdate()");
 
+        builder.HasMany(c => c.Solutions)
+            .WithOne(s => s.Challenge)
+            .HasForeignKey(s => s.ChallengeId);
+            
         builder.HasMany(c => c.Categories)
             .WithMany(c => c.Challenges)
             .UsingEntity<Dictionary<string, object>>(
