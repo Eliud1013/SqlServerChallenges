@@ -40,6 +40,8 @@ public class Result
             ? Success(value)
             : Fail<TValue>(error);
     }
+
+    public static implicit operator Result(Error error) => Fail(error);
 }
 
 public class Result<TValue> : Result

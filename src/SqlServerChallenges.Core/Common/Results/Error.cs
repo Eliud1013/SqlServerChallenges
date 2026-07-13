@@ -2,22 +2,36 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace SqlServerChallenges.Core.Common.Results;
 
-public sealed record Error
+public record Error
 {
-    public required ErrorType Type { get; init; }
-    public required string Code { get; init; }
-    public required string Message { get; init; }
+    public string Code { get; init; }
+    public string Message { get; init; }
 
-    [SetsRequiredMembers]
-    public Error(ErrorType type, string code, string message)
+    public Error(string code, string message)
     {
-        if (type != ErrorType.None && (string.IsNullOrEmpty(code) || string.IsNullOrEmpty(message)))
-            throw new InvalidOperationException("A non-None error must have a non-empty code and message.");
+        if (string.IsNullOrEmpty(code) ^ string.IsNullOrEmpty(message))
+            throw new InvalidOperationException("Code and Message must both be either provided or empty.");
 
-        Type = type;
         Code = code;
         Message = message;
     }
 
-    public static Error None => new(ErrorType.None, string.Empty, string.Empty);
+    public static readonly Error None = new(string.Empty, string.Empty);
+}
+
+public sealed record Error<TValue> : Error
+{
+    private readonly TValue _value;
+
+    public Error(
+        string code,
+        string message,
+        TValue value) : base(code, message)
+    {
+        _value = value;
+    }
+
+    public TValue Value => !string.IsNullOrEmpty(Code)
+        ? _value
+        : throw new InvalidOperationException("Value on a non-error cannot be accessed.");
 }
