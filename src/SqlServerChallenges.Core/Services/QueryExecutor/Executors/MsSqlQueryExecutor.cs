@@ -1,0 +1,54 @@
+using System.Data;
+using Microsoft.Data.SqlClient;
+
+namespace SqlServerChallenges.Core.Services.SqlExecutor;
+
+public class MsSqlQueryExecutor : IQueryExecutor
+{
+    public DatabaseProvider Provider => DatabaseProvider.SqlServer;
+
+    private readonly SqlConnection _connection;
+
+    public MsSqlQueryExecutor(SqlConnection connection)
+    {
+        _connection = connection;
+    }
+
+    public async Task<QueryExecutorResult> ExecuteQueryAsync(string query, CancellationToken ct = default)
+    {
+        await _connection.OpenAsync(ct);
+        await using var command = new SqlCommand(query, _connection);
+        command.CommandTimeout = 6;
+
+        try
+        {
+            await using var reader = await command.ExecuteReaderAsync(ct);
+            var table = new DataTable();
+
+            for (int i = 0; i < reader.FieldCount; i++)
+            {
+                table.Columns.Add(reader.GetName(i), reader.GetFieldType(i));
+            }
+
+            int rowNumber = 0;
+
+            while (rowNumber < 50 && await reader.ReadAsync(ct))
+            {
+                var row = table.NewRow();
+
+                for (int i = 0; i < reader.FieldCount; i++)
+                    row[i] = reader.IsDBNull(i) ? DBNull.Value : reader.GetValue(i);
+
+
+                table.Rows.Add(row);
+                rowNumber++;
+            }
+
+            return table;
+        }
+        catch (SqlException ex) when (ex.Number == -2)
+        {
+            return QueryErrorType.QueryTimeout;
+        }
+    }
+}
