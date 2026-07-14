@@ -39,16 +39,20 @@ public class MsSqlQueryExecutor : IQueryExecutor
                 for (int i = 0; i < reader.FieldCount; i++)
                     row[i] = reader.IsDBNull(i) ? DBNull.Value : reader.GetValue(i);
 
-
                 table.Rows.Add(row);
                 rowNumber++;
             }
 
             return table;
         }
-        catch (SqlException ex) when (ex.Number == -2)
+        catch (SqlException ex)
         {
-            return QueryErrorType.QueryTimeout;
+            return ex.Number switch
+            {
+                -2 => QueryErrorType.QueryTimeout,
+                229 => QueryErrorType.PermissionDenied,
+                _ => QueryErrorType.Unknown
+            };
         }
     }
 }
