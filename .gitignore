@@ -5,7 +5,7 @@
 
 # dotenv files
 .env
-
+.junie
 # User-specific files
 *.rsuser
 *.suo

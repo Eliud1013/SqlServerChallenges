@@ -1,19 +1,29 @@
 ﻿services:
   sqlserverchallenges.web:
     image: sqlserverchallenges.web
+    environment:
+      ConnectionStrings__DefaultConnection: "Server=app_db;Database=SqlChallengesDb;User Id=sa;Password=${SA_PASSWORD};TrustServerCertificate=True"
+      ConnectionStrings__AdventureWorks: "Server=adventure_works,${AW_PORT};Database=AdventureWorks2022;User Id=${AW_SUBMISSION_LOGIN};Password=${AW_SUBMISSION_PASSWORD};TrustServerCertificate=True"
     build:
       context: .
       dockerfile: src/SqlServerChallenges.Web/Dockerfile
-  
+    depends_on:
+      app_db:
+        condition: service_healthy
+      adventure_works:
+        condition: service_healthy
+      
   app_db:
-    image: mcr.microsoft.com/mssql/server:2025-latest
+    image: mcr.microsoft.com/mssql/server:2025-latest   
     environment:
       ACCEPT_EULA: Y
-      SA_PASSWORD: password123!@#
+      SA_PASSWORD: ${SA_PASSWORD}
+
     ports:
-      - 1433:1433
+      - 1433:1433    
     volumes:
       - app_data:/var/opt/mssql
+
     healthcheck:
       test:
         [
@@ -24,7 +34,53 @@
       timeout: 5s
       retries: 5
       start_period: 10s
-      
+  
+  adventure_works:
+    image: mcr.microsoft.com/mssql/server:2025-latest
+    environment:
+      ACCEPT_EULA: Y
+      SA_PASSWORD: ${AW_SA_PASSWORD}
+   
+    ports:
+      - ${AW_PORT}:1433
+    volumes:
+      - adventure_works:/backup
+   
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P $$SA_PASSWORD -C -Q 'SELECT 1'",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    
+  adventure_works_setup:
+    image: mcr.microsoft.com/mssql/server:2025-latest
+    user: root
+    
+    environment:
+      DB_HOST: adventure_works
+      DB_SA_PASSWORD: ${AW_SA_PASSWORD}
+      DB_SETUP_LOGIN: ${AW_SUBMISSION_LOGIN}
+      DB_SETUP_USER: ${AW_SUBMISSION_USER}
+      DB_SETUP_PASSWORD: ${AW_SUBMISSION_PASSWORD}
+    volumes:
+      - adventure_works:/backup
+      - ./adventureworks_setup.sh:/adventureworks_setup.sh
+    
+    entrypoint: ["/bin/bash", "/adventureworks_setup.sh"]
+    
+    depends_on:
+      adventure_works:
+        condition: service_healthy
+
 volumes:
   app_data:
     driver: local
+  adventure_works:
+    driver: local
+  
+  
