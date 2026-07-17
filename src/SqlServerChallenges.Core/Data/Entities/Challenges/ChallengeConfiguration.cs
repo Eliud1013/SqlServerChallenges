@@ -33,25 +33,12 @@ public class ChallengeConfiguration : IEntityTypeConfiguration<Challenge>
         builder.Property(x => x.UpdatedAt)
             .HasDefaultValueSql("getutcdate()");
 
+        builder.HasOne(x => x.Category)
+            .WithMany(c => c.Challenges);
+            
         builder.HasMany(c => c.Solutions)
             .WithOne(s => s.Challenge)
             .HasForeignKey(s => s.ChallengeId);
-            
-        builder.HasMany(c => c.Categories)
-            .WithMany(c => c.Challenges)
-            .UsingEntity<Dictionary<string, object>>(
-                "ChallengeCategory",
-                j => j.HasOne<Category>()
-                    .WithMany()
-                    .HasForeignKey("CategoryId"),
-                j => j.HasOne<Challenge>()
-                    .WithMany()
-                    .HasForeignKey("ChallengeId"),
-                j =>
-                {
-                    j.ToTable("ChallengeCategories", "Challenges");
-                    j.HasKey("ChallengeId", "CategoryId");
-                });
         
     }
 }

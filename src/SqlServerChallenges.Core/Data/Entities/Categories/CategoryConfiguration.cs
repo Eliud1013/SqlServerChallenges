@@ -18,6 +18,6 @@ public class CategoryConfiguration : IEntityTypeConfiguration<Category>
             .IsRequired();
 
         builder.HasMany(c => c.Challenges)
-            .WithMany(c => c.Categories);
+            .WithOne(c => c.Category);
     }
 }

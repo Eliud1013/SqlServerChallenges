@@ -10,9 +10,9 @@ public sealed class Challenge
     public required string Title { get; init; }
     public required string TaskDescription { get; init; }
     public required ChallengeDifficulty Difficulty { get; init; }
+    public int CategoryId { get; init; }
     public required DateTime CreatedAt { get; init; }
     public required DateTime UpdatedAt { get; init; }
-
     public ICollection<ChallengeSolution> Solutions { get; init; } = [];
-    public ICollection<Category> Categories { get; init; } = [];
+    public Category Category { get; init; } = null!;
 }

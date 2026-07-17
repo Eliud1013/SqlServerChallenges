@@ -23,6 +23,11 @@ public static class DependencyInjection
             => new SqlConnection(configuration.GetConnectionString("AdventureWorks"))
         );
 
+        services.AddMediatR(options =>
+        {
+            options.RegisterServicesFromAssembly(typeof(DependencyInjection).Assembly);
+        });
+
         services.AddSingleton<MsSqlQuerySyntaxChecker>();
 
         services.AddScoped<IQueryExecutor, MsSqlQueryExecutor>();
@@ -30,8 +35,6 @@ public static class DependencyInjection
 
         services.AddScoped<IQuerySyntaxChecker, MsSqlQuerySyntaxChecker>();
         services.AddScoped<SyntaxCheckerDispatcher>();
-        
-        
 
         return services;
     }

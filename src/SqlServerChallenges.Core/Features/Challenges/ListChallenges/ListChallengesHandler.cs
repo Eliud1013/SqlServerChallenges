@@ -1,3 +1,4 @@
+using System.Security.Cryptography;
 using Microsoft.EntityFrameworkCore;
 using SqlServerChallenges.Core.Common.CQRS;
 using SqlServerChallenges.Core.Common.CQRS.Query;
@@ -25,17 +26,20 @@ public class ListChallengesHandler : IQueryHandler<ListChallengesQuery, IReadOnl
             query = query.Where(c => c.Difficulty == request.Difficulty);
 
         if (!string.IsNullOrEmpty(request.CategoryName))
-            query = query.Where(c => c.Categories.Select(cat => cat.Name).Contains(request.CategoryName));
+            query = query.Where(c => c.Category != null && c.Category.Name == request.CategoryName);
 
         if (!string.IsNullOrEmpty(request.Title))
             query = query.Where(c => c.Title.Contains(request.Title));
 
+        int acceptance = RandomNumberGenerator.GetInt32(0, 100);
+        
         return await query.Select(challenge => new ChallengeEntry(
             Id: challenge.Id,
             Title: challenge.Title,
-            TaskDescription: challenge.TaskDescription,
+            Category: challenge.Category.Name,
             Difficulty: challenge.Difficulty,
-            Categories: challenge.Categories.Select(cat => cat.Name).ToList())
+            Acceptance: acceptance,
+            Solved: true)
         ).ToListAsync(cancellationToken);
     }
 }

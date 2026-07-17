@@ -11,7 +11,7 @@ public class ChallengeSolutionConfiguration : IEntityTypeConfiguration<Challenge
     {
         builder.ToTable("ChallengeSolutions", "Challenges");
 
-        builder.HasKey(x => x.ChallengeId);
+        builder.HasKey(x => new {x.ChallengeId, x.DatabaseProvider});
 
         builder.Property(x => x.DatabaseProvider)
             .HasConversion<string>()
