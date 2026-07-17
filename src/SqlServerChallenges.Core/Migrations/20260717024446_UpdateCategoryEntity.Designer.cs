@@ -12,8 +12,8 @@ using SqlServerChallenges.Core.Data;
 namespace SqlServerChallenges.Core.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260709212832_FirstMigration")]
-    partial class FirstMigration
+    [Migration("20260717024446_UpdateCategoryEntity")]
+    partial class UpdateCategoryEntity
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,21 +24,6 @@ namespace SqlServerChallenges.Core.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("ChallengeCategory", b =>
-                {
-                    b.Property<Guid>("ChallengeId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("CategoryId")
-                        .HasColumnType("int");
-
-                    b.HasKey("ChallengeId", "CategoryId");
-
-                    b.HasIndex("CategoryId");
-
-                    b.ToTable("ChallengeCategories", "Challenges");
-                });
 
             modelBuilder.Entity("SqlServerChallenges.Core.Data.Entities.Categories.Category", b =>
                 {
@@ -65,6 +50,9 @@ namespace SqlServerChallenges.Core.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasDefaultValueSql("newsequentialid()");
 
+                    b.Property<int>("CategoryId")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
@@ -73,11 +61,6 @@ namespace SqlServerChallenges.Core.Migrations
                     b.Property<string>("Difficulty")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("SolutionQuery")
-                        .IsRequired()
-                        .HasMaxLength(300)
-                        .HasColumnType("nvarchar(300)");
 
                     b.Property<string>("TaskDescription")
                         .IsRequired()
@@ -96,22 +79,59 @@ namespace SqlServerChallenges.Core.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CategoryId");
+
                     b.ToTable("Challenges", "Challenges");
                 });
 
-            modelBuilder.Entity("ChallengeCategory", b =>
+            modelBuilder.Entity("SqlServerChallenges.Core.Data.Entities.ChallengeSolutions.ChallengeSolution", b =>
                 {
-                    b.HasOne("SqlServerChallenges.Core.Data.Entities.Categories.Category", null)
-                        .WithMany()
+                    b.Property<Guid>("ChallengeId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("DatabaseProvider")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("SolutionSql")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ChallengeId", "DatabaseProvider");
+
+                    b.ToTable("ChallengeSolutions", "Challenges");
+                });
+
+            modelBuilder.Entity("SqlServerChallenges.Core.Data.Entities.Challenge", b =>
+                {
+                    b.HasOne("SqlServerChallenges.Core.Data.Entities.Categories.Category", "Category")
+                        .WithMany("Challenges")
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("SqlServerChallenges.Core.Data.Entities.Challenge", null)
-                        .WithMany()
+                    b.Navigation("Category");
+                });
+
+            modelBuilder.Entity("SqlServerChallenges.Core.Data.Entities.ChallengeSolutions.ChallengeSolution", b =>
+                {
+                    b.HasOne("SqlServerChallenges.Core.Data.Entities.Challenge", "Challenge")
+                        .WithMany("Solutions")
                         .HasForeignKey("ChallengeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Challenge");
+                });
+
+            modelBuilder.Entity("SqlServerChallenges.Core.Data.Entities.Categories.Category", b =>
+                {
+                    b.Navigation("Challenges");
+                });
+
+            modelBuilder.Entity("SqlServerChallenges.Core.Data.Entities.Challenge", b =>
+                {
+                    b.Navigation("Solutions");
                 });
 #pragma warning restore 612, 618
         }

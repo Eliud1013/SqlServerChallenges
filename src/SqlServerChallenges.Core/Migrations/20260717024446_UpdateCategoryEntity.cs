@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace SqlServerChallenges.Core.Migrations
 {
     /// <inheritdoc />
-    public partial class FirstMigration : Migration
+    public partial class UpdateCategoryEntity : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -36,36 +36,37 @@ namespace SqlServerChallenges.Core.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "newsequentialid()"),
                     Title = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     TaskDescription = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
-                    SolutionQuery = table.Column<string>(type: "nvarchar(300)", maxLength: 300, nullable: false),
                     Difficulty = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CategoryId = table.Column<int>(type: "int", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "getutcdate()"),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "getutcdate()")
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Challenges", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "ChallengeCategories",
-                schema: "Challenges",
-                columns: table => new
-                {
-                    ChallengeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    CategoryId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ChallengeCategories", x => new { x.ChallengeId, x.CategoryId });
                     table.ForeignKey(
-                        name: "FK_ChallengeCategories_Categories_CategoryId",
+                        name: "FK_Challenges_Categories_CategoryId",
                         column: x => x.CategoryId,
                         principalSchema: "Challenges",
                         principalTable: "Categories",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ChallengeSolutions",
+                schema: "Challenges",
+                columns: table => new
+                {
+                    ChallengeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    DatabaseProvider = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    SolutionSql = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ChallengeSolutions", x => new { x.ChallengeId, x.DatabaseProvider });
                     table.ForeignKey(
-                        name: "FK_ChallengeCategories_Challenges_ChallengeId",
+                        name: "FK_ChallengeSolutions_Challenges_ChallengeId",
                         column: x => x.ChallengeId,
                         principalSchema: "Challenges",
                         principalTable: "Challenges",
@@ -74,9 +75,9 @@ namespace SqlServerChallenges.Core.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_ChallengeCategories_CategoryId",
+                name: "IX_Challenges_CategoryId",
                 schema: "Challenges",
-                table: "ChallengeCategories",
+                table: "Challenges",
                 column: "CategoryId");
         }
 
@@ -84,15 +85,15 @@ namespace SqlServerChallenges.Core.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "ChallengeCategories",
-                schema: "Challenges");
-
-            migrationBuilder.DropTable(
-                name: "Categories",
+                name: "ChallengeSolutions",
                 schema: "Challenges");
 
             migrationBuilder.DropTable(
                 name: "Challenges",
+                schema: "Challenges");
+
+            migrationBuilder.DropTable(
+                name: "Categories",
                 schema: "Challenges");
         }
     }
