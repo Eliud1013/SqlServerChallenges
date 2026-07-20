@@ -1,0 +1,31 @@
+@using SqlServerChallenges.Core.Features.Challenges.ListChallenges
+@model IReadOnlyList<ChallengeEntry>
+
+@{
+    int challengeNumber = 1;
+}
+
+@foreach (var challenge in @Model)
+{
+    <tr>
+        <td class="challenges-page__index">@challengeNumber @{ challengeNumber++;}</td>
+        <td>
+            <span class="challenges-page__status @(challenge.Solved ? "is-solved" : "")" aria-hidden="true">
+                @if (challenge.Solved)
+                {
+                    <svg viewBox="0 0 24 24" fill="none" class="challenges-page__status-icon">
+                        <path d="M6.5 12.5L10 16l7-8" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                }
+            </span>
+        </td>
+        <td class="challenges-page__title-cell">@challenge.Title</td>
+        <td>
+            <span class="badge rounded-2 challenges-page__badge align-middle challenges-page__badge--category">@challenge.Category</span>
+        </td>
+        <td>
+            <span class="badge rounded-3 challenges-page__badge challenges-page__badge--difficulty challenges-page__badge--@challenge.Difficulty.ToString().ToLower()">@challenge.Difficulty</span>
+        </td>
+        <td class="challenges-page__accept">@challenge.Acceptance%</td>
+    </tr>
+}

@@ -1,0 +1,139 @@
+@page
+@using SqlServerChallenges.Core.Data.Entities.Challenges
+@model SqlServerChallenges.Web.Pages.Challenges.ListChallenges.Index
+@{
+    ViewData["Title"] = "Challenges";
+
+}
+<section class="challenges-page">
+    <div class="challenges-page__glow challenges-page__glow--left z-2" aria-hidden="true"></div>
+    <div class="challenges-page__glow challenges-page__glow--right z-2" aria-hidden="true"></div>
+
+    <div class="position-relative z-1 d-flex flex-column gap-4">
+        <header class="d-flex flex-column gap-1">
+            <h1 class="challenges-page__title h2 mb-0">Challenges</h1>
+            <p class="challenges-page__stats mb-0 small">
+                <span>@Model.TotalChallenges total</span>
+                <span class="challenges-page__stat challenges-page__stat--easy">@Model.EasyCount easy</span>
+                <span class="challenges-page__stat challenges-page__stat--medium">@Model.MediumCount medium</span>
+                <span class="challenges-page__stat challenges-page__stat--hard">@Model.HardCount hard</span>
+            </p>
+        </header>
+
+        <div class="row g-3 align-items-center challenges-page__filters">
+            <div class="col-12 col-lg-4">
+                <label class="challenges-page__search">
+                    <span class="visually-hidden">Search challenges</span>
+                    <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" class="challenges-page__search-icon">
+                        <path d="M21 21l-4.35-4.35" stroke="currentColor" stroke-width="1.8"
+                              stroke-linecap="round"/>
+                        <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.8"/>
+                    </svg>
+                    <input type="search"
+                           name="Title"
+                           id="filter-title"
+                           onkeyup="debounceSearch(event)"
+                           placeholder="Search challenges..." aria-label="Search challenges"/>
+                </label>
+            </div>
+
+            <div class="col-12 col-lg-5">
+                <div class="challenges-page__segmented" role="tablist" aria-label="Difficulty filters">
+                    <input type="hidden" id="filter-difficulty" name="Difficulty" value=""/>
+                    <button type="button"
+                            data-difficulty=""
+                            class="challenges-page__segmented-item is-active"
+                            onclick="filterByDifficulty(this)"
+                            aria-pressed="true">All
+                    </button>
+
+                    <button type="button"
+                            data-difficulty="@ChallengeDifficulty.Easy"
+                            class="challenges-page__segmented-item"
+                            onclick="filterByDifficulty(this)">Easy
+                    </button>
+
+                    <button type="button"
+                            data-difficulty="@ChallengeDifficulty.Medium"
+                            class="challenges-page__segmented-item"
+                            onclick="filterByDifficulty(this)">Medium
+                    </button>
+
+                    <button type="button"
+                            class="challenges-page__segmented-item"
+                            data-difficulty="@ChallengeDifficulty.Hard"
+                            onclick="filterByDifficulty(this)">Hard
+                    </button>
+                </div>
+            </div>
+
+            <div class="col-12 col-lg-3">
+                <select class="challenges-page__select"
+                        name="CategoryName"
+                        id="filter-category"
+                        aria-label="Category filter"
+                        onchange="filterByCategory(this)">
+                    <option value="">Category: All</option>
+                    @foreach (var category in Model.Categories)
+                    {
+                        <option value="@category">@category</option>
+                    }
+                </select>
+            </div>
+        </div>
+
+        <div class="challenges-page__table-shell">
+            <div class="table-responsive">
+                <table class="table table-dark mb-0 align-middle challenges-page__table">
+                    <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col"></th>
+                        <th scope="col">Title</th>
+                        <th scope="col">Category</th>
+                        <th scope="col">Difficulty</th>
+                        <th scope="col">Accept.</th>
+                    </tr>
+                    </thead>
+                    <tbody id="table-body">
+                    <partial name="_ChallengeRows" model="Model.Challenges"/>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    let searchTimer;
+
+    function refreshTable() {
+        const title = document.getElementById('filter-title').value;
+        const difficulty = document.getElementById('filter-difficulty').value;
+        const category = document.getElementById('filter-category').value;
+
+        const params = new URLSearchParams();
+        if (title) params.set('Title', title);
+        if (difficulty) params.set('Difficulty', difficulty);
+        if (category) params.set('CategoryName', category);
+
+        htmx.ajax('GET', '?handler=UpdateList&' + params.toString(), {target: '#table-body'});
+    }
+
+    function debounceSearch() {
+        clearTimeout(searchTimer);
+        searchTimer = setTimeout(refreshTable, 400);
+    }
+
+    function filterByDifficulty(btn) {
+        document.querySelectorAll('.challenges-page__segmented-item')
+            .forEach(b => b.classList.remove('is-active'));
+        btn.classList.add('is-active');
+        document.getElementById('filter-difficulty').value = btn.dataset.difficulty;
+        refreshTable();
+    }
+
+    function filterByCategory() {
+        refreshTable();
+    }
+</script>

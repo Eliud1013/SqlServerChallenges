@@ -1,0 +1,80 @@
+.challenges-page__index {
+    text-align: center;
+    width: 3.25rem;
+    color: #6d7790;
+    font-size: 0.84rem;
+}
+
+.challenges-page__status {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.1rem;
+    height: 1.1rem;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: rgba(255, 255, 255, 0.02);
+    color: transparent;
+}
+
+.challenges-page__status.is-solved {
+    background: #31d0aa;
+    border-color: #31d0aa;
+    color: #0b101a;
+    box-shadow: 0 0 0 3px rgba(49, 208, 170, 0.12);
+}
+
+.challenges-page__status-icon {
+    width: 0.76rem;
+    height: 0.76rem;
+    color: currentColor;
+}
+
+.challenges-page__title-cell {
+    font-size: 0.99rem;
+    font-weight: 500;
+    color: #edf2ff;
+}
+
+.challenges-page__badge {
+    min-height: 1.5rem;
+    padding: 0.18rem 0.7rem;
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+}
+
+.challenges-page__badge--category {
+    color: #7f8aa9;
+    background: rgba(49, 61, 88, 0.48);
+    border: 1px solid rgba(112, 126, 154, 0.14);
+    text-transform: uppercase;
+}
+
+.challenges-page__badge--difficulty {
+    min-width: 4rem;
+}
+
+.challenges-page__badge--easy {
+    color: #31d0aa;
+    background: rgba(49, 208, 170, 0.08);
+    border: 1px solid rgba(49, 208, 170, 0.22);
+}
+
+.challenges-page__badge--medium {
+    color: #f5b942;
+    background: rgba(245, 185, 66, 0.08);
+    border: 1px solid rgba(245, 185, 66, 0.22);
+}
+
+.challenges-page__badge--hard {
+    color: #ff6b77;
+    background: rgba(255, 107, 119, 0.08);
+    border: 1px solid rgba(255, 107, 119, 0.22);
+}
+
+.challenges-page__accept {
+    width: 5rem;
+    color: #7e88a4;
+    font-size: 0.86rem;
+}

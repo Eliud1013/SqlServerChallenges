@@ -4,7 +4,65 @@
     ViewData["Title"] = "Home page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="home">
+    <div class="home__content">
+        <div class="home__text">
+            <div class="home__pill">T-SQL Practice Platform</div>
+
+            <h1 class="home__title">
+                Write real&nbsp;<span class="home__accent">SQL</span>
+                <span class="home__subtitle">Solve real problems.</span>
+            </h1>
+
+            <p class="home__description">
+                Practice T-SQL with challenges modeled on real-world scenarios.
+                From basic selects to window functions.
+            </p>
+
+            <div class="home__actions">
+                <a class="home__btn home__btn--primary" asp-page="/Challenges/Index">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/><line x1="4" y1="4" x2="9" y2="9"/></svg>
+                    Start Coding
+                </a>
+                <a class="home__btn home__btn--ghost" asp-page="/Tutorials">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg>
+                    View Tutorials
+                </a>
+            </div>
+        </div>
+
+        <div class="home__terminal" aria-hidden="true">
+            <div class="home__terminal-header">
+                <span class="home__dot home__dot--red"></span>
+                <span class="home__dot home__dot--yellow"></span>
+                <span class="home__dot home__dot--green"></span>
+                <span class="home__terminal-title">solution.sql</span>
+            </div>
+            <div class="home__terminal-body">
+                <span class="home__keyword">WITH</span> ranked <span class="home__keyword">AS</span> (<br/>
+                &nbsp;&nbsp;&nbsp;&nbsp;<span class="home__keyword">SELECT</span> <span class="home__function">RANK</span>() <span class="home__keyword">OVER</span> (<br/>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="home__keyword">PARTITION BY</span> dept<br/>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="home__keyword">ORDER BY</span> salary <span class="home__keyword">DESC</span><br/>
+                &nbsp;&nbsp;&nbsp;&nbsp;) <span class="home__keyword">AS</span> rnk<br/>
+                &nbsp;&nbsp;&nbsp;&nbsp;<span class="home__keyword">FROM</span> employees<br/>
+                )<br/>
+                <span class="home__keyword">SELECT</span> * <span class="home__keyword">FROM</span> ranked
+            </div>
+        </div>
+    </div>
+
+    <div class="home__stats">
+        <div class="home__stat">
+            <span class="home__stat-value">5</span>
+            <span class="home__stat-label">Topics</span>
+        </div>
+        <div class="home__stat">
+            <span class="home__stat-value">10</span>
+            <span class="home__stat-label">Challenges</span>
+        </div>
+        <div class="home__stat">
+            <span class="home__stat-value">3</span>
+            <span class="home__stat-label">Difficulties</span>
+        </div>
+    </div>
 </div>
