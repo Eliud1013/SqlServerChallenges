@@ -1,4 +1,3 @@
-using System.Data;
 using FluentAssertions;
 using Microsoft.Data.SqlClient;
 using SqlServerChallenges.Core.Data.Entities;
@@ -16,7 +15,7 @@ public class MsSqlQueryExecutorTests : BaseIntegrationTest
     }
 
     [Fact]
-    public async Task ShouldReturnDataTable_WhenQueryIsValid()
+    public async Task ShouldReturnQueryResult_WhenQueryIsValid()
     {
         await using var connection = new SqlConnection(_fixture._connectionString);
 
@@ -27,8 +26,8 @@ public class MsSqlQueryExecutorTests : BaseIntegrationTest
 
         result.Should().NotBeNull();
         result.IsSuccess.Should().BeTrue();
-        result.Table.Columns.Count.Should().Be(1);
-        result.Table.Rows.Count.Should().Be(1);
+        result.Columns.Count.Should().Be(1);
+        result.Rows.Count.Should().Be(1);
     }
 
     [Fact]
@@ -67,8 +66,8 @@ public class MsSqlQueryExecutorTests : BaseIntegrationTest
         var result = await executor.ExecuteQueryAsync(query);
 
         result.IsSuccess.Should().BeTrue();
-        result.Table.Rows.Count.Should().Be(1);
-        var row = result.Table.Rows[0];
+        result.Rows.Count.Should().Be(1);
+        var row = result.Rows[0];
         row["Title"].Should().Be("Basic SELECT");
         row["TaskDescription"].Should().Be("Write a SELECT query");
         row["Difficulty"].Should().Be(nameof(ChallengeDifficulty.Easy));
@@ -84,7 +83,7 @@ public class MsSqlQueryExecutorTests : BaseIntegrationTest
         var result = await executor.ExecuteQueryAsync(query);
 
         result.IsSuccess.Should().BeTrue();
-        result.Table.Rows.Count.Should().Be(50);
+        result.Rows.Count.Should().Be(50);
     }
 
 
