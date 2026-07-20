@@ -1,6 +1,7 @@
 using FluentAssertions;
 using Microsoft.Data.SqlClient;
 using SqlServerChallenges.Core.Data.Entities;
+using SqlServerChallenges.Core.Data.Entities.Categories;
 using SqlServerChallenges.Core.Data.Entities.Challenges;
 using SqlServerChallenges.Core.Services.SqlExecutor;
 using SqlServerChallenges.Core.Tests.Common;
@@ -54,7 +55,8 @@ public class MsSqlQueryExecutorTests : BaseIntegrationTest
             TaskDescription = "Write a SELECT query",
             Difficulty = ChallengeDifficulty.Easy,
             CreatedAt = DateTime.UtcNow,
-            UpdatedAt = DateTime.UtcNow
+            UpdatedAt = DateTime.UtcNow,
+            Category = new Category { Name = "Basic Queries" }
         });
 
         await _dbContext.SaveChangesAsync();

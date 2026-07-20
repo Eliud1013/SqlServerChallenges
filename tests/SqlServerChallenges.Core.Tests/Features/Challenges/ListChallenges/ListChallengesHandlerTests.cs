@@ -35,7 +35,8 @@ public class ListChallengesHandlerTests : IClassFixture<SqlServerFixture>, IAsyn
             TaskDescription = "Write a SELECT query",
             Difficulty = ChallengeDifficulty.Easy,
             CreatedAt = DateTime.UtcNow,
-            UpdatedAt = DateTime.UtcNow
+            UpdatedAt = DateTime.UtcNow,
+            Category = new Category { Name = "Basic Queries" }
         });
 
         await _dbContext.SaveChangesAsync();
@@ -62,13 +63,10 @@ public class ListChallengesHandlerTests : IClassFixture<SqlServerFixture>, IAsyn
             Difficulty = ChallengeDifficulty.Easy,
             CreatedAt = DateTime.UtcNow,
             UpdatedAt = DateTime.UtcNow,
-            Categories = new List<Category>
+            Category = new Category
             {
-                new Category
-                {
-                    Name = "Basic SELECT"
-                }
-            },
+                Name = "Basic SELECT"
+            }
         });
 
         await _dbContext.SaveChangesAsync();
@@ -76,10 +74,10 @@ public class ListChallengesHandlerTests : IClassFixture<SqlServerFixture>, IAsyn
         var handler = new ListChallengesHandler(_dbContext);
 
         var result = await handler.Handle(new ListChallengesQuery(null, "Basic SELECT", null), CancellationToken.None);
-        
+
         result.Succeeded.Should().BeTrue();
         result.Value.Should().ContainSingle(c => c.Title == "Basic SELECT");
-        result.Value.Select(v => v.Categories).Should().NotBeEmpty();
+        result.Value.Select(v => v.Category).Should().NotBeEmpty();
     }
 
     [Fact]
@@ -93,6 +91,7 @@ public class ListChallengesHandlerTests : IClassFixture<SqlServerFixture>, IAsyn
             Difficulty = ChallengeDifficulty.Easy,
             CreatedAt = DateTime.UtcNow,
             UpdatedAt = DateTime.UtcNow,
+            Category = new Category { Name = "Basic Queries" },
             Solutions = new List<ChallengeSolution>
             {
                 new ChallengeSolution
@@ -100,7 +99,6 @@ public class ListChallengesHandlerTests : IClassFixture<SqlServerFixture>, IAsyn
                     DatabaseProvider = DatabaseProvider.SqlServer,
                     SolutionSql = "SELECT 1"
                 },
-                
             }
         });
 
@@ -125,6 +123,7 @@ public class ListChallengesHandlerTests : IClassFixture<SqlServerFixture>, IAsyn
             Difficulty = ChallengeDifficulty.Medium,
             CreatedAt = DateTime.UtcNow,
             UpdatedAt = DateTime.UtcNow,
+            Category = new Category { Name = "Basic Queries" },
             Solutions = new List<ChallengeSolution>()
             {
                 new ChallengeSolution
@@ -132,7 +131,6 @@ public class ListChallengesHandlerTests : IClassFixture<SqlServerFixture>, IAsyn
                     DatabaseProvider = DatabaseProvider.SqlServer,
                     SolutionSql = "SELECT 1"
                 },
-                
             }
         });
 
@@ -144,6 +142,7 @@ public class ListChallengesHandlerTests : IClassFixture<SqlServerFixture>, IAsyn
             CancellationToken.None);
 
         result.Succeeded.Should().BeTrue();
-        result.Value.Should().ContainSingle(c => c.Title == "Basic SELECT" && c.Difficulty == ChallengeDifficulty.Medium);
+        result.Value.Should()
+            .ContainSingle(c => c.Title == "Basic SELECT" && c.Difficulty == ChallengeDifficulty.Medium);
     }
 }
