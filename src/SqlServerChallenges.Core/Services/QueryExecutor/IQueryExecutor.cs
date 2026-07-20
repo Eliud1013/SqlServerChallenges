@@ -1,5 +1,3 @@
-using System.Data;
-
 namespace SqlServerChallenges.Core.Services.SqlExecutor;
 
 public interface IQueryExecutor
