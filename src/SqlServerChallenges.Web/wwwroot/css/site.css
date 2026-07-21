@@ -1,31 +1,146 @@
-html {
-  font-size: 14px;
+@layer reset {
+    /* 1. Use a more-intuitive box-sizing model */
+    *, *::before, *::after {
+        box-sizing: border-box;
+    }
+
+    /* 2. Remove default margin */
+    *:not(dialog) {
+        margin: 0;
+    }
+
+    /* 3. Enable keyword animations */
+    @media (prefers-reduced-motion: no-preference) {
+        html {
+            interpolate-size: allow-keywords;
+        }
+    }
+
+    body {
+        /* 4. Increase line-height */
+        line-height: 1.5;
+        /* 5. Improve text rendering */
+        -webkit-font-smoothing: antialiased;
+    }
+
+    /* 6. Improve media defaults */
+    img, picture, video, canvas, svg {
+        display: block;
+        max-width: 100%;
+    }
+
+    /* 7. Inherit fonts for form controls */
+    input, button, textarea, select {
+        font: inherit;
+    }
+
+    /* 8. Avoid text overflows */
+    p, h1, h2, h3, h4, h5, h6 {
+        overflow-wrap: break-word;
+    }
+
+    /* 9. Improve line wrapping */
+    p {
+        text-wrap: pretty;
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+        text-wrap: balance;
+    }
+
+    /*
+      10. Create a root stacking context
+    */
+    #root, #__next {
+        isolation: isolate;
+    }
 }
 
-@media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
+@layer variables {
+    :root {
+        --fg-default: #BFC2CB;
+        --fg-muted: #434C5F;
+        --fg-primary: #00D39F;
+
+        --ff-body: "Inter", sans-serif;
+        --ff-display: "Outfit", sans-serif;
+        --ff-mono: "JetBrains Mono", monospace;
+
+        --bg-page: #0B0E17;
+        --bg-surface: #0F1220;
+        --bg-elevated: #151A2B;
+
+        --bg-hover: #22283b;
+        --bg-codebox: #0D1017;
+
+        --bg-table-header: #0D111C;
+        --bg-table-col: #0B0E17;
+        --bg-table-row-primary: #0B0E17;
+        --bg-table-row-secondary: #0F121B;
+
+        --radius-sm: 6px;
+        --radius-md: 8px;
+        --radius-lg: 12px;
+        --radius-xl: 16px;
+    }
 }
 
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+@layer utilities {
+    .text-primary {
+        color: var(--fg-primary) !important;
+    }
+
+    .text-secondary {
+        color: var(--fg-muted) !important;
+    }
+
+    .text-body {
+        color: var(--fg-default) !important;
+    }
+    
 }
 
-html {
-  position: relative;
-  min-height: 100%;
+@layer components {
+    .challenges__badge {
+        min-height: 1.5rem;
+        padding: 0.18rem 0.7rem;
+        font-size: 0.78rem;
+        font-weight: 600;
+        letter-spacing: 0.04em;
+    }
+
+    .challenges__badge--category {
+        color: #7f8aa9;
+        background: rgba(49, 61, 88, 0.48);
+        border: 1px solid rgba(112, 126, 154, 0.14);
+        text-transform: uppercase;
+    }
+
+    .challenge__badge--easy {
+        color: #31d0aa;
+        background: rgba(49, 208, 170, 0.08);
+        border: 1px solid rgba(49, 208, 170, 0.22);
+    }
+
+    .challenge__badge--medium {
+        color: #f5b942;
+        background: rgba(245, 185, 66, 0.08);
+        border: 1px solid rgba(245, 185, 66, 0.22);
+    }
+
+    .challenge__badge--hard {
+        color: #ff6b77;
+        background: rgba(255, 107, 119, 0.08);
+        border: 1px solid rgba(255, 107, 119, 0.22);
+    }
 }
 
-body {
-  margin-bottom: 60px;
-}
-
-.form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
-  color: var(--bs-secondary-color);
-  text-align: end;
-}
-
-.form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
-  text-align: start;
+@layer base {
+    html {
+        font-family: var(--ff-body);
+        font-size: 16px;
+        color: var(--fg-default);
+        background: var(--bg-page);
+    }
+    
 }

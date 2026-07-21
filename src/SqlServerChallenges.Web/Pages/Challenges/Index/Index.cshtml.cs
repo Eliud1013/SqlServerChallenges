@@ -11,12 +11,12 @@ namespace SqlServerChallenges.Web.Pages.Challenges.ListChallenges;
 public class Index : PageModel
 {
     private readonly ISender Sender;
-    private readonly ApplicationDbContext DbContext;
+    private readonly ApplicationDbContext _dbContext;
 
     public Index(ISender sender, ApplicationDbContext dbContext)
     {
         Sender = sender;
-        DbContext = dbContext;
+        _dbContext = dbContext;
     }
 
     public IReadOnlyList<ChallengeEntry> Challenges { get; private set; } = [];
@@ -33,7 +33,7 @@ public class Index : PageModel
         var result = await Sender.Send(request);
 
         Challenges = result.Value;
-        Categories = await DbContext.Categories.OrderBy(c => c.Name).Select(c => c.Name).ToListAsync();
+        Categories = await _dbContext.Categories.OrderBy(c => c.Name).Select(c => c.Name).ToListAsync();
     }
 
     public async Task<IActionResult> OnGetUpdateList(string? Title, string? CategoryName,
