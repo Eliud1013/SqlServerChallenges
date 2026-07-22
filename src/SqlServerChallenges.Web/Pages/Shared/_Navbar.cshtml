@@ -1,14 +1,16 @@
+
 @{
     var currentPage = ViewContext.RouteData.Values["page"]?.ToString();
-    
+
+
     var indexPage = "/Index";
     var challengesPage = "/Challenges/Index";
-    var tutorialsPage = "/Tutorials";
+
 }
 
-<header>
+<header class="mb-5 sticky-top bg-body">
     <nav class="navbar navbar-expand-sm navbar-toggleable-sm box-shadow">
-        <div class="container-fluid mx-5">`
+        <div class="container-fluid mx-5">
             <a class="navbar-brand" asp-area="" asp-page="/Index">
                 <span class="text-light fw-bold">Query</span><span class="text-success fw-bold">Forge</span>
             </a>
@@ -20,13 +22,10 @@
             <div class="navbar-collapse collapse d-sm-inline-flex mx-sm-5">
                 <ul class="navbar-nav flex-grow-1 gap-1">
                     <li class="nav-item">
-                        <a class="nav-link @(currentPage == indexPage ? "active" : "")" asp-area="" asp-page="@indexPage">Home</a>
+                        <a class="nav-link px-3 @(currentPage == indexPage ? "active-link" : "")" asp-area="" asp-page="@indexPage">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link @(currentPage == challengesPage ? "active" : "")" asp-area="" asp-page="@challengesPage">Challenges</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link @(currentPage == tutorialsPage ? "active" : "")" asp-page="@tutorialsPage">Tutorials</a>
+                        <a class="nav-link px-3 @(currentPage == challengesPage ? "active-link" : "")" asp-area="" asp-page="@challengesPage">Challenges</a>
                     </li>
                 </ul>
                 <ul class="navbar-nav d-flex justify-content-sm-end flex-grow-1 ">
