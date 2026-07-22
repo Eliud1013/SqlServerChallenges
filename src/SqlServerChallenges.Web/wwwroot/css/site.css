@@ -1,105 +1,3 @@
-@layer reset {
-    /* 1. Use a more-intuitive box-sizing model */
-    *, *::before, *::after {
-        box-sizing: border-box;
-    }
-
-    /* 2. Remove default margin */
-    *:not(dialog) {
-        margin: 0;
-    }
-
-    /* 3. Enable keyword animations */
-    @media (prefers-reduced-motion: no-preference) {
-        html {
-            interpolate-size: allow-keywords;
-        }
-    }
-
-    body {
-        /* 4. Increase line-height */
-        line-height: 1.5;
-        /* 5. Improve text rendering */
-        -webkit-font-smoothing: antialiased;
-    }
-
-    /* 6. Improve media defaults */
-    img, picture, video, canvas, svg {
-        display: block;
-        max-width: 100%;
-    }
-
-    /* 7. Inherit fonts for form controls */
-    input, button, textarea, select {
-        font: inherit;
-    }
-
-    /* 8. Avoid text overflows */
-    p, h1, h2, h3, h4, h5, h6 {
-        overflow-wrap: break-word;
-    }
-
-    /* 9. Improve line wrapping */
-    p {
-        text-wrap: pretty;
-    }
-
-    h1, h2, h3, h4, h5, h6 {
-        text-wrap: balance;
-    }
-
-    /*
-      10. Create a root stacking context
-    */
-    #root, #__next {
-        isolation: isolate;
-    }
-}
-
-@layer variables {
-    :root {
-        --fg-default: #BFC2CB;
-        --fg-muted: #434C5F;
-        --fg-primary: #00D39F;
-
-        --ff-body: "Inter", sans-serif;
-        --ff-display: "Outfit", sans-serif;
-        --ff-mono: "JetBrains Mono", monospace;
-
-        --bg-page: #0B0E17;
-        --bg-surface: #0F1220;
-        --bg-elevated: #151A2B;
-
-        --bg-hover: #22283b;
-        --bg-codebox: #0D1017;
-
-        --bg-table-header: #0D111C;
-        --bg-table-col: #0B0E17;
-        --bg-table-row-primary: #0B0E17;
-        --bg-table-row-secondary: #0F121B;
-
-        --radius-sm: 6px;
-        --radius-md: 8px;
-        --radius-lg: 12px;
-        --radius-xl: 16px;
-    }
-}
-
-@layer utilities {
-    .text-primary {
-        color: var(--fg-primary) !important;
-    }
-
-    .text-secondary {
-        color: var(--fg-muted) !important;
-    }
-
-    .text-body {
-        color: var(--fg-default) !important;
-    }
-    
-}
-
 @layer components {
     .challenges__badge {
         min-height: 1.5rem;
@@ -135,12 +33,62 @@
     }
 }
 
-@layer base {
-    html {
-        font-family: var(--ff-body);
-        font-size: 16px;
-        color: var(--fg-default);
-        background: var(--bg-page);
+@layer variables {
+    :root {
+        --clr-primary: #00D39F;
+        --clr-primary-rgb: 0, 211, 159;
+
+        --clr-body: #E6E9F2;
+        --clr-body-rgb: 230, 233, 242;
+        --clr-body-bg: #0B0E17;
+        --clr-body-bg-rgb: 11, 14, 23;
+        
+        --clr-secondary: #566278;
+        --clr-secondary-rgb: 86, 98, 120;
+
+        --ff-body: "Inter", sans-serif;
+        --ff-display: "Outfit", sans-serif;
+        --ff-mono: "JetBrains Mono", monospace;
+
+        --bg-page: #0B0E17;
+        --bg-surface: #0F1220;
+        --bg-elevated: #151A2B;
+
+        --bg-hover: #22283b;
+        --bg-codebox: #0D1017;
+
+        --bg-table-header: #0D111C;
+        --bg-table-col: #0B0E17;
+        --bg-table-row-primary: #0B0E17;
+        --bg-table-row-secondary: #0F121B;
+
+        --radius-sm: 6px;
+        --radius-md: 8px;
+        --radius-lg: 12px;
+        --radius-xl: 16px;
     }
+}
+
+:root {
+    --bs-primary: var(--clr-primary);
+    --bs-primary-rgb: var(--clr-primary-rgb);
+
+    --bs-secondary: var(--clr-secondary);
+    --bs-secondary-rgb: var(--clr-secondary-rgb);
     
+    --bs-body-color: var(--clr-body);
+    --bs-body-color-rgb: var(--clr-body-rgb);
+    
+    --bs-body-bg: var(--clr-body-bg);
+    --bs-body-bg-rgb: var(--clr-body-bg-rgb);
+    
+    --bs-body-font-size: 1rem;
+    --bs-body-font-family: var(--ff-body);
+    --bs-font-monospace: var(--ff-mono);
+
+    --bs-border-radius-sm: var(--radius-sm);
+    --bs-border-radius: var(--radius-md);
+    --bs-border-radius-lg: var(--radius-lg);
+    --bs-border-radius-xl: var(--radius-xl);
+
 }
