@@ -5,7 +5,10 @@
 }
 
 
-<div class="d-flex mt-5">
+<div class="d-flex mt-5 position-relative">
+    <div class="home__glow home__glow--left" aria-hidden="true"></div>
+    <div class="home__glow home__glow--right" aria-hidden="true"></div>
+
     <div class="d-flex flex-column gap-2">
 
         <h1 class="home__title fw-bold">
@@ -33,19 +36,20 @@
             <span class="home__dot home__dot--red"></span>
             <span class="home__dot home__dot--yellow"></span>
             <span class="home__dot home__dot--green"></span>
-            <span class="home__terminal-title">solution.sql</span>
+            <span class="home__terminal-title">top_salaries.sql</span>
         </div>
         <div class="home__terminal-body">
+            <span class="home__comment">-- Get top earners per department</span><br/>
             <span class="home__keyword">WITH</span> ranked <span class="home__keyword">AS</span> (<br/>
-            &nbsp;&nbsp;&nbsp;&nbsp;<span class="home__keyword">SELECT</span> <span class="home__function">RANK</span>()
-            <span class="home__keyword">OVER</span> (<br/>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="home__keyword">PARTITION BY</span> dept<br/>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="home__keyword">ORDER BY</span> salary <span
-                class="home__keyword">DESC</span><br/>
-            &nbsp;&nbsp;&nbsp;&nbsp;) <span class="home__keyword">AS</span> rnk<br/>
-            &nbsp;&nbsp;&nbsp;&nbsp;<span class="home__keyword">FROM</span> employees<br/>
+            &nbsp;&nbsp;<span class="home__keyword">SELECT</span> name, dept,<br/>
+            &nbsp;&nbsp;<span class="home__function">RANK</span>() <span class="home__keyword">OVER</span> (<br/>
+            &nbsp;&nbsp;&nbsp;&nbsp;<span class="home__keyword">PARTITION BY</span> dept<br/>
+            &nbsp;&nbsp;&nbsp;&nbsp;<span class="home__keyword">ORDER BY</span> salary <span class="home__keyword">DESC</span><br/>
+            &nbsp;&nbsp;) <span class="home__keyword">AS</span> rnk<br/>
+            &nbsp;&nbsp;<span class="home__keyword">FROM</span> employees<br/>
             )<br/>
-            <span class="home__keyword">SELECT</span> * <span class="home__keyword">FROM</span> ranked
+            <span class="home__keyword">SELECT</span> * <span class="home__keyword">FROM</span> ranked<br/>
+            <span class="home__keyword">WHERE</span> rnk = <span class="home__string">1</span>;<span class="home__terminal-cursor"></span>
         </div>
     </div>
 </div>
