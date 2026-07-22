@@ -1,90 +1,63 @@
-.home {
-    display: flex;
-    flex-direction: column;
-    gap: 4rem;
-    padding-block: 2rem 4rem;
-    min-height: calc(100vh - 200px);
-}
-
-.home__content {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 4rem;
-    align-items: center;
-    flex: 1;
-}
-
-.home__text {
-    display: flex;
-    flex-direction: column;
-    gap: 1.25rem;
-}
-
-.home__pill {
-    display: inline-flex;
-    align-self: flex-start;
-    font-size: 0.75rem;
-    font-weight: 600;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-    padding: 0.35rem 0.75rem;
-    border-radius: 999px;
-    background: rgba(0, 212, 160, 0.08);
-    color: var(--primary);
-    border: 1px solid rgba(0, 212, 160, 0.15);
-}
-
 .home__title {
-    font-size: clamp(36px, 7vw, 64px);
-    font-weight: 800;
+    font-family: var(--ff-display);
     line-height: 1.05;
     letter-spacing: -0.02em;
-    color: var(--foreground);
+    font-size: clamp(2.125rem, 5vw, 3rem);
 }
 
-.home__accent {
-    color: var(--primary);
+.home__challenges-btn {
+    font-size: 1rem;
+    font-weight: 600;
 }
 
 .home__subtitle {
     display: block;
     margin-top: 0.15em;
-    background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+    background: linear-gradient(135deg, var(--fg-default) 0%, var(--fg-primary) 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
 }
 
-.home__description {
-    max-width: 30rem;
-    font-size: 1.05rem;
-    line-height: 1.7;
-    color: var(--muted-foreground);
-}
-
-.home__actions {
-    display: flex;
-    gap: 1rem;
-    flex-wrap: wrap;
-    margin-top: 0.5rem;
-}
-
 .home__btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.7rem 1.5rem;
-    border-radius: 10px;
-    font-size: 0.9rem;
-    font-weight: 600;
-    text-decoration: none;
     transition: all 0.15s ease;
     cursor: pointer;
 }
 
+/* ===================================================
+   BOTÓN 1: Browse Challenges (Principal / Verde)
+   =================================================== */
+.home__btn-challenges {
+    /* Estado Base */
+    --bs-btn-bg: var(--clr-primary);
+    --bs-btn-border-color: var(--clr-primary);
+    --bs-btn-color: #0B0E17;
+
+    /* Estado Hover */
+    --bs-btn-hover-bg: #00b88a;
+    --bs-btn-hover-border-color: #00b88a;
+    --bs-btn-hover-color: #0B0E17;
+
+    /* Estado Active (Clic) */
+    --bs-btn-active-bg: #009e76;
+    --bs-btn-active-border-color: #009e76;
+    --bs-btn-active-color: #ffffff;
+}
+
+.btn.home__btn-tutorials {
+    --bs-btn-border-color: color-mix(in srgb, var(--clr-secondary) 20%, transparent);
+    --bs-btn-color: var(--clr-secondary);
+    
+    --bs-btn-hover-border-color: color-mix(in srgb, var(--clr-body) 30%, transparent);
+    --bs-btn-hover-color: var(--clr-body);
+    
+    --bs-btn-active-bg: var(--bg-elevated);
+    --bs-btn-active-border-color: color-mix(in srgb, var(--clr-body) 40%, transparent);
+    --bs-btn-active-color: var(--clr-body);
+}
 .home__btn--primary {
-    background: var(--primary);
-    color: var(--primary-foreground);
+    background: #00D39F;
+    color: var(--fg-default);
     border: none;
 }
 
@@ -94,18 +67,6 @@
     box-shadow: 0 4px 20px rgba(0, 212, 160, 0.25);
 }
 
-.home__btn--ghost {
-    background: transparent;
-    color: var(--foreground);
-    border: 1px solid var(--border);
-}
-
-.home__btn--ghost:hover {
-    background: var(--secondary);
-    border-color: transparent;
-}
-
-/* Terminal */
 .home__terminal {
     width: 100%;
     max-width: 420px;
@@ -131,9 +92,17 @@
     border-radius: 50%;
 }
 
-.home__dot--red { background: #ff5f56; }
-.home__dot--yellow { background: #ffbd2e; }
-.home__dot--green { background: #27c93f; }
+.home__dot--red {
+    background: #ff5f56;
+}
+
+.home__dot--yellow {
+    background: #ffbd2e;
+}
+
+.home__dot--green {
+    background: #27c93f;
+}
 
 .home__terminal-title {
     margin-left: auto;
@@ -150,8 +119,13 @@
     font-family: 'JetBrains Mono', 'Fira Code', monospace;
 }
 
-.home__keyword { color: var(--accent); }
-.home__function { color: var(--primary); }
+.home__keyword {
+    color: var(--accent);
+}
+
+.home__function {
+    color: var(--primary);
+}
 
 /* Stats */
 .home__stats {
