@@ -5,5 +5,13 @@
         <Link>.dockerignore</Link>
       </Content>
     </ItemGroup>
+    
+    <ItemGroup>
+      <ProjectReference Include="..\SqlServerChallenges.Core\SqlServerChallenges.Core.csproj" />
+    </ItemGroup>
+    
+    <ItemGroup>
+      <AdditionalFiles Include="Pages\Challenges\_ChallengeRows.cshtml" />
+    </ItemGroup>
 
 </Project>
