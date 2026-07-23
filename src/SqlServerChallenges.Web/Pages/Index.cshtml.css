@@ -5,26 +5,6 @@
     font-size: clamp(2.125rem, 5vw, 3rem);
 }
 
-.home__challenges-btn {
-    font-size: 1rem;
-    font-weight: 600;
-}
-
-.home__subtitle {
-    display: block;
-    margin-top: 0.15em;
-    background: linear-gradient(135deg, var(--fg-default) 0%, var(--fg-primary) 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-}
-
-.home__btn {
-    transition: all 0.15s ease;
-    cursor: pointer;
-}
-
-
 .home__btn-challenges {
     --bs-btn-bg: var(--clr-primary);
     --bs-btn-border-color: var(--clr-primary);
@@ -49,6 +29,10 @@
     --bs-btn-active-bg: var(--bg-elevated);
     --bs-btn-active-border-color: color-mix(in srgb, var(--clr-body) 40%, transparent);
     --bs-btn-active-color: var(--clr-body);
+}
+
+.home__hr {
+    border-color: color-mix(in srgb, var(--clr-secondary) 85%, transparent);
 }
 
 .home__terminal {
