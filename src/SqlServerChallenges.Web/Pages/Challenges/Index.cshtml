@@ -3,21 +3,20 @@
 @model SqlServerChallenges.Web.Pages.Challenges.ListChallenges.Index
 @{
     ViewData["Title"] = "Challenges";
-
 }
 
 @section Styles {
     <link rel="stylesheet" href="~/css/Challenges/Index.css" asp-append-version="true"/>
 }
 
-<section class="challenges-page">
+<section class="position-relative w-100">
     <div class="challenges-page__glow challenges-page__glow--left z-2" aria-hidden="true"></div>
     <div class="challenges-page__glow challenges-page__glow--right z-2" aria-hidden="true"></div>
 
     <div class="position-relative z-1 d-flex flex-column gap-4">
-        <header class="d-flex flex-column gap-1">
-            <h1 class="challenges-page__title h2 mb-0">Challenges</h1>
-            <p class="challenges-page__stats mb-0 small">
+        <header class="challenges-page__stats d-flex flex-column gap-1">
+            <h1 class="fw-bold h2 mb-0">Challenges</h1>
+            <p class="d-flex flex-wrap align-items-center gap-2 mb-0 small">
                 <span>@Model.TotalChallenges total</span>
                 <span class="challenges-page__stat challenges-page__stat--easy">@Model.EasyCount easy</span>
                 <span class="challenges-page__stat challenges-page__stat--medium">@Model.MediumCount medium</span>
@@ -25,7 +24,7 @@
             </p>
         </header>
 
-        <div class="row g-3 align-items-center challenges-page__filters">
+        <div class="row g-3 align-items-center mb-2">
             <div class="col-12 col-lg-4">
                 <label class="challenges-page__search">
                     <span class="visually-hidden">Search challenges</span>
@@ -37,7 +36,10 @@
                     <input type="search"
                            name="Title"
                            id="filter-title"
-                           onkeyup="debounceSearch(event)"
+                           hx-get="?handler=UpdateList"
+                           hx-trigger="keyup changed delay:400ms"
+                           hx-target="#table-body"
+                           hx-include="#filter-category, #filter-difficulty"
                            placeholder="Search challenges..." aria-label="Search challenges"/>
                 </label>
             </div>
@@ -47,27 +49,36 @@
                     <input type="hidden" id="filter-difficulty" name="Difficulty" value=""/>
                     <button type="button"
                             data-difficulty=""
+                            onclick="document.getElementById('filter-difficulty').value = ''"
                             class="challenges-page__segmented-item is-active"
-                            onclick="filterByDifficulty(this)"
+                            hx-get="?handler=UpdateList"
+                            hx-target="#table-body"
+                            hx-include="#filter-title, #filter-category, #filter-difficulty"
                             aria-pressed="true">All
                     </button>
 
                     <button type="button"
-                            data-difficulty="@ChallengeDifficulty.Easy"
+                            onclick="document.getElementById('filter-difficulty').value = '@ChallengeDifficulty.Easy'"
                             class="challenges-page__segmented-item"
-                            onclick="filterByDifficulty(this)">Easy
+                            hx-get="?handler=UpdateList"
+                            hx-target="#table-body"
+                            hx-include="#filter-title, #filter-category, #filter-difficulty">Easy
                     </button>
 
                     <button type="button"
-                            data-difficulty="@ChallengeDifficulty.Medium"
+                            onclick="document.getElementById('filter-difficulty').value = '@ChallengeDifficulty.Medium'"
                             class="challenges-page__segmented-item"
-                            onclick="filterByDifficulty(this)">Medium
+                            hx-get="?handler=UpdateList"
+                            hx-target="#table-body"
+                            hx-include="#filter-title, #filter-category, #filter-difficulty">Medium
                     </button>
 
                     <button type="button"
+                            onclick="document.getElementById('filter-difficulty').value = '@ChallengeDifficulty.Hard'"
                             class="challenges-page__segmented-item"
-                            data-difficulty="@ChallengeDifficulty.Hard"
-                            onclick="filterByDifficulty(this)">Hard
+                            hx-get="?handler=UpdateList"
+                            hx-target="#table-body"
+                            hx-include="#filter-title, #filter-category, #filter-difficulty">Hard
                     </button>
                 </div>
             </div>
@@ -77,7 +88,10 @@
                         name="CategoryName"
                         id="filter-category"
                         aria-label="Category filter"
-                        onchange="filterByCategory(this)">
+                        hx-get="?handler=UpdateList"
+                        hx-trigger="change"
+                        hx-target="#table-body"
+                        hx-include="#filter-title, #filter-difficulty">
                     <option value="">Category: All</option>
                     @foreach (var category in Model.Categories)
                     {
@@ -100,8 +114,25 @@
                         <th scope="col">Accept.</th>
                     </tr>
                     </thead>
-                    <tbody id="table-body">
+                    <tbody id="table-body"
+                           hx-get="?handler=UpdateList"
+                           hx-trigger="load"
+                           hx-include="#filter-title, #filter-category, #filter-difficulty"
+                           hx-target="this"
+                           hx-swap="innerHTML">
                     <partial name="_ChallengeRows" model="Model.Challenges"/>
+
+                    @for (int i = 0; i < 7; i++)
+                    {
+                        <tr class="placeholder-wave">
+                            <td class="ps-3"><span class="placeholder col-8 rounded"></span></td>
+                            <td></td>
+                            <td><span class="placeholder col-8 rounded"></span></td>
+                            <td><span class="placeholder col-6 rounded"></span></td>
+                            <td><span class="placeholder col-5 rounded"></span></td>
+                            <td><span class="placeholder col-7 rounded"></span></td>
+                        </tr>
+                    }
                     </tbody>
                 </table>
             </div>
@@ -110,35 +141,10 @@
 </section>
 
 <script>
-    let searchTimer;
-
-    function refreshTable() {
-        const title = document.getElementById('filter-title').value;
-        const difficulty = document.getElementById('filter-difficulty').value;
-        const category = document.getElementById('filter-category').value;
-
-        const params = new URLSearchParams();
-        if (title) params.set('Title', title);
-        if (difficulty) params.set('Difficulty', difficulty);
-        if (category) params.set('CategoryName', category);
-
-        htmx.ajax('GET', '?handler=UpdateList&' + params.toString(), {target: '#table-body'});
-    }
-
-    function debounceSearch() {
-        clearTimeout(searchTimer);
-        searchTimer = setTimeout(refreshTable, 400);
-    }
-
-    function filterByDifficulty(btn) {
-        document.querySelectorAll('.challenges-page__segmented-item')
-            .forEach(b => b.classList.remove('is-active'));
-        btn.classList.add('is-active');
-        document.getElementById('filter-difficulty').value = btn.dataset.difficulty;
-        refreshTable();
-    }
-
-    function filterByCategory() {
-        refreshTable();
-    }
+    document.addEventListener("click", function (e) {
+        if (e.target.matches('.challenges-page__segmented-item')) {
+            document.querySelectorAll('.challenges-page__segmented-item').forEach(b => b.classList.remove('is-active'));
+            e.target.classList.add('is-active');
+        }
+    });
 </script>
