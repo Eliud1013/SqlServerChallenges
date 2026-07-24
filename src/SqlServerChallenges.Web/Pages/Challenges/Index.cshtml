@@ -100,21 +100,9 @@
                 </select>
             </div>
         </div>
-
-        <div class="challenges-page__table-shell">
             <div class="table-responsive">
-                <table class="table table-dark mb-0 align-middle challenges-page__table">
-                    <thead>
-                    <tr>
-                        <th scope="col">#</th>
-                        <th scope="col"></th>
-                        <th scope="col">Title</th>
-                        <th scope="col">Category</th>
-                        <th scope="col">Difficulty</th>
-                        <th scope="col">Accept.</th>
-                    </tr>
-                    </thead>
-                    <tbody id="table-body"
+                <table class="table table-dark mb-0 align-middle">
+                    <tbody id="challengesAccordion"
                            hx-get="?handler=UpdateList"
                            hx-trigger="load"
                            hx-include="#filter-title, #filter-category, #filter-difficulty"
@@ -124,20 +112,18 @@
 
                     @for (int i = 0; i < 7; i++)
                     {
-                        <tr class="placeholder-wave">
+                        <tr class="placeholder-wave bg-transparent">
                             <td class="ps-3"><span class="placeholder col-8 rounded"></span></td>
                             <td></td>
                             <td><span class="placeholder col-8 rounded"></span></td>
                             <td><span class="placeholder col-6 rounded"></span></td>
                             <td><span class="placeholder col-5 rounded"></span></td>
-                            <td><span class="placeholder col-7 rounded"></span></td>
                         </tr>
                     }
                     </tbody>
                 </table>
             </div>
         </div>
-    </div>
 </section>
 
 <script>

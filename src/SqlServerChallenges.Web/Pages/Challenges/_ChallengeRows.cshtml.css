@@ -3,6 +3,7 @@
     width: 3.25rem;
     color: #6d7790;
     font-size: 0.84rem;
+
 }
 
 .challenges-page__status {
@@ -77,4 +78,47 @@
     width: 5rem;
     color: #7e88a4;
     font-size: 0.86rem;
+}
+
+tr:hover {
+    background: rgba(255, 255, 255, 0.02);
+}
+
+td:first-child {
+    border-radius: var(--radius-lg) 0 0 var(--radius-lg);
+}
+
+td:last-child {
+    border-radius: 0 var(--radius-lg) var(--radius-lg) 0;
+}
+
+tr[aria-expanded="true"] {
+    background: #13161E;
+
+    td:first-child {
+        border-radius: var(--radius-lg) 0 0 0;
+    }
+
+    td:last-child {
+        border-radius: 0 var(--radius-lg) 0 0;
+    }
+
+    .bi-chevron-right {
+        display: inline-block;
+        transition: transform 0.3s ease;
+        transform: rotate(180deg)
+    }
+}
+
+tr[aria-expanded="true"] + tr {
+    background: #13161E;
+    
+    td:first-child {
+        border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+    }
+}
+
+tr[aria-expanded="false"] .bi-chevron-right {
+    display: inline-block;
+    transition: transform 0.3s ease;
 }

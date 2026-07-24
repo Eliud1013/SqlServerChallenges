@@ -46,11 +46,9 @@
 }
 
 
-
 .challenges-page__search,
 .challenges-page__select,
-.challenges-page__segmented,
-.challenges-page__table-shell {
+.challenges-page__segmented {
     border: 1px solid rgba(255, 255, 255, 0.08);
     background: linear-gradient(180deg, rgba(255, 255, 255, 0.025), rgba(255, 255, 255, 0.01)),
     rgba(17, 21, 32, 0.92);
@@ -88,7 +86,6 @@
     border: 0;
     outline: 0;
     background: transparent;
-    color: var(--fg-default);
 }
 
 .challenges-page__search input::placeholder {
@@ -126,56 +123,20 @@
     color: #d8def0;
 }
 
-.challenges-page__table-shell {
-    overflow: hidden;
-    border-radius: 12px;
-    background: rgba(11, 14, 23, 0.9);
-}
 
-.challenges-page__table {
-    width: 100%;
-    min-width: 0;
-    --bs-table-bg: transparent;
-    --bs-table-color: #dde4f0;
-    --bs-table-border-color: rgba(255, 255, 255, 0.05);
-    --bs-table-striped-bg: rgba(255, 255, 255, 0.015);
-    --bs-table-striped-color: #dde4f0;
-    --bs-table-hover-bg: rgba(255, 255, 255, 0.03);
-    --bs-table-hover-color: #f3f6ff;
-    background-color: transparent !important;
-    color: #dde4f0;
-}
-
-.challenges-page__table thead,
-.challenges-page__table tbody,
-.challenges-page__table tr,
-.challenges-page__table th,
-.challenges-page__table td {
+.table td {
+    border-style: none;
     background-color: transparent !important;
 }
 
-.challenges-page__table thead th {
-    padding-top: 0.9rem;
-    padding-bottom: 0.9rem;
-    color: #72809c;
-    font-size: 0.66rem;
-    font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: 0.28em;
-    border-bottom-color: rgba(255, 255, 255, 0.06);
-}
 
-.challenges-page__table tbody td {
+.table tbody td {
     padding-top: 1rem;
     padding-bottom: 1rem;
     border-color: rgba(255, 255, 255, 0.05);
 }
 
-.challenges-page__table tbody tr:hover > * {
-    background-color: rgba(255, 255, 255, 0.03) !important;
-}
-
-.challenges-page__table > thead th:first-child {
+.table > thead th:first-child {
     text-align: center;
 }
 
@@ -190,7 +151,6 @@
         padding-top: 0;
     }
     
-
     .challenges-page__stats {
         font-size: 0.88rem;
     }
