@@ -29,11 +29,11 @@ public class Index : PageModel
 
     public async Task OnGet()
     {
-        /*var request = new ListChallengesQuery(null, null, null);
+        var request = new ListChallengesQuery(null, null, null);
         var result = await Sender.Send(request);
 
         Challenges = result.Value;
-        Categories = await _dbContext.Categories.OrderBy(c => c.Name).Select(c => c.Name).ToListAsync();*/
+        Categories = await _dbContext.Categories.OrderBy(c => c.Name).Select(c => c.Name).ToListAsync();
     }
 
     public async Task<IActionResult> OnGetUpdateList(string? Title, string? CategoryName,

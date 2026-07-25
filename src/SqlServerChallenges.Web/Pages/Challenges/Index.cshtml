@@ -38,7 +38,7 @@
                            id="filter-title"
                            hx-get="?handler=UpdateList"
                            hx-trigger="keyup changed delay:400ms"
-                           hx-target="#table-body"
+                           hx-target="#challengesAccordion"
                            hx-include="#filter-category, #filter-difficulty"
                            placeholder="Search challenges..." aria-label="Search challenges"/>
                 </label>
@@ -52,7 +52,7 @@
                             onclick="document.getElementById('filter-difficulty').value = ''"
                             class="challenges-page__segmented-item is-active"
                             hx-get="?handler=UpdateList"
-                            hx-target="#table-body"
+                            hx-target="#challengesAccordion"
                             hx-include="#filter-title, #filter-category, #filter-difficulty"
                             aria-pressed="true">All
                     </button>
@@ -61,7 +61,7 @@
                             onclick="document.getElementById('filter-difficulty').value = '@ChallengeDifficulty.Easy'"
                             class="challenges-page__segmented-item"
                             hx-get="?handler=UpdateList"
-                            hx-target="#table-body"
+                            hx-target="#challengesAccordion"
                             hx-include="#filter-title, #filter-category, #filter-difficulty">Easy
                     </button>
 
@@ -69,7 +69,7 @@
                             onclick="document.getElementById('filter-difficulty').value = '@ChallengeDifficulty.Medium'"
                             class="challenges-page__segmented-item"
                             hx-get="?handler=UpdateList"
-                            hx-target="#table-body"
+                            hx-target="#challengesAccordion"
                             hx-include="#filter-title, #filter-category, #filter-difficulty">Medium
                     </button>
 
@@ -77,7 +77,7 @@
                             onclick="document.getElementById('filter-difficulty').value = '@ChallengeDifficulty.Hard'"
                             class="challenges-page__segmented-item"
                             hx-get="?handler=UpdateList"
-                            hx-target="#table-body"
+                            hx-target="#challengesAccordion"
                             hx-include="#filter-title, #filter-category, #filter-difficulty">Hard
                     </button>
                 </div>
@@ -90,7 +90,7 @@
                         aria-label="Category filter"
                         hx-get="?handler=UpdateList"
                         hx-trigger="change"
-                        hx-target="#table-body"
+                        hx-target="#challengesAccordion"
                         hx-include="#filter-title, #filter-difficulty">
                     <option value="">Category: All</option>
                     @foreach (var category in Model.Categories)
@@ -108,7 +108,6 @@
                            hx-include="#filter-title, #filter-category, #filter-difficulty"
                            hx-target="this"
                            hx-swap="innerHTML">
-                    @await Html.PartialAsync("_ChallengeRows", Model.Challenges)
 
                     @for (int i = 0; i < 7; i++)
                     {
