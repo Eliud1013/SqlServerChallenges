@@ -124,20 +124,16 @@
 }
 
 
-.table td {
+.challenges-page__table.table td {
     border-style: none;
     background-color: transparent !important;
 }
 
 
-.table tbody td {
+.challenges-page__table.table tbody td {
     padding-top: 1rem;
     padding-bottom: 1rem;
     border-color: rgba(255, 255, 255, 0.05);
-}
-
-.table > thead th:first-child {
-    text-align: center;
 }
 
 @media (max-width: 992px) {

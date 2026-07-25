@@ -41,11 +41,11 @@ tr:hover {
     background: rgba(255, 255, 255, 0.02);
 }
 
-td:first-child {
+tr[data-bs-toggle="collapse"] > td:first-child {
     border-radius: var(--radius-lg) 0 0 var(--radius-lg);
 }
 
-td:last-child {
+tr[data-bs-toggle="collapse"] > td:last-child {
     border-radius: 0 var(--radius-lg) var(--radius-lg) 0;
 }
 
@@ -69,8 +69,8 @@ tr[aria-expanded="true"] {
 
 tr[aria-expanded="true"] + tr {
     background: #13161E;
-    
-    td:first-child {
+
+    & > td:first-child {
         border-radius: 0 0 var(--radius-lg) var(--radius-lg);
     }
 }
