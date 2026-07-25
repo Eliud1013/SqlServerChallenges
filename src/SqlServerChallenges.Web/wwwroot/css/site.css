@@ -1,3 +1,28 @@
+@layer base {
+    * {
+        scrollbar-width: thin;
+        scrollbar-color: var(--bg-hover) var(--bg-surface);
+    }
+
+    *::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+    }
+
+    *::-webkit-scrollbar-track {
+        background: var(--bg-surface);
+    }
+
+    *::-webkit-scrollbar-thumb {
+        background-color: var(--bg-hover);
+        border-radius: var(--radius-md);
+        border: 2px solid var(--bg-surface);
+    }
+
+    *::-webkit-scrollbar-thumb:hover {
+        background-color: var(--clr-secondary);
+    }
+}
 @layer components {
     .challenges__badge {
         display: inline-block;
