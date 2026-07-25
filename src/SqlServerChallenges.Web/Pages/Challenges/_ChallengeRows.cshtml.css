@@ -32,7 +32,7 @@
 }
 
 .challenges-page__title-cell {
-    font-size: 0.99rem;
+    font-size: 0.875rem;
     font-weight: 500;
     color: #edf2ff;
 }
@@ -63,7 +63,7 @@ tr[aria-expanded="true"] {
     .bi-chevron-right {
         display: inline-block;
         transition: transform 0.3s ease;
-        transform: rotate(180deg)
+        transform: rotate(90deg)
     }
 }
 
@@ -109,4 +109,22 @@ tr[aria-expanded="false"] .bi-chevron-right {
     text-align: start;
     white-space: nowrap;
 
+}
+
+.accordion-collapse {
+    opacity: 0;
+    transform: translateY(-8px);
+    transition: opacity 0.15s ease-in-out, transform 0.15s ease-in-out;
+}
+
+
+.accordion-collapse.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.accordion-collapse.collapsing {
+    opacity: 0;
+    transform: translateY(-8px);
+    transition: height 0.15s ease, opacity 0.15s ease-in-out, transform 0.15s ease-in-out;
 }

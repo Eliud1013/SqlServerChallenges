@@ -9,7 +9,7 @@
     }
 
     .challenges__badge--category {
-        color: #7f8aa9;
+        color: var(--clr-secondary);
         background: rgba(49, 61, 88, 0.48);
         border: 1px solid rgba(112, 126, 154, 0.14);
         text-transform: uppercase;
