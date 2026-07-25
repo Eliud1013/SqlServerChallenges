@@ -25,13 +25,13 @@
             </span>
         </td>
         <td class="challenges-page__title-cell">@challenge.Title</td>
-        <td>
+        <td class="ps-5">
             <span
-                class="badge rounded-2 challenges-page__badge align-middle challenges-page__badge--category">@challenge.Category</span>
+                class="challenges__badge challenges__badge--category">@challenge.Category</span>
         </td>
         <td>
                 <span
-                    class="badge rounded-3 challenges-page__badge challenges-page__badge--difficulty challenges-page__badge--@challenge.Difficulty.ToString().ToLower()">@challenge.Difficulty</span>
+                    class="challenges__badge challenge__badge--@challenge.Difficulty.ToString().ToLower()">@challenge.Difficulty</span>
         </td>
         <td>
             <i class="bi bi-chevron-right text-secondary"></i>
