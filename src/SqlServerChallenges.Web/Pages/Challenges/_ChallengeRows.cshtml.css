@@ -79,3 +79,34 @@ tr[aria-expanded="false"] .bi-chevron-right {
     display: inline-block;
     transition: transform 0.3s ease;
 }
+
+.text-body-tertiary {
+    color: rgba(230, 233, 242, 0.8) !important;
+}
+
+.challenge__result-table {
+    background-color: var(--bg-surface);
+    border: 1px solid rgba(255, 255, 255, 0.06)
+}
+
+.challenge__result-table th {
+    padding: 8px 16px;
+    font-size: 0.68rem;
+    color: color-mix(in srgb, var(--clr-primary) 85%, transparent);
+    font-weight: 600;
+    text-align: start;
+    background: transparent;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    white-space: nowrap;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.challenge__result-table td {
+    padding: 8px 16px;
+    font-size: 0.68rem;
+    color: var(--clr-secondary);
+    text-align: start;
+    white-space: nowrap;
+
+}

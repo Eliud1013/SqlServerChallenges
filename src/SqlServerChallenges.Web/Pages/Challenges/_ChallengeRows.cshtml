@@ -42,12 +42,52 @@
         <td colspan="6" class="p-0 border-0">
             <div id="collapse-@challenge.Id" class="accordion-collapse collapse" data-bs-parent="#challengesAccordion">
                 <hr class="text-secondary p-0 m-0"/>
-                <div class="p-4 rounded-bottom d-flex justify-content-between">
-                    <div class="d-flex flex-column gap-2">
-                        Title
+                <div class="p-4">
+                    <div class="row g-4">
+                        <div class="col-12 col-md-7">
+                            <p class="text-secondary fw-bold font-monospace text-uppercase mb-2" style="letter-spacing:0.08rem; font-size: 0.84rem">Description</p>
+                            <p class="text-muted pe-sm-5 mb-0">Write a query in SQL to find the email addresses of employees and groups them by city. Return top ten rows.</p>
+                        </div>
+                        <div class="col-12 col-md-5">
+                            <div class="d-flex align-items-center gap-2 mb-3">
+                                <span class="text-secondary fw-bold" style="font-size:0.81rem">Acceptance rate</span>
+                                <span class="font-monospace fw-medium @(challenge.Acceptance >= 60 ? "text-success" : challenge.Acceptance >= 40 ? "text-warning" : "text-danger")" style="font-size:13px">@challenge.Acceptance%</span>
+                            </div>
+                            <div class="challenge__result-table p-3 rounded-3">
+                                <p class="text-secondary font-monospace text-uppercase mb-2" style="font-size: 0.73rem">Expected output</p>
+                                <hr class="text-secondary py-1 m-0"/>
+                                <div style="overflow-x:auto">
+                                    
+                                    <div class="table-responsive">
+                                        <table class="table table-sm table-borderless">
+                                            <thead>
+                                            <tr>
+                                                <th>City</th>
+                                                <th>Email</th>
+                                                <th>IsVirgin</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr>
+                                                <td>New York</td>
+                                                <td>test@mail.com</td>
+                                                <td>Yes</td>
+                                            </tr>
+                                            
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="d-flex flex-column gap-2">
-                        <p>meta</p>
+                    <div class="d-flex justify-content-end mt-3 pt-3" style="border-top:1px solid rgba(255,255,255,0.06)">
+                        <a class="btn btn-primary btn-glow d-inline-flex align-items-center gap-2 px-4 py-2"
+                           asp-page="/Challenges/Detail"
+                           asp-route-id="@challenge.Id">
+                            <i class="bi bi-play-fill"></i> Solve challenge <i class="bi bi-chevron-right"></i>
+                        </a>
                     </div>
                 </div>
             </div>
