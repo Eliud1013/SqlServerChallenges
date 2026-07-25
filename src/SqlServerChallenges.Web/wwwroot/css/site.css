@@ -40,6 +40,7 @@
         --clr-primary-rgb: 0, 211, 159;
 
         --clr-body: #E6E9F2;
+        --clr-body-contrast: #0B0E17;
         --clr-body-rgb: 230, 233, 242;
         --clr-body-bg: #0B0E17;
         --clr-body-bg-rgb: 11, 14, 23;
@@ -92,4 +93,17 @@
     --bs-border-radius-lg: var(--radius-lg);
     --bs-border-radius-xl: var(--radius-xl);
 
+}
+
+.btn-primary {
+    --bs-btn-color: var(--clr-body-contrast);
+    --bs-btn-font-weight: 600;
+    --bs-btn-bg: var(--clr-primary);
+    --bs-btn-border-color: var(--clr-primary);
+    
+    --bs-btn-hover-color: var(--clr-body-contrast);
+    --bs-btn-hover-bg: #00b88a;
+    --bs-btn-hover-border-color: #00b88a;
+    --bs-btn-active-bg: #009e76;
+    --bs-btn-active-border-color: #009e76;
 }
