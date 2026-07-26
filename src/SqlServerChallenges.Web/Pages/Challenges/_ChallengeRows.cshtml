@@ -40,61 +40,76 @@
 
     <tr>
         <td colspan="6" class="p-0 border-0">
-            <div id="collapse-@challenge.Id" class="accordion-collapse collapse" data-bs-parent="#challengesAccordion">
-                <hr class="text-secondary p-0 m-0"/>
+            <div id="collapse-@challenge.Id" data-challenge-category="@challenge.Category"
+                 class="accordion-collapse collapse" data-bs-parent="#challengesAccordion">
+                <hr class="text-secondary p-0 m-0" style="color: rgba(255,255,255,0.06);"/>
                 <div class="p-4">
-                    <div class="row g-4">
-                        <div class="col-12 col-md-7">
-                            <p class="text-secondary fw-bold font-monospace text-uppercase mb-2" style="letter-spacing:0.08rem; font-size: 0.84rem">Description</p>
-                            <p class="text-muted pe-sm-5 mb-0">Write a query in SQL to find the email addresses of employees and groups them by city. Return top ten rows.</p>
-                        </div>
-                        <div class="col-12 col-md-5">
-                            <div class="d-flex align-items-center gap-2 mb-3">
-                                <span class="text-secondary fw-bold" style="font-size:0.81rem">Acceptance rate</span>
-                                <span class="font-monospace fw-medium @(challenge.Acceptance >= 60 ? "text-success" : challenge.Acceptance >= 40 ? "text-warning" : "text-danger")" style="font-size:13px">@challenge.Acceptance%</span>
+                    <div class="row d-flex justify-content-between  g-4">
+                        <div class="col-12 col-md-6">
+                            <p class="challenges-page__section-label mb-2">Description</p>
+                            <p class="text-muted mb-3" style="font-size:0.92rem">Write a query in SQL to find the email
+                                addresses of
+                                employees and groups them by city. Return top ten rows.</p>
+
+                            <div class="d-flex align-items-center gap-2">
+                                <span class="text-secondary" style="font-size:0.81rem">Acceptance</span>
+                                <span
+                                    class="font-monospace fw-medium @(challenge.Acceptance >= 60 ? "text-success" : challenge.Acceptance >= 40 ? "text-warning" : "text-danger")"
+                                    style="font-size:13px">@challenge.Acceptance%</span>
                             </div>
-                            <div class="challenge__result-table p-3 rounded-3">
-                                <p class="text-secondary font-monospace text-uppercase mb-2" style="font-size: 0.73rem">Expected output</p>
-                                <hr class="text-secondary py-1 m-0"/>
-                                <div style="overflow-x:auto">
-                                    
-                                    <div class="table-responsive">
-                                        <table class="table table-sm table-borderless">
-                                            <thead>
-                                            <tr>
-                                                <th>City</th>
-                                                <th>Email</th>
-                                                <th>IsVirgin</th>
-                                                <th>IsVirgin</th>
-                                                <th>IsVirgin</th>
-                                                <th>IsVirgin</th>
-                                                <th>IsVirgin</th>
-                                                <th>IsVirgin</th>
-                                                <th>IsVirgin</th>
-                                            </tr>
-                                            </thead>
-                                            <tbody>
-                                            <tr>
-                                                <td>New York</td>
-                                                <td>test@mail.com</td>
-                                                <td>Yes</td>
-                                                <td>Yes</td>
-                                                <td>Yes</td>
-                                                <td>Yes</td>
-                                                <td>Yes</td>
-                                                <td>Yes</td>
-                                                <td>Yes</td>
-                                            </tr>
-                                            
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                    
+                        </div>
+
+                        <div class="col-12 col-md-5">
+                            <div class="challenges-page__codebox card overflow-hidden">
+                                <div class="challenges-page__codebox-header d-flex align-items-center gap-2 py-1 px-3">
+                                    <i class="bi bi-terminal text-secondary"></i>
+                                    <span class="font-monospace text-secondary" style="font-size: 0.69rem">T-SQL</span>
+                                    <span
+                                        class="challenges-page__codebox-badge ms-auto d-none align-items-center gap-1 font-monospace text-primary"
+                                        style="font-size: 0.63rem">
+                                        <i class="bi bi-check-circle"></i> executed
+                                    </span>
+                                </div>
+                                <pre
+                                    class="challenges-page__codebox-body card-body m-0 font-monospace p-3 text-secondary"
+                                    style="font-size: 0.78rem"><code>&gt;&gt;</code></pre>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-none challenges-page__expected-output mt-4 w-75 mx-auto">
+                        <p class="challenges-page__section-label mb-2 mt-4 text-center">Sample output</p>
+                        <div class="challenge__result-table p-3 rounded-3">
+                            <div style="overflow-x:auto">
+                                <div class="table-responsive">
+                                    <table class="table table-sm table-borderless mb-0">
+                                        <thead>
+                                        <tr>
+                                            <th>City</th>
+                                            <th>Email</th>
+                                            <th>IsVirgin</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr>
+                                            <td>New York</td>
+                                            <td>test@mail.com</td>
+                                            <td>Yes</td>
+                                        </tr>
+                                        <tr>
+                                            <td>New York</td>
+                                            <td>test@mail.com</td>
+                                            <td>Yes</td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="d-flex justify-content-end mt-3 pt-3" style="border-top:1px solid rgba(255,255,255,0.06)">
+
+                    <div class="d-flex justify-content-end mt-4 pt-3"
+                         style="border-top: 1px solid rgba(255,255,255,0.06)">
                         <a class="btn btn-primary btn-glow d-inline-flex align-items-center gap-2 px-4 py-2"
                            asp-page="/Challenges/Detail"
                            asp-route-id="@challenge.Id">
@@ -106,3 +121,121 @@
         </td>
     </tr>
 }
+
+<script>
+    if (!window.__codeboxInit) {
+        window.__codeboxInit = true;
+
+        const GENERIC_QUERIES = {
+            "Basic Queries": "SELECT ****\nFROM   ****\nWHERE  ****",
+            "Joins": "SELECT ****, ****\nFROM   ****\nJOIN   **** ON ****\nWHERE  ****",
+            "Aggregation": "SELECT ****, COUNT(*)\nFROM   ****\nGROUP BY ****\nHAVING ****",
+            "CTEs": "WITH cte AS (\n  SELECT ****\n  FROM   ****\n)\nSELECT ****\nFROM   cte",
+            "Window Functions": "SELECT ****, ****() OVER (\n  PARTITION BY ****\n  ORDER BY ****\n) FROM ****",
+            "Data Manipulation": "UPDATE ****\nSET    **** = ****\nFROM   ****\nJOIN   **** ON ****"
+        };
+
+        const typingTimers = {};
+
+        function startTyping(collapseId, codeEl, query) {
+            if (!codeEl || !query) return;
+            if (typingTimers[collapseId]) {
+                clearTimeout(typingTimers[collapseId]);
+            }
+
+            let i = 0;
+            const cursor = '<span class="challenges-page__codebox-cursor text-primary">&gt;&gt;</span>';
+            codeEl.style.height = '120px';
+
+            function typeNext() {
+                if (i < query.length) {
+                    var typed = query.substring(0, i + 1).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\n/g, '<br>');
+                    codeEl.innerHTML = cursor + ' ' + typed;
+                    i++;
+
+                    var ch = query[i - 1];
+                    var delay = ch === '\n' ? 100
+                        : ch === ' ' ? 20
+                            : ch === '*' ? 50
+                                : 25;
+
+                    typingTimers[collapseId] = setTimeout(typeNext, delay);
+                } else {
+                    delete typingTimers[collapseId];
+                    var codebox = codeEl.closest('.challenges-page__codebox');
+                    if (codebox) {
+                        codebox.classList.add('challenges-page__codebox--flash');
+                        var badge = codebox.querySelector('.challenges-page__codebox-badge');
+                        if (badge) {
+                            badge.classList.remove('d-none');
+                            badge.classList.add('d-flex');
+                        }
+                        setTimeout(function () {
+                            codeEl.style.transition = 'opacity 0.2s ease, height 0.2s ease';
+                            codeEl.style.opacity = '0';
+                            setTimeout(function () {
+                                codeEl.innerHTML = '<span class="challenges-page__codebox-cursor text-primary">&gt;&gt;</span>';
+                                codeEl.style.height = '32px';
+                                codeEl.style.opacity = '1';
+                                setTimeout(function () {
+                                    codeEl.style.transition = '';
+                                }, 200);
+                            }, 200);
+                        }, 500);
+                    }
+                    var collapse = codeEl.closest('.accordion-collapse');
+                    if (collapse) {
+                        var output = collapse.querySelector('.challenges-page__expected-output');
+                        if (output) {
+                            output.classList.remove('d-none');
+                            requestAnimationFrame(function () {
+                                output.classList.add('challenges-page__codebox--output');
+                            });
+                        }
+                    }
+                }
+            }
+
+            typingTimers[collapseId] = setTimeout(typeNext, 300);
+        }
+
+        function resetCodebox(collapseId, collapseEl) {
+            if (typingTimers[collapseId]) {
+                clearTimeout(typingTimers[collapseId]);
+                delete typingTimers[collapseId];
+            }
+            var codeEl = collapseEl.querySelector('.challenges-page__codebox-body code');
+            if (codeEl) {
+                codeEl.innerHTML = '<span class="challenges-page__codebox-cursor text-primary">&gt;&gt;</span>';
+            }
+            var codebox = collapseEl.querySelector('.challenges-page__codebox');
+            if (codebox) {
+                codebox.classList.remove('challenges-page__codebox--flash');
+                var badge = codebox.querySelector('.challenges-page__codebox-badge');
+                if (badge) {
+                    badge.classList.add('d-none');
+                    badge.classList.remove('d-flex');
+                }
+            }
+            var output = collapseEl.querySelector('.challenges-page__expected-output');
+            if (output) {
+                output.classList.add('d-none');
+                output.classList.remove('challenges-page__codebox--output');
+            }
+        }
+
+        document.getElementById('challengesAccordion').addEventListener('shown.bs.collapse', function (e) {
+            var collapseEl = e.target;
+            var collapseId = collapseEl.id;
+            var category = collapseEl.dataset.challengeCategory;
+            var query = GENERIC_QUERIES[category];
+            var codeEl = collapseEl.querySelector('.challenges-page__codebox-body code');
+            startTyping(collapseId, codeEl, query);
+        });
+
+        document.getElementById('challengesAccordion').addEventListener('hidden.bs.collapse', function (e) {
+            var collapseEl = e.target;
+            resetCodebox(collapseEl.id, collapseEl);
+        });
+    }
+</script>
