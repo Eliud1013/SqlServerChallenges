@@ -70,9 +70,15 @@ public class MsSqlQueryExecutorTests : BaseIntegrationTest
         result.IsSuccess.Should().BeTrue();
         result.Rows.Count.Should().Be(1);
         var row = result.Rows[0];
+        var columns = result.Columns;
+        
         row["Title"].Should().Be("Basic SELECT");
         row["TaskDescription"].Should().Be("Write a SELECT query");
         row["Difficulty"].Should().Be(nameof(ChallengeDifficulty.Easy));
+        columns.Should().Contain("Title");
+        columns.Should().Contain("TaskDescription");
+        columns.Should().Contain("Difficulty");
+        columns.Count.Should().Be(7);
     }
 
     [Fact]

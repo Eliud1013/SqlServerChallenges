@@ -27,7 +27,8 @@ public class RunUserSqlHandler : ICommandHandler<RunUserSqlCommand, QueryExecuto
         _syntaxCheckerDispatcher = syntaxCheckerDispatcher;
     }
 
-    public async Task<Result<QueryExecutorResult>> Handle(RunUserSqlCommand request, CancellationToken cancellationToken)
+    public async Task<Result<QueryExecutorResult>> Handle(RunUserSqlCommand request,
+        CancellationToken cancellationToken)
     {
         var challenge = await _dbContext.Challenges
             .FirstOrDefaultAsync(c => c.Id == request.ChallengeId, cancellationToken);
@@ -43,7 +44,7 @@ public class RunUserSqlHandler : ICommandHandler<RunUserSqlCommand, QueryExecuto
         if (syntaxValidationResult.IsInvalid)
             return SubmissionErrors.SyntaxError(syntaxValidationResult.Errors);
 
-        var queryResult = await _queryExecutorDispatcher.ExecuteQueryAsync(userQuery, provider, cancellationToken);
+        var queryResult = await _queryExecutorDispatcher.ExecuteQueryAsync(userQuery, provider, ct: cancellationToken);
 
         return queryResult;
     }

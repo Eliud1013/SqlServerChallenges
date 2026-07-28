@@ -20,7 +20,7 @@ public static class DependencyInjection
         });
 
         services.AddScoped<SqlConnection>(_
-            => new SqlConnection(configuration.GetConnectionString("AdventureWorks"))
+            => new SqlConnection(configuration.GetConnectionString("AdventureWorksConnection"))
         );
 
         services.AddMediatR(options =>
