@@ -47,9 +47,7 @@
                     <div class="row d-flex justify-content-between  g-4">
                         <div class="col-12 col-md-6">
                             <p class="challenges-page__section-label mb-2">Description</p>
-                            <p class="text-muted mb-3" style="font-size:0.92rem">Write a query in SQL to find the email
-                                addresses of
-                                employees and groups them by city. Return top ten rows.</p>
+                            <p class="text-muted mb-3" style="font-size:0.92rem">@challenge.Description</p>
 
                             <div class="d-flex align-items-center gap-2">
                                 <span class="text-secondary" style="font-size:0.81rem">Acceptance</span>
@@ -77,32 +75,16 @@
                         </div>
                     </div>
 
-                    <div class="d-none challenges-page__expected-output mt-4 w-75 mx-auto">
+                    <div class="d-none challenges-page__expected-output mt-4 mx-auto"
+                         hx-get="?handler=SampleOutput&challengeId=@challenge.Id"
+                         hx-trigger="revealed"
+                         hx-target="find .table-responsive"
+                         hx-swap="innerHTML">
                         <p class="challenges-page__section-label mb-2 mt-4 text-center">Sample output</p>
-                        <div class="challenge__result-table p-3 rounded-3">
+                        <div class="challenge__result-table p-3 rounded-3 mx-auto overflow-hidden" style="max-width: 540px">
                             <div style="overflow-x:auto">
                                 <div class="table-responsive">
-                                    <table class="table table-sm table-borderless mb-0">
-                                        <thead>
-                                        <tr>
-                                            <th>City</th>
-                                            <th>Email</th>
-                                            <th>IsVirgin</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        <tr>
-                                            <td>New York</td>
-                                            <td>test@mail.com</td>
-                                            <td>Yes</td>
-                                        </tr>
-                                        <tr>
-                                            <td>New York</td>
-                                            <td>test@mail.com</td>
-                                            <td>Yes</td>
-                                        </tr>
-                                        </tbody>
-                                    </table>
+                                  
                                 </div>
                             </div>
                         </div>

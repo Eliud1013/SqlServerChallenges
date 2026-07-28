@@ -4,18 +4,19 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using SqlServerChallenges.Core.Data;
 using SqlServerChallenges.Core.Data.Entities.Challenges;
+using SqlServerChallenges.Core.Features.Challenges.GetSolution;
 using SqlServerChallenges.Core.Features.Challenges.ListChallenges;
 
 namespace SqlServerChallenges.Web.Pages.Challenges.ListChallenges;
 
 public class Index : PageModel
 {
-    private readonly ISender Sender;
+    private readonly ISender _sender;
     private readonly ApplicationDbContext _dbContext;
 
     public Index(ISender sender, ApplicationDbContext dbContext)
     {
-        Sender = sender;
+        _sender = sender;
         _dbContext = dbContext;
     }
 
@@ -30,7 +31,7 @@ public class Index : PageModel
     public async Task OnGet()
     {
         var request = new ListChallengesQuery(null, null, null);
-        var result = await Sender.Send(request);
+        var result = await _sender.Send(request);
 
         Challenges = result.Value;
         Categories = await _dbContext.Categories.OrderBy(c => c.Name).Select(c => c.Name).ToListAsync();
@@ -40,8 +41,15 @@ public class Index : PageModel
         ChallengeDifficulty? Difficulty)
     {
         var request = new ListChallengesQuery(Title, CategoryName, Difficulty);
-        var result = await Sender.Send(request);
+        var result = await _sender.Send(request);
         
         return Partial("_ChallengeRows", result.Value);
+    }
+
+    public async Task<IActionResult> OnGetSampleOutput(Guid ChallengeId)
+    {
+        var result = await _sender.Send(new GetSolutionSampleQuery(ChallengeId));
+        
+        return Partial("_SampleOutput", result);
     }
 }

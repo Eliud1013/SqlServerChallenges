@@ -4,6 +4,9 @@
       <Content Include="..\..\.dockerignore">
         <Link>.dockerignore</Link>
       </Content>
+      <Content Update="Pages\Challenges\_SampleOutput.cshtml">
+        <DependentUpon>_ChallengeRows.cshtml</DependentUpon>
+      </Content>
     </ItemGroup>
     
     <ItemGroup>

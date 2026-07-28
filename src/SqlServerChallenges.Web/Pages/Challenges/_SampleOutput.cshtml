@@ -1,0 +1,36 @@
+@using SqlServerChallenges.Core.Features.Challenges.GetSolution;
+@using SqlServerChallenges.Core.Common.Results;
+@model Result<SampleOutput>
+
+@{
+    SampleOutput? queryResult = Model.Failed ? null : Model.Value;
+}
+
+@if (queryResult == null)
+{
+    <p class="text-muted font-monospace" style="font-size: 0.75rem">Sample not available</p>
+    return;
+}
+
+<table class="table table-sm table-borderless mb-0">
+
+    <thead>
+    <tr>
+        @foreach (var column in queryResult.Columns)
+        {
+            <th>@column</th>
+        }
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var row in queryResult.Rows)
+    {
+        <tr>
+            @foreach (var cell in row.Values)
+            {
+                <td>@(string.IsNullOrEmpty(cell?.ToString()) ? "-" : cell)</td>
+            }
+        </tr>
+    }
+    </tbody>
+</table>
