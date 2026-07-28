@@ -54,6 +54,14 @@ public static class SeedData
                 CategoryId = categories["Basic Queries"].Id,
                 CreatedAt = DateTime.UtcNow,
                 UpdatedAt = DateTime.UtcNow,
+                Solutions = new List<ChallengeSolution>
+                {
+                    new()
+                    {
+                        DatabaseProvider = DatabaseProvider.SqlServer,
+                        SolutionSql = "SELECT * FROM Person.Person;"
+                    }
+                }
             },
             new()
             {
