@@ -28,7 +28,20 @@
         <tr>
             @foreach (var cell in row.Values)
             {
-                <td>@(string.IsNullOrEmpty(cell?.ToString()) ? "-" : cell)</td>
+                string? cellValue = cell?.ToString();
+
+                if (string.IsNullOrEmpty(cellValue))
+                {
+                    <td>-</td>
+                }
+                else if (cellValue?.Length > 20)
+                {
+                    <td>@cellValue.Substring(0, 20)...</td>
+                }
+                else
+                {
+                    <td>@cellValue</td>
+                }
             }
         </tr>
     }
