@@ -1,8 +1,11 @@
 using System.Data;
+using MediatR;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using SqlServerChallenges.Core.Behaviours;
 using SqlServerChallenges.Core.Data;
 using SqlServerChallenges.Core.Services;
 using SqlServerChallenges.Core.Services.SqlExecutor;
@@ -26,7 +29,11 @@ public static class DependencyInjection
         services.AddMediatR(options =>
         {
             options.RegisterServicesFromAssembly(typeof(DependencyInjection).Assembly);
+            options.AddOpenBehavior(typeof(CacheableQueryBehavior<,>));
         });
+
+        services.AddMemoryCache();
+        services.AddTransient(typeof(IPipelineBehavior<,>), typeof(CacheableQueryBehavior<,>));
 
         services.AddSingleton<MsSqlQuerySyntaxChecker>();
 
