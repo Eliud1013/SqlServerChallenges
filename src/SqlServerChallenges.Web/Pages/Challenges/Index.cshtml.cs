@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using SqlServerChallenges.Core.Data;
 using SqlServerChallenges.Core.Data.Entities.Challenges;
-using SqlServerChallenges.Core.Features.Challenges.GetSolution;
+using SqlServerChallenges.Core.Features.Challenges.GetSolutionSample;
 using SqlServerChallenges.Core.Features.Challenges.ListChallenges;
 
 namespace SqlServerChallenges.Web.Pages.Challenges.ListChallenges;

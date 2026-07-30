@@ -2,7 +2,7 @@ using SqlServerChallenges.Core.Common.Cache;
 using SqlServerChallenges.Core.Common.CQRS.Query;
 using SqlServerChallenges.Core.Services.SqlExecutor;
 
-namespace SqlServerChallenges.Core.Features.Challenges.GetSolution;
+namespace SqlServerChallenges.Core.Features.Challenges.GetSolutionSample;
 
 public sealed record GetSolutionSampleQuery(Guid ChallengeId) : ICacheableQuery<SampleOutput>
 {

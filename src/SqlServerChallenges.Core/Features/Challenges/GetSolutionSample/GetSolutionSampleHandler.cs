@@ -4,7 +4,7 @@ using SqlServerChallenges.Core.Common.Results;
 using SqlServerChallenges.Core.Data;
 using SqlServerChallenges.Core.Services.SqlExecutor;
 
-namespace SqlServerChallenges.Core.Features.Challenges.GetSolution;
+namespace SqlServerChallenges.Core.Features.Challenges.GetSolutionSample;
 
 public class GetSolutionSampleHandler : IQueryHandler<GetSolutionSampleQuery, SampleOutput>
 {

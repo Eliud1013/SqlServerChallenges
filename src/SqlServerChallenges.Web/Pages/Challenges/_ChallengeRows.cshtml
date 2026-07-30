@@ -77,14 +77,13 @@
 
                     <div class="d-none challenges-page__expected-output mt-4 mx-auto"
                          hx-get="?handler=SampleOutput&challengeId=@challenge.Id"
-                         hx-trigger="revealed"
+                         hx-trigger="opened"
                          hx-target="find .table-responsive"
                          hx-swap="innerHTML">
                         <p class="challenges-page__section-label mb-2 mt-4 text-center">Sample output</p>
                         <div class="challenge__result-table p-3 rounded-3 mx-auto overflow-hidden" style="max-width: 540px">
                             <div style="overflow-x:auto">
                                 <div class="table-responsive">
-                                  
                                 </div>
                             </div>
                         </div>
@@ -212,6 +211,12 @@
             var category = collapseEl.dataset.challengeCategory;
             var query = GENERIC_QUERIES[category];
             var codeEl = collapseEl.querySelector('.challenges-page__codebox-body code');
+            
+            var output = e.target.querySelector('.challenges-page__expected-output');
+            if (output) {
+                htmx.trigger(output, 'opened');
+            }
+            
             startTyping(collapseId, codeEl, query);
         });
 

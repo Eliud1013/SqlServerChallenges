@@ -1,4 +1,4 @@
-namespace SqlServerChallenges.Core.Features.Challenges.GetSolution;
+namespace SqlServerChallenges.Core.Features.Challenges.GetSolutionSample;
 
 public record SampleOutput(
     IReadOnlyList<string> Columns,
