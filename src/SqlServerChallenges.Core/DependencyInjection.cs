@@ -8,6 +8,8 @@ using Microsoft.Extensions.DependencyInjection;
 using SqlServerChallenges.Core.Behaviours;
 using SqlServerChallenges.Core.Data;
 using SqlServerChallenges.Core.Services;
+using SqlServerChallenges.Core.Services.QueryReader;
+using SqlServerChallenges.Core.Services.QueryResultComparer;
 using SqlServerChallenges.Core.Services.SqlExecutor;
 
 namespace SqlServerChallenges.Core;
@@ -42,6 +44,11 @@ public static class DependencyInjection
 
         services.AddScoped<IQuerySyntaxChecker, MsSqlQuerySyntaxChecker>();
         services.AddScoped<SyntaxCheckerDispatcher>();
+
+        services.AddScoped<IQueryReader, MsSqlQueryReader>();
+        services.AddScoped<QueryReaderDispatcher>();
+
+        services.AddSingleton<QueryResultComparer>();
 
         return services;
     }
