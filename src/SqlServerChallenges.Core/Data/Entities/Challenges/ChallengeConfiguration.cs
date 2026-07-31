@@ -23,6 +23,9 @@ public class ChallengeConfiguration : IEntityTypeConfiguration<Challenge>
             .HasMaxLength(200)
             .IsRequired();
         
+        builder.Property(x => x.RequiresOrdering)
+            .IsRequired();
+        
         builder.Property(x => x.Difficulty)
             .HasConversion<string>()
             .IsRequired();

@@ -34,6 +34,7 @@ public class ListChallengesHandlerTests : IClassFixture<SqlServerFixture>, IAsyn
             Title = "Basic SELECT",
             TaskDescription = "Write a SELECT query",
             Difficulty = ChallengeDifficulty.Easy,
+            RequiresOrdering = false,
             CreatedAt = DateTime.UtcNow,
             UpdatedAt = DateTime.UtcNow,
             Category = new Category { Name = "Basic Queries" }
@@ -61,6 +62,7 @@ public class ListChallengesHandlerTests : IClassFixture<SqlServerFixture>, IAsyn
             Title = "Basic SELECT",
             TaskDescription = "Write a SELECT query",
             Difficulty = ChallengeDifficulty.Easy,
+            RequiresOrdering = false,
             CreatedAt = DateTime.UtcNow,
             UpdatedAt = DateTime.UtcNow,
             Category = new Category
@@ -89,6 +91,7 @@ public class ListChallengesHandlerTests : IClassFixture<SqlServerFixture>, IAsyn
             Title = "Basic SELECT",
             TaskDescription = "Write a SELECT query",
             Difficulty = ChallengeDifficulty.Easy,
+            RequiresOrdering = false,
             CreatedAt = DateTime.UtcNow,
             UpdatedAt = DateTime.UtcNow,
             Category = new Category { Name = "Basic Queries" },
@@ -121,6 +124,7 @@ public class ListChallengesHandlerTests : IClassFixture<SqlServerFixture>, IAsyn
             Title = "Basic SELECT",
             TaskDescription = "Write a SELECT query",
             Difficulty = ChallengeDifficulty.Medium,
+            RequiresOrdering = false,
             CreatedAt = DateTime.UtcNow,
             UpdatedAt = DateTime.UtcNow,
             Category = new Category { Name = "Basic Queries" },
