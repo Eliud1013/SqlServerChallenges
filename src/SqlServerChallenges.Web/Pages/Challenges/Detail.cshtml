@@ -1,0 +1,72 @@
+@page "/Challenges/{slug}"
+@model SqlServerChallenges.Web.Pages.Challenges.Detail
+@{
+    ViewData["Title"] = Model.Info.Title;
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/Challenges/Detail.css" asp-append-version="true"/>
+}
+
+<section class="position-relative w-100 px-5">
+    <div class="challenges-page__glow challenges-page__glow--left z-2" aria-hidden="true"></div>
+    <div class="challenges-page__glow challenges-page__glow--right z-2" aria-hidden="true"></div>
+
+    <div class="position-relative z-1 d-flex flex-column gap-4" style="max-width: 860px">
+        <header class="d-flex flex-column gap-2">
+            <div class="d-flex align-items-center gap-3">
+                <a asp-page="/Challenges/Index" class="challenge-detail__back">
+                    <i class="bi bi-arrow-left"></i>
+                </a>
+                <h1 class="fw-bold h2 mb-0">@Model.Info.Title</h1>
+            </div>
+
+            <div class="d-flex flex-wrap align-items-center gap-2 small">
+                <span class="challenge-detail__badge challenge-detail__badge--@Model.Info.Difficulty.ToString().ToLowerInvariant()">
+                    @Model.Info.Difficulty
+                </span>
+                <span class="challenge-detail__badge challenge-detail__badge--neutral">
+                    <i class="bi bi-tag me-1"></i>@Model.Info.Category
+                </span>
+                <span class="challenge-detail__badge challenge-detail__badge--neutral">
+                    <i class="bi bi-chat-left-text me-1"></i>@Model.State.CommentCount comments
+                </span>
+                @if (Model.State.IsSolved)
+                {
+                    <span class="challenge-detail__badge challenge-detail__badge--easy">
+                        <i class="bi bi-check-circle me-1"></i>Solved
+                    </span>
+                }
+                else
+                {
+                    <span class="challenge-detail__badge challenge-detail__badge--neutral">
+                        <i class="bi bi-circle me-1"></i>Unsolved
+                    </span>
+                }
+            </div>
+        </header>
+
+        <div class="challenge-detail__panel p-4 rounded-4">
+            <h2 class="h5 fw-semibold mb-3">
+                <i class="bi bi-file-earmark-text me-2 text-primary"></i>Description
+            </h2>
+            <p class="challenge-detail__description mb-0">@Model.Info.Description</p>
+        </div>
+
+        <div class="challenge-detail__panel p-4 rounded-4">
+            <h2 class="h5 fw-semibold mb-3">
+                <i class="bi bi-code-slash me-2 text-primary"></i>Your solution
+            </h2>
+            <div class="challenge-detail__editor rounded-3 p-3 font-monospace text-secondary"
+                 contenteditable="true" role="textbox" aria-multiline="true">
+                SELECT
+            </div>
+            <div class="d-flex justify-content-end gap-2 mt-3">
+                <button type="button" class="btn btn-outline-secondary btn-glow px-4">Run</button>
+                <button type="button" class="btn btn-primary btn-glow px-4">
+                    <i class="bi bi-check-lg me-1"></i>Submit
+                </button>
+            </div>
+        </div>
+    </div>
+</section>

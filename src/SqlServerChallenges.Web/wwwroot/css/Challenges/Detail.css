@@ -1,0 +1,98 @@
+.challenges-page__glow {
+    position: absolute;
+    pointer-events: none;
+    filter: blur(44px);
+    opacity: 0.2;
+}
+
+.challenges-page__glow--left {
+    top: -1.5rem;
+    right: 13%;
+    width: 14rem;
+    height: 14rem;
+    border-radius: 999px;
+    background: radial-gradient(circle, rgba(0, 212, 160, 0.34), rgba(0, 212, 160, 0.02) 68%, transparent 73%);
+}
+
+.challenges-page__glow--right {
+    top: 6rem;
+    right: -2rem;
+    width: 20rem;
+    height: 20rem;
+    border-radius: 999px;
+    background: radial-gradient(circle, rgba(56, 189, 248, 0.14), rgba(56, 189, 248, 0.01) 62%, transparent 74%);
+}
+
+.challenge-detail__back {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: 0.65rem;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    color: #8b97b2;
+    text-decoration: none;
+    transition: color 0.15s ease, border-color 0.15s ease;
+}
+
+.challenge-detail__back:hover {
+    color: #e9eef9;
+    border-color: rgba(49, 208, 170, 0.45);
+}
+
+.challenge-detail__badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.25rem 0.7rem;
+    border-radius: 999px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    line-height: 1.4;
+}
+
+.challenge-detail__badge--easy {
+    color: #31d0aa;
+    background: rgba(49, 208, 170, 0.12);
+}
+
+.challenge-detail__badge--medium {
+    color: #f5b942;
+    background: rgba(245, 185, 66, 0.12);
+}
+
+.challenge-detail__badge--hard {
+    color: #ff6b77;
+    background: rgba(255, 107, 119, 0.12);
+}
+
+.challenge-detail__badge--neutral {
+    color: #a9b4cc;
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.challenge-detail__panel {
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.025), rgba(255, 255, 255, 0.01)),
+    rgba(17, 21, 32, 0.92);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03),
+    0 12px 40px rgba(1, 6, 17, 0.24);
+}
+
+.challenge-detail__description {
+    color: #aeb8d0;
+    line-height: 1.7;
+}
+
+.challenge-detail__editor {
+    min-height: 10rem;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(5, 8, 14, 0.6);
+    outline: 0;
+    white-space: pre-wrap;
+}
+
+.challenge-detail__editor:focus {
+    border-color: rgba(49, 208, 170, 0.45);
+    box-shadow: 0 0 0 1px rgba(49, 208, 170, 0.12);
+}
