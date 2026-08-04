@@ -32,6 +32,7 @@ public class ListChallengesHandlerTests : IClassFixture<SqlServerFixture>, IAsyn
         {
             Id = Guid.NewGuid(),
             Title = "Basic SELECT",
+            Slug = "basic-select",
             TaskDescription = "Write a SELECT query",
             Difficulty = ChallengeDifficulty.Easy,
             RequiresOrdering = false,
@@ -60,6 +61,7 @@ public class ListChallengesHandlerTests : IClassFixture<SqlServerFixture>, IAsyn
         {
             Id = Guid.NewGuid(),
             Title = "Basic SELECT",
+            Slug = "basic-select",
             TaskDescription = "Write a SELECT query",
             Difficulty = ChallengeDifficulty.Easy,
             RequiresOrdering = false,
@@ -89,6 +91,7 @@ public class ListChallengesHandlerTests : IClassFixture<SqlServerFixture>, IAsyn
         {
             Id = Guid.NewGuid(),
             Title = "Basic SELECT",
+            Slug = "basic-select",
             TaskDescription = "Write a SELECT query",
             Difficulty = ChallengeDifficulty.Easy,
             RequiresOrdering = false,
@@ -122,6 +125,7 @@ public class ListChallengesHandlerTests : IClassFixture<SqlServerFixture>, IAsyn
         {
             Id = Guid.NewGuid(),
             Title = "Basic SELECT",
+            Slug = "basic-select",
             TaskDescription = "Write a SELECT query",
             Difficulty = ChallengeDifficulty.Medium,
             RequiresOrdering = false,

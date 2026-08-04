@@ -36,6 +36,7 @@ public class ListChallengesHandler : IQueryHandler<ListChallengesQuery, IReadOnl
         return await query.Select(challenge => new ChallengeEntry(
             Id: challenge.Id,
             Title: challenge.Title,
+            Slug: challenge.Slug,
             Description: challenge.TaskDescription,
             Category: challenge.Category.Name,
             Difficulty: challenge.Difficulty,

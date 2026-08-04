@@ -52,6 +52,7 @@ public class MsSqlQueryExecutorTests : BaseIntegrationTest
         {
             Id = Guid.NewGuid(),
             Title = "Basic SELECT",
+            Slug = "basic-select",
             TaskDescription = "Write a SELECT query",
             Difficulty = ChallengeDifficulty.Easy,
             RequiresOrdering = false,
@@ -79,7 +80,7 @@ public class MsSqlQueryExecutorTests : BaseIntegrationTest
         columns.Should().Contain("Title");
         columns.Should().Contain("TaskDescription");
         columns.Should().Contain("Difficulty");
-        columns.Count.Should().Be(8);
+        columns.Count.Should().Be(9);
     }
 
     [Fact]

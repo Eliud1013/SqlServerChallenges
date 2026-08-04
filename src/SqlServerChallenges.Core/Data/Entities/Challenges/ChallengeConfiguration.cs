@@ -19,6 +19,13 @@ public class ChallengeConfiguration : IEntityTypeConfiguration<Challenge>
             .HasMaxLength(100)
             .IsRequired();
 
+        builder.Property(x => x.Slug)
+            .HasMaxLength(120)
+            .IsRequired();
+
+        builder.HasIndex(x => x.Slug)
+            .IsUnique();
+
         builder.Property(x => x.TaskDescription)
             .HasMaxLength(200)
             .IsRequired();

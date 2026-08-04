@@ -6,6 +6,7 @@ namespace SqlServerChallenges.Core.Features.Challenges.ListChallenges;
 public sealed record ChallengeEntry(
     Guid Id,
     string Title,
+    string Slug,
     string Description,
     string Category,
     ChallengeDifficulty Difficulty,

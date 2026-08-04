@@ -8,6 +8,7 @@ public sealed class Challenge
 {
     public Guid Id { get; init; }
     public required string Title { get; init; }
+    public required string Slug { get; init; }
     public required string TaskDescription { get; init; }
     public required bool RequiresOrdering { get; init; }
     public required ChallengeDifficulty Difficulty { get; init; }

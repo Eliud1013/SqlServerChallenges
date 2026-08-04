@@ -49,25 +49,19 @@ public static class SeedData
             {
                 Id = Guid.NewGuid(),
                 Title = "SELECT All",
+                Slug = "select-all",
                 TaskDescription = "Write a query to return all columns from the Person.Person table.",
                 Difficulty = ChallengeDifficulty.Easy,
                 RequiresOrdering = false,
                 CategoryId = categories["Basic Queries"].Id,
                 CreatedAt = DateTime.UtcNow,
-                UpdatedAt = DateTime.UtcNow,
-                Solutions = new List<ChallengeSolution>
-                {
-                    new()
-                    {
-                        DatabaseProvider = DatabaseProvider.SqlServer,
-                        SolutionSql = "SELECT * FROM Person.Person;"
-                    }
-                }
+                UpdatedAt = DateTime.UtcNow
             },
             new()
             {
                 Id = Guid.NewGuid(),
                 Title = "Filter with WHERE",
+                Slug = "filter-with-where",
                 TaskDescription = "List all products from Production.Product with a ListPrice greater than 1000.",
                 Difficulty = ChallengeDifficulty.Easy,
                 RequiresOrdering = false,
@@ -79,6 +73,7 @@ public static class SeedData
             {
                 Id = Guid.NewGuid(),
                 Title = "Ordering Results",
+                Slug = "ordering-results",
                 TaskDescription = "Retrieve the top 10 most expensive products, ordered by ListPrice descending.",
                 Difficulty = ChallengeDifficulty.Easy,
                 RequiresOrdering = true,
@@ -90,6 +85,7 @@ public static class SeedData
             {
                 Id = Guid.NewGuid(),
                 Title = "INNER JOIN",
+                Slug = "inner-join",
                 TaskDescription = "Join Sales.SalesOrderHeader with Sales.SalesOrderDetail to return order dates and line totals.",
                 Difficulty = ChallengeDifficulty.Medium,
                 RequiresOrdering = false,
@@ -101,6 +97,7 @@ public static class SeedData
             {
                 Id = Guid.NewGuid(),
                 Title = "LEFT JOIN",
+                Slug = "left-join",
                 TaskDescription = "List all customers and their orders, including customers who have never placed an order.",
                 Difficulty = ChallengeDifficulty.Medium,
                 RequiresOrdering = false,
@@ -112,6 +109,7 @@ public static class SeedData
             {
                 Id = Guid.NewGuid(),
                 Title = "GROUP BY with HAVING",
+                Slug = "group-by-with-having",
                 TaskDescription = "Find product categories that have more than 100 products assigned.",
                 Difficulty = ChallengeDifficulty.Medium,
                 RequiresOrdering = false,
@@ -123,6 +121,7 @@ public static class SeedData
             {
                 Id = Guid.NewGuid(),
                 Title = "Running Total with SUM OVER",
+                Slug = "running-total-with-sum-over",
                 TaskDescription = "Calculate a running total of sales amount per day using a window function.",
                 Difficulty = ChallengeDifficulty.Hard,
                 RequiresOrdering = true,
@@ -134,6 +133,7 @@ public static class SeedData
             {
                 Id = Guid.NewGuid(),
                 Title = "Recursive CTE",
+                Slug = "recursive-cte",
                 TaskDescription = "Use a recursive CTE to generate a list of dates for the current month.",
                 Difficulty = ChallengeDifficulty.Hard,
                 RequiresOrdering = false,
@@ -145,6 +145,7 @@ public static class SeedData
             {
                 Id = Guid.NewGuid(),
                 Title = "UPDATE with JOIN",
+                Slug = "update-with-join",
                 TaskDescription = "Increase the ListPrice of all products in the 'Bikes' subcategory by 10%.",
                 Difficulty = ChallengeDifficulty.Medium,
                 RequiresOrdering = false,
@@ -156,6 +157,7 @@ public static class SeedData
             {
                 Id = Guid.NewGuid(),
                 Title = "ROW_NUMBER for Deduplication",
+                Slug = "row-number-for-deduplication",
                 TaskDescription = "Use ROW_NUMBER to identify and delete duplicate email addresses from Person.EmailAddress.",
                 Difficulty = ChallengeDifficulty.Hard,
                 RequiresOrdering = false,
