@@ -1,29 +1,17 @@
-﻿<!DOCTYPE html>
-<html lang="en" data-bs-theme="dark">
-<head>
-    <meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>@ViewData["Title"] - SqlServerChallenges.Web</title>
-    <script type="importmap"></script>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"/>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true"/>
-    <link rel="stylesheet" href="~/SqlServerChallenges.Web.styles.css" asp-append-version="true"/>
-    <link rel="stylesheet" href="~/css/Shared/_Navbar.css" asp-append-version="true"/>
+﻿@{
+    Layout = "_BaseLayout";
+}
+
+@section Styles {
     @await RenderSectionAsync("Styles", required: false)
-</head>
-<body>
+}
+
+@section Scripts {
+    @await RenderSectionAsync("Scripts", required: false)
+}
 
 <partial name="_Navbar"/>
 
-<main class="container-xl d-flex justify-content-around pt-5 px-md-5">
+<main class="container-xl d-flex justify-content-around px-md-5">
     @RenderBody()
 </main>
-<script src="~/lib/jquery/dist/jquery.min.js"></script>
-<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-<script src="~/js/site.js" asp-append-version="true"></script>
-<script src="https://unpkg.com/htmx.org@1.9.10"></script>
-
-@await RenderSectionAsync("Scripts", required: false)
-</body>
-</html>

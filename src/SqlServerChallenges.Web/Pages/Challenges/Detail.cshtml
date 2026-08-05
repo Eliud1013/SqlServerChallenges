@@ -1,6 +1,7 @@
 @page "/Challenges/{slug}"
 @model SqlServerChallenges.Web.Pages.Challenges.Detail
 @{
+    Layout = "_BaseLayout";
     ViewData["Title"] = Model.Info.Title;
 }
 
