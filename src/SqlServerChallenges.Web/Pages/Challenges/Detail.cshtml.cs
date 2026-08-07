@@ -10,9 +10,11 @@ public class Detail : PageModel
 {
     public ChallengeInfo Info { get; private set; } = null!;
     public ChallengeState State { get; private set; } = null!;
+    public string Slug { get; private set; } = null!;
 
     public IActionResult OnGet(string slug)
     {
+        Slug = slug;
         Info = new ChallengeInfo(
             "SELECT All",
             "Write a query to return all columns from the Person.Person table.",

@@ -35,9 +35,8 @@
 
     .challenges__badge--category {
         color: var(--clr-secondary);
-        background: rgba(49, 61, 88, 0.48);
-        border: 1px solid rgba(112, 126, 154, 0.14);
-        text-transform: uppercase;
+        background: #181d2e;
+        border: 1px solid rgba(255, 255, 255, 0.05);
     }
     
     .challenge__badge--easy {
@@ -57,6 +56,17 @@
         background: rgba(248, 113, 113, 0.1);
         border: 1px solid rgba(248, 113, 113, 0.2);
     }
+
+    .challenges-page__index {
+        text-align: center;
+        color: var(--clr-secondary);
+        font-family: var(--ff-mono);
+        font-size: 0.84rem;
+    }
+
+    .challenges-page__index--small {
+        font-size: 0.79rem;
+    }
 }
 
 @layer variables {
@@ -65,7 +75,7 @@
         --clr-primary-rgb: 0, 211, 159;
 
         --clr-body: #E6E9F2;
-        --clr-body-contrast: #0B0E17;
+        --clr-body-contrast: #0D0F1B;
         --clr-body-rgb: 230, 233, 242;
         --clr-body-bg: #0B0E17;
         --clr-body-bg-rgb: 11, 14, 23;

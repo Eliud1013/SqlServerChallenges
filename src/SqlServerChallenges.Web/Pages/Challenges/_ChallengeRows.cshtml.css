@@ -1,11 +1,3 @@
-.challenges-page__index {
-    text-align: center;
-    width: 3.25rem;
-    color: #6d7790;
-    font-size: 0.84rem;
-
-}
-
 .challenges-page__status {
     display: inline-flex;
     align-items: center;

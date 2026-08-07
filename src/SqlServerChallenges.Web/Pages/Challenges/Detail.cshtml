@@ -9,65 +9,283 @@
     <link rel="stylesheet" href="~/css/Challenges/Detail.css" asp-append-version="true"/>
 }
 
-<section class="position-relative w-100 px-5">
-    <div class="challenges-page__glow challenges-page__glow--left z-2" aria-hidden="true"></div>
-    <div class="challenges-page__glow challenges-page__glow--right z-2" aria-hidden="true"></div>
+<div class="challenge-detail bg-body">
+    <header class="challenge-detail__subbar d-flex w-100 px-4">
+        <a asp-page="Index" class="fw-bold fs-6 text-body link-underline link-underline-opacity-0 me-3">
+            <img src="~/img/logo.svg" alt="SqlChallenges" class="challenge-detail__logo">
+            <span>
+                Sql<span class="text-primary">Challenges</span>
+            </span>
+        </a>
 
-    <div class="position-relative z-1 d-flex flex-column gap-4" style="max-width: 860px">
-        <header class="d-flex flex-column gap-2">
-            <div class="d-flex align-items-center gap-3">
-                <a asp-page="/Challenges/Index" class="challenge-detail__back">
-                    <i class="bi bi-arrow-left"></i>
-                </a>
-                <h1 class="fw-bold h2 mb-0">@Model.Info.Title</h1>
-            </div>
+        <button class="challenge-detail__nav-arrow" title="Previous challenge">
+            <i class="bi bi-arrow-left "></i>
+        </button>
 
-            <div class="d-flex flex-wrap align-items-center gap-2 small">
-                <span class="challenge-detail__badge challenge-detail__badge--@Model.Info.Difficulty.ToString().ToLowerInvariant()">
-                    @Model.Info.Difficulty
+        <button class="challenge-detail__nav-arrow" title="Next challenge">
+            <i class="bi bi-arrow-right "></i>
+        </button>
+
+        <button class="challenge-detail__nav-arrow" title="Random challenge">
+            <i class="bi bi-shuffle "></i>
+        </button>
+        
+    </header>
+
+    <div class="challenge-detail__body">
+        <div class="d-flex flex-grow-1 flex-shrink-1 flex-row p-3" id="challenge-detail-col">
+            <aside class="challenge-detail__panel" id="challenge-detail-left">
+                <div class="challenge-detail__tabs">
+                    <button class="challenge-detail__tab is-active">Description</button>
+                    <button class="challenge-detail__tab">Schema</button>
+                    <button class="challenge-detail__tab">Comments</button>
+                </div>
+                
+                <section class="challenge-detail__tab-panel is-active" data-tab="description" role="tabpanel">
+                    <div class="d-flex align-items-center gap-2 mb-2">
+                        <span class="challenges-page__index challenges-page__index--small">#01</span>
+                        <span class="challenges__badge challenges__badge--category">@Model.Info.Category</span>
+                        <span
+                            class="challenges__badge challenge__badge--@Model.Info.Difficulty.ToString().ToLowerInvariant()">
+                            @Model.Info.Difficulty
+                        </span>
+                        <span class="text-secondary ms-auto" style="font-size: 0.75rem">45% Acceptance</span>
+                    </div>
+
+                    <h1 class="challenge-detail__title">@Model.Info.Title</h1>
+                    <p class="challenge-detail__description">@Model.Info.Description</p>
+
+                    <h2 class="challenge-detail__label">
+                        <i class="bi bi-table me-1"></i>Expected output
+                    </h2>
+                    <div class="challenge-detail__sample">
+                        <div class="table-responsive">
+                            <table class="table challenge-detail__table mb-0">
+                                <thead>
+                                <tr>
+                                    <th>BusinessEntityID</th>
+                                    <th>PersonType</th>
+                                    <th>FirstName</th>
+                                    div
+                                    <th>LastName</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td>EM</td>
+                                    <td>Ken</td>
+                                    <td>Sánchez</td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>EM</td>
+                                    <td>Terri</td>
+                                    <td>Duffy</td>
+                                </tr>
+                                <tr>
+                                    <td>3</td>
+                                    <td>EM</td>
+                                    <td>Roberto</td>
+                                    <td>Tamburello</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="challenge-detail__tab-panel" data-tab="schema" role="tabpanel">
+                    <h2 class="challenge-detail__label">
+                        <i class="bi bi-diagram-3 me-1"></i>Table definitions
+                    </h2>
+                    <pre class="challenge-detail__schema">CREATE TABLE Person.Person (
+    BusinessEntityID INT          NOT NULL,
+    PersonType       NCHAR(2)     NOT NULL,
+    NameStyle        BIT          NOT NULL,
+    Title            NVARCHAR(8)  NULL,
+    FirstName        NVARCHAR(50) NOT NULL,
+    MiddleName       NVARCHAR(50) NULL,
+    LastName         NVARCHAR(50) NOT NULL,
+    EmailPromotion   INT          NOT NULL
+);</pre>
+                </section>
+
+                <section class="challenge-detail__tab-panel" data-tab="comments" role="tabpanel">
+                    <h2 class="challenge-detail__label">
+                        <i class="bi bi-chat-left-text me-1"></i>Comments
+                    </h2>
+                    <div class="challenge-detail__chat">
+                        <article class="challenge-detail__comment">
+                            <span class="challenge-detail__comment-avatar">AR</span>
+                            <div class="challenge-detail__comment-body">
+                                <div class="d-flex align-items-center gap-2">
+                                    <span class="challenge-detail__comment-name">Alex Rivera</span>
+                                    <span class="challenge-detail__comment-time">2 days ago</span>
+                                </div>
+                                <p class="challenge-detail__comment-text">
+                                    Watch out: the sample output only includes people of type EM.
+                                </p>
+                            </div>
+                        </article>
+                        <article class="challenge-detail__comment">
+                            <span class="challenge-detail__comment-avatar">SM</span>
+                            <div class="challenge-detail__comment-body">
+                                <div class="d-flex align-items-center gap-2">
+                                    <span class="challenge-detail__comment-name">Sam Miller</span>
+                                    <span class="challenge-detail__comment-time">3 days ago</span>
+                                </div>
+                                <p class="challenge-detail__comment-text">
+                                    SELECT * is enough for this one. Do not add an ORDER BY.
+                                </p>
+                            </div>
+                        </article>
+                    </div>
+                </section>
+            </aside>
+            
+            <div class="challenge-detail__workbench" id="challenge-detail-right">
+                <header class="challenge-detail__workbench-bar">
+                <span class="challenge-detail__workbench-title">
+                    <i class="bi bi-terminal me-2"></i>T-SQL · SQL Server
                 </span>
-                <span class="challenge-detail__badge challenge-detail__badge--neutral">
-                    <i class="bi bi-tag me-1"></i>@Model.Info.Category
-                </span>
-                <span class="challenge-detail__badge challenge-detail__badge--neutral">
-                    <i class="bi bi-chat-left-text me-1"></i>@Model.State.CommentCount comments
-                </span>
-                @if (Model.State.IsSolved)
-                {
-                    <span class="challenge-detail__badge challenge-detail__badge--easy">
-                        <i class="bi bi-check-circle me-1"></i>Solved
-                    </span>
-                }
-                else
-                {
-                    <span class="challenge-detail__badge challenge-detail__badge--neutral">
-                        <i class="bi bi-circle me-1"></i>Unsolved
-                    </span>
-                }
-            </div>
-        </header>
+                    <button type="button" class="btn btn-primary challenge-detail__run" id="challenge-detail-run">
+                        <i class="bi bi-play-fill me-1" id="challenge-detail-run-icon"></i>
+                        <span class="spinner-border spinner-border-sm me-1 d-none" id="challenge-detail-run-spinner"
+                              role="status" aria-hidden="true"></span>
+                        <span id="challenge-detail-run-text">Run</span>
+                    </button>
+                </header>
 
-        <div class="challenge-detail__panel p-4 rounded-4">
-            <h2 class="h5 fw-semibold mb-3">
-                <i class="bi bi-file-earmark-text me-2 text-primary"></i>Description
-            </h2>
-            <p class="challenge-detail__description mb-0">@Model.Info.Description</p>
-        </div>
+                <div class="challenge-detail__split challenge-detail__split--row" id="challenge-detail-row">
+                    <div class="challenge-detail__editor-wrap" id="challenge-detail-editor">
+                    <textarea class="challenge-detail__editor" id="challenge-detail-sql"
+                              spellcheck="false" aria-label="SQL editor" autocomplete="off">SELECT
+</textarea>
+                    </div>
 
-        <div class="challenge-detail__panel p-4 rounded-4">
-            <h2 class="h5 fw-semibold mb-3">
-                <i class="bi bi-code-slash me-2 text-primary"></i>Your solution
-            </h2>
-            <div class="challenge-detail__editor rounded-3 p-3 font-monospace text-secondary"
-                 contenteditable="true" role="textbox" aria-multiline="true">
-                SELECT
-            </div>
-            <div class="d-flex justify-content-end gap-2 mt-3">
-                <button type="button" class="btn btn-outline-secondary btn-glow px-4">Run</button>
-                <button type="button" class="btn btn-primary btn-glow px-4">
-                    <i class="bi bi-check-lg me-1"></i>Submit
-                </button>
+                    <section class="challenge-detail__results" id="challenge-detail-results">
+                        <header class="challenge-detail__results-header">
+                            <span class="challenge-detail__label challenge-detail__label--inline mb-0">Results</span>
+                            <span class="challenge-detail__results-count d-none" id="challenge-detail-results-count">
+                            <i class="bi bi-check-circle me-1"></i><span id="challenge-detail-row-count"></span>
+                        </span>
+                        </header>
+
+                        <div class="challenge-detail__results-state" id="challenge-detail-results-idle">
+                            <i class="bi bi-play-circle challenge-detail__results-icon" aria-hidden="true"></i>
+                            <p>Press Run to see results</p>
+                        </div>
+
+                        <div class="challenge-detail__results-state d-none" id="challenge-detail-results-running">
+                            <div class="spinner-border challenge-detail__results-spinner" role="status"
+                                 aria-hidden="true"></div>
+                            <p>Executing query...</p>
+                        </div>
+
+                        <div class="challenge-detail__results-table-wrap d-none"
+                             id="challenge-detail-results-table-wrap">
+                            <div class="table-responsive">
+                                <table class="table challenge-detail__table mb-0">
+                                    <thead>
+                                    <tr>
+                                        <th>BusinessEntityID</th>
+                                        <th>PersonType</th>
+                                        <th>FirstName</th>
+                                        <th>LastName</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                        <td>1</td>
+                                        <td>EM</td>
+                                        <td>Ken</td>
+                                        <td>Sánchez</td>
+                                    </tr>
+                                    <tr>
+                                        <td>2</td>
+                                        <td>EM</td>
+                                        <td>Terri</td>
+                                        <td>Duffy</td>
+                                    </tr>
+                                    <tr>
+                                        <td>3</td>
+                                        <td>EM</td>
+                                        <td>Roberto</td>
+                                        <td>Tamburello</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </section>
+                </div>
             </div>
         </div>
     </div>
-</section>
+</div>
+
+@section Scripts {
+    <script src="https://unpkg.com/split.js@1.6.5/dist/split.min.js"></script>
+    <script>
+        (function () {
+            Split(['#challenge-detail-left', '#challenge-detail-right'], {
+                sizes: [42, 58],
+                minSize: [280, 400],
+                gutterSize: 6,
+                gutterClass: 'challenge-detail__gutter',
+                cursor: 'col-resize',
+            });
+
+            Split(['#challenge-detail-editor', '#challenge-detail-results'], {
+                sizes: [60, 40],
+                minSize: [160, 140],
+                gutterSize: 6,
+                gutterClass: 'challenge-detail__gutter',
+                cursor: 'row-resize',
+            });
+
+            const tabs = document.querySelectorAll('.challenge-detail__tab');
+            const panels = document.querySelectorAll('.challenge-detail__tab-panel');
+
+            tabs.forEach((tab) => {
+                tab.addEventListener('click', () => {
+                    const target = tab.textContent.trim().toLowerCase();
+                    tabs.forEach((t) => t.classList.toggle('is-active', t === tab));
+                    panels.forEach((p) => p.classList.toggle('is-active', p.dataset.tab === target));
+                });
+            });
+
+            const runBtn = document.getElementById('challenge-detail-run');
+            const runIcon = document.getElementById('challenge-detail-run-icon');
+            const runSpinner = document.getElementById('challenge-detail-run-spinner');
+            const runText = document.getElementById('challenge-detail-run-text');
+            const idle = document.getElementById('challenge-detail-results-idle');
+            const running = document.getElementById('challenge-detail-results-running');
+            const tableWrap = document.getElementById('challenge-detail-results-table-wrap');
+            const resultsCount = document.getElementById('challenge-detail-results-count');
+            const rowCount = document.getElementById('challenge-detail-row-count');
+
+            runBtn.addEventListener('click', () => {
+                if (runBtn.disabled) return;
+                runBtn.disabled = true;
+                runIcon.classList.add('d-none');
+                runSpinner.classList.remove('d-none');
+                runText.textContent = 'Running...';
+                idle.classList.add('d-none');
+                running.classList.remove('d-none');
+
+                setTimeout(() => {
+                    runBtn.disabled = false;
+                    runIcon.classList.remove('d-none');
+                    runSpinner.classList.add('d-none');
+                    runText.textContent = 'Run';
+                    running.classList.add('d-none');
+                    tableWrap.classList.remove('d-none');
+                    rowCount.textContent = '3 rows';
+                    resultsCount.classList.remove('d-none');
+                }, 900);
+            });
+        })();
+    </script>
+}

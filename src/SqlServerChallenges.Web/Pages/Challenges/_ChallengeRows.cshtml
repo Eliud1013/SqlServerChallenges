@@ -9,7 +9,7 @@
 {
     <tr data-bs-toggle="collapse" data-bs-target="#collapse-@challenge.Id" aria-expanded="false"
         aria-controls="collapse-@challenge.Id" style="cursor: pointer;">
-        <td class="challenges-page__index text-secondary font-monospace ">
+        <td class="challenges-page__index">
             @(challengeNumber < 10 ? $"0{challengeNumber}" : challengeNumber)
             @{ challengeNumber++; }
         </td>
