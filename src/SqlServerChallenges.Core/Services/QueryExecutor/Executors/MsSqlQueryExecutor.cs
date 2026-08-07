@@ -16,12 +16,12 @@ public class MsSqlQueryExecutor : IQueryExecutor
 
     public async Task<QueryExecutorResult> ExecuteQueryAsync(string query, int? rowLimit = 50, CancellationToken ct = default)
     {
-        await _connection.OpenAsync(ct);
-        await using var command = new SqlCommand(query, _connection);
-        command.CommandTimeout = 6;
-
         try
         {
+            await _connection.OpenAsync(ct);
+            await using var command = new SqlCommand(query, _connection);
+            command.CommandTimeout = 6;
+            
             await using var reader = await command.ExecuteReaderAsync(ct);
             var table = new DataTable();
 
