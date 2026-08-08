@@ -6,7 +6,7 @@ using SqlServerChallenges.Core.Services.SqlExecutor;
 
 namespace SqlServerChallenges.Core.Features.Challenges.GetSolutionSample;
 
-public class GetSolutionSampleHandler : IQueryHandler<GetSolutionSampleQuery, SampleOutput>
+public class GetSolutionSampleHandler : IQueryHandler<GetSolutionSampleQuery, OutputTable>
 {
     private readonly ApplicationDbContext _dbContext;
     private readonly QueryExecutorDispatcher _queryExecutorDispatcher;
@@ -17,7 +17,7 @@ public class GetSolutionSampleHandler : IQueryHandler<GetSolutionSampleQuery, Sa
         _dbContext = dbContext;
     }
 
-    public async Task<Result<SampleOutput>> Handle(GetSolutionSampleQuery request, CancellationToken cancellationToken)
+    public async Task<Result<OutputTable>> Handle(GetSolutionSampleQuery request, CancellationToken cancellationToken)
     {
         var provider = DatabaseProvider.SqlServer;
         
@@ -34,6 +34,6 @@ public class GetSolutionSampleHandler : IQueryHandler<GetSolutionSampleQuery, Sa
         if (!queryResult.IsSuccess)
             return ChallengesErrors.UnknownError;
         
-        return new SampleOutput(queryResult.Columns, queryResult.Rows);
+        return queryResult.OutputTable;
     }
 }

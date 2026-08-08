@@ -4,7 +4,7 @@ using SqlServerChallenges.Core.Services.SqlExecutor;
 
 namespace SqlServerChallenges.Core.Features.Challenges.GetSolutionSample;
 
-public sealed record GetSolutionSampleQuery(Guid ChallengeId) : ICacheableQuery<SampleOutput>
+public sealed record GetSolutionSampleQuery(Guid ChallengeId) : ICacheableQuery<OutputTable>
 {
     public string CacheKey { get; }  = CacheKeys.Challenges.SolutionSample(ChallengeId);
     public TimeSpan? SlidingExpiration { get; }

@@ -2,19 +2,20 @@ using System.Data;
 
 namespace SqlServerChallenges.Core.Services.SqlExecutor;
 
+public record OutputTable(
+    IReadOnlyList<string> Columns,
+    IReadOnlyList<IReadOnlyDictionary<string, object?>> Rows);
+
 public sealed record QueryExecutorResult
 {
     public bool IsSuccess { get; }
-
-    private readonly IReadOnlyList<string>? _columns;
-    private readonly IReadOnlyList<IReadOnlyDictionary<string, object?>>? _rows;
+    private readonly OutputTable? _outputTable;
     private readonly QueryErrorType? _errorType;
 
     private QueryExecutorResult(IReadOnlyList<string> columns, IReadOnlyList<IReadOnlyDictionary<string, object?>> rows)
     {
         IsSuccess = true;
-        _columns = columns;
-        _rows = rows;
+        _outputTable = new(columns, rows);
     }
 
     private QueryExecutorResult(QueryErrorType errorType)
@@ -22,12 +23,15 @@ public sealed record QueryExecutorResult
         IsSuccess = false;
         _errorType = errorType;
     }
-
-    public IReadOnlyList<string> Columns => _columns
-        ?? throw new InvalidOperationException("The result does not contain a query result.");
-
-    public IReadOnlyList<IReadOnlyDictionary<string, object?>> Rows => _rows
-        ?? throw new InvalidOperationException("The result does not contain a query result.");
+    
+    public OutputTable OutputTable => _outputTable
+        ?? throw new InvalidOperationException("The result does not contain a table.");
+    
+    public IReadOnlyList<string> Columns => _outputTable?.Columns
+        ?? throw new InvalidOperationException("The result does not contain a table."); 
+    
+    public IReadOnlyList<IReadOnlyDictionary<string, object?>> Rows => _outputTable?.Rows
+        ?? throw new InvalidOperationException("The result does not contain a table.");
 
     public QueryErrorType ErrorType => _errorType
         ?? throw new InvalidOperationException("The result does not contain an error.");

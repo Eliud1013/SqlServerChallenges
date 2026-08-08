@@ -1,10 +1,10 @@
-@using SqlServerChallenges.Core.Common.Results;
-@using SqlServerChallenges.Core.Features.Challenges.GetSolutionSample
+@using SqlServerChallenges.Core.Common.Results
+@using SqlServerChallenges.Core.Services.SqlExecutor
 
-@model Result<SampleOutput>
+@model Result<OutputTable>
 
 @{
-    SampleOutput? queryResult = Model.Failed ? null : Model.Value;
+    OutputTable? queryResult = Model.Failed ? null : Model.Value;
 }
 
 @if (queryResult == null)
