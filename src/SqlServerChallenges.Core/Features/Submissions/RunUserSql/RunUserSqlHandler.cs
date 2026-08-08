@@ -1,15 +1,11 @@
-using System.Data;
-using System.Security.AccessControl;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Update;
 using SqlServerChallenges.Core.Common.CQRS;
 using SqlServerChallenges.Core.Common.Results;
 using SqlServerChallenges.Core.Data;
-using SqlServerChallenges.Core.Features.Challenges;
 using SqlServerChallenges.Core.Services;
-using SqlServerChallenges.Core.Services.SqlExecutor;
+using SqlServerChallenges.Core.Services.QueryExecutor;
 
-namespace SqlServerChallenges.Core.Features.Submissions.RunUserQuery;
+namespace SqlServerChallenges.Core.Features.Submissions.RunUserSql;
 
 public class RunUserSqlHandler : ICommandHandler<RunUserSqlCommand, QueryExecutorResult>
 {

@@ -1,6 +1,6 @@
 using SqlServerChallenges.Core.Common.Cache;
 using SqlServerChallenges.Core.Common.CQRS.Query;
-using SqlServerChallenges.Core.Services.SqlExecutor;
+using SqlServerChallenges.Core.Services.QueryExecutor;
 
 namespace SqlServerChallenges.Core.Features.Challenges.GetSolutionSample;
 

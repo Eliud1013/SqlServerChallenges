@@ -1,4 +1,7 @@
-namespace SqlServerChallenges.Core.Services.SqlExecutor;
+
+using SqlServerChallenges.Core.Data.Entities.ChallengeSolutions;
+
+namespace SqlServerChallenges.Core.Services.QueryExecutor;
 
 public class QueryExecutorDispatcher
 {

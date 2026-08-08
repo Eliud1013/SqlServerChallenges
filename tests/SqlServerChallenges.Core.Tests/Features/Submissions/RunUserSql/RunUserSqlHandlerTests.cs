@@ -1,17 +1,18 @@
 using System.Data;
 using FluentAssertions;
 using Moq;
-using SqlServerChallenges.Core.Features.Submissions.RunUserQuery;
+using SqlServerChallenges.Core.Data.Entities.ChallengeSolutions;
+using SqlServerChallenges.Core.Features.Submissions.RunUserSql;
 using SqlServerChallenges.Core.Services;
-using SqlServerChallenges.Core.Services.SqlExecutor;
+using SqlServerChallenges.Core.Services.QueryExecutor;
 using SqlServerChallenges.Core.Tests.Common;
 using Xunit;
 
-namespace SqlServerChallenges.Core.Tests.Features.Submissions.RunUserQuery;
+namespace SqlServerChallenges.Core.Tests.Features.Submissions.RunUserSql;
 
-public class ListChallengesHandlerTests : BaseIntegrationTest
+public class RunUserSqlHandlerTests : BaseIntegrationTest
 {
-    public ListChallengesHandlerTests(SqlServerFixture fixture) : base(fixture)
+    public RunUserSqlHandlerTests(SqlServerFixture fixture) : base(fixture)
     {
     }
 

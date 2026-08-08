@@ -1,7 +1,5 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using SqlServerChallenges.Core.Data.Entities;
-using SqlServerChallenges.Core.Services.SqlExecutor;
 
 namespace SqlServerChallenges.Core.Data.Entities.ChallengeSolutions;
 

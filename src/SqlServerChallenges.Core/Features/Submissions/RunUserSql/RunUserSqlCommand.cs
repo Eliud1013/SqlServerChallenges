@@ -1,8 +1,8 @@
-using System.Data;
 using SqlServerChallenges.Core.Common.CQRS;
-using SqlServerChallenges.Core.Services.SqlExecutor;
+using SqlServerChallenges.Core.Data.Entities.ChallengeSolutions;
+using SqlServerChallenges.Core.Services.QueryExecutor;
 
-namespace SqlServerChallenges.Core.Features.Submissions.RunUserQuery;
+namespace SqlServerChallenges.Core.Features.Submissions.RunUserSql;
 
 public sealed record RunUserSqlCommand(
     Guid ChallengeId,

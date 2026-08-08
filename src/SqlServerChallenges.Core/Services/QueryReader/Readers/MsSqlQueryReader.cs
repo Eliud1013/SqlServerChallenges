@@ -1,6 +1,6 @@
 using System.Data.Common;
 using Microsoft.Data.SqlClient;
-using SqlServerChallenges.Core.Services.SqlExecutor;
+using SqlServerChallenges.Core.Data.Entities.ChallengeSolutions;
 
 namespace SqlServerChallenges.Core.Services.QueryReader;
 

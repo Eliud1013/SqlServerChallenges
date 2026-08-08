@@ -1,6 +1,6 @@
 using System.Data;
 
-namespace SqlServerChallenges.Core.Services.SqlExecutor;
+namespace SqlServerChallenges.Core.Services.QueryExecutor;
 
 public record OutputTable(
     IReadOnlyList<string> Columns,

@@ -1,4 +1,4 @@
-namespace SqlServerChallenges.Core.Services.SqlExecutor;
+namespace SqlServerChallenges.Core.Services.QueryExecutor;
 
 public enum QueryErrorType
 {

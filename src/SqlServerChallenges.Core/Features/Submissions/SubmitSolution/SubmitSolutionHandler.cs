@@ -1,14 +1,10 @@
-using System.Data;
-using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Update;
 using SqlServerChallenges.Core.Common.CQRS;
 using SqlServerChallenges.Core.Common.Results;
 using SqlServerChallenges.Core.Data;
 using SqlServerChallenges.Core.Services;
-using SqlServerChallenges.Core.Services.SqlExecutor;
 
-namespace SqlServerChallenges.Core.Features.Challenges.SubmitSolution;
+namespace SqlServerChallenges.Core.Features.Submissions.SubmitSolution;
 
 public class SubmitSolutionHandler : ICommandHandler<SubmitSolutionCommand>
 {
@@ -29,7 +25,7 @@ public class SubmitSolutionHandler : ICommandHandler<SubmitSolutionCommand>
             .FirstOrDefaultAsync(c => c.Id == request.ChallengeId, cancellationToken);
 
         if (challenge is null)
-            return ChallengesErrors.NotFound;
+            return SubmissionErrors.ChallengeNotFound;
         
         var userSql = request.UserQuery;
  

@@ -3,7 +3,7 @@ using Microsoft.Extensions.Caching.Memory;
 using SqlServerChallenges.Core.Common.CQRS.Query;
 using SqlServerChallenges.Core.Common.Results;
 
-namespace SqlServerChallenges.Core.Behaviours;
+namespace SqlServerChallenges.Core.Common.Behaviours;
 
 public class CacheableQueryBehavior<TQuery, TResponse> : IPipelineBehavior<TQuery, Result<TResponse>>
     where TQuery : ICacheableQuery<TResponse>

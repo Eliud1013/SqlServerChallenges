@@ -4,7 +4,6 @@ using SqlServerChallenges.Core.Data.Entities;
 using SqlServerChallenges.Core.Data.Entities.Categories;
 using SqlServerChallenges.Core.Data.Entities.Challenges;
 using SqlServerChallenges.Core.Data.Entities.ChallengeSolutions;
-using SqlServerChallenges.Core.Services.SqlExecutor;
 
 namespace SqlServerChallenges.Core.Data;
 

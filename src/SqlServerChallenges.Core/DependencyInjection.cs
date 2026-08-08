@@ -1,16 +1,14 @@
-using System.Data;
 using MediatR;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using SqlServerChallenges.Core.Behaviours;
+using SqlServerChallenges.Core.Common.Behaviours;
 using SqlServerChallenges.Core.Data;
 using SqlServerChallenges.Core.Services;
+using SqlServerChallenges.Core.Services.QueryExecutor;
 using SqlServerChallenges.Core.Services.QueryReader;
 using SqlServerChallenges.Core.Services.QueryResultComparer;
-using SqlServerChallenges.Core.Services.SqlExecutor;
 
 namespace SqlServerChallenges.Core;
 

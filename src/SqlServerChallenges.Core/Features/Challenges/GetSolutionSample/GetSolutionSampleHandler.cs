@@ -2,7 +2,8 @@ using Microsoft.EntityFrameworkCore;
 using SqlServerChallenges.Core.Common.CQRS.Query;
 using SqlServerChallenges.Core.Common.Results;
 using SqlServerChallenges.Core.Data;
-using SqlServerChallenges.Core.Services.SqlExecutor;
+using SqlServerChallenges.Core.Data.Entities.ChallengeSolutions;
+using SqlServerChallenges.Core.Services.QueryExecutor;
 
 namespace SqlServerChallenges.Core.Features.Challenges.GetSolutionSample;
 

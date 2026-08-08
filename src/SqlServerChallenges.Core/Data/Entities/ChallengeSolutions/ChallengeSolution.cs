@@ -1,5 +1,3 @@
-using SqlServerChallenges.Core.Services.SqlExecutor;
-
 namespace SqlServerChallenges.Core.Data.Entities.ChallengeSolutions;
 
 public class ChallengeSolution

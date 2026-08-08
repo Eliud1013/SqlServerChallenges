@@ -3,7 +3,7 @@ using Microsoft.Data.SqlClient;
 using SqlServerChallenges.Core.Data.Entities;
 using SqlServerChallenges.Core.Data.Entities.Categories;
 using SqlServerChallenges.Core.Data.Entities.Challenges;
-using SqlServerChallenges.Core.Services.SqlExecutor;
+using SqlServerChallenges.Core.Services.QueryExecutor;
 using SqlServerChallenges.Core.Tests.Common;
 using Xunit;
 

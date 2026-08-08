@@ -1,5 +1,5 @@
 using SqlServerChallenges.Core.Common.CQRS;
 
-namespace SqlServerChallenges.Core.Features.Challenges.SubmitSolution;
+namespace SqlServerChallenges.Core.Features.Submissions.SubmitSolution;
 
 public sealed record SubmitSolutionCommand(Guid ChallengeId, SubmissionType SubmissionType, string UserQuery) : ICommand;

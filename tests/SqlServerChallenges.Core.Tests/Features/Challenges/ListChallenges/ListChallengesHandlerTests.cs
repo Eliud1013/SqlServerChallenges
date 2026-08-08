@@ -5,7 +5,6 @@ using SqlServerChallenges.Core.Data.Entities.Categories;
 using SqlServerChallenges.Core.Data.Entities.Challenges;
 using SqlServerChallenges.Core.Data.Entities.ChallengeSolutions;
 using SqlServerChallenges.Core.Features.Challenges.ListChallenges;
-using SqlServerChallenges.Core.Services.SqlExecutor;
 using SqlServerChallenges.Core.Tests.Common;
 using Xunit;
 

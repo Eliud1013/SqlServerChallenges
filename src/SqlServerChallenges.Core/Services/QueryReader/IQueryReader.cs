@@ -1,5 +1,5 @@
 using System.Data.Common;
-using SqlServerChallenges.Core.Services.SqlExecutor;
+using SqlServerChallenges.Core.Data.Entities.ChallengeSolutions;
 
 namespace SqlServerChallenges.Core.Services.QueryReader;
 

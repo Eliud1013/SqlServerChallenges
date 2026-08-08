@@ -1,7 +1,8 @@
 using System.Data;
 using Microsoft.Data.SqlClient;
+using SqlServerChallenges.Core.Data.Entities.ChallengeSolutions;
 
-namespace SqlServerChallenges.Core.Services.SqlExecutor;
+namespace SqlServerChallenges.Core.Services.QueryExecutor;
 
 public class MsSqlQueryExecutor : IQueryExecutor
 {
