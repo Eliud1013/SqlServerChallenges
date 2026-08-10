@@ -4,20 +4,22 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using SqlServerChallenges.Core.Data;
 using SqlServerChallenges.Core.Data.Entities.Challenges;
-using SqlServerChallenges.Core.Features.Challenges.GetSolutionSample;
 using SqlServerChallenges.Core.Features.Challenges.ListChallenges;
+using SqlServerChallenges.Core.Services.SampleOutput;
 
 namespace SqlServerChallenges.Web.Pages.Challenges.ListChallenges;
 
 public class Index : PageModel
 {
     private readonly ISender _sender;
+    private readonly ISampleOutputProvider _sampleOutputProvider; 
     private readonly ApplicationDbContext _dbContext;
 
-    public Index(ISender sender, ApplicationDbContext dbContext)
+    public Index(ISender sender, ApplicationDbContext dbContext, ISampleOutputProvider sampleOutputProvider)
     {
         _sender = sender;
         _dbContext = dbContext;
+        _sampleOutputProvider = sampleOutputProvider;
     }
 
     public IReadOnlyList<ChallengeEntry> Challenges { get; private set; } = [];
@@ -48,7 +50,7 @@ public class Index : PageModel
 
     public async Task<IActionResult> OnGetSampleOutput(Guid ChallengeId)
     {
-        var result = await _sender.Send(new GetSolutionSampleQuery(ChallengeId));
+        var result = await _sampleOutputProvider.GetForChallengeAsync(ChallengeId, rowLimit: 3);
         
         return Partial("_SampleOutput", result);
     }

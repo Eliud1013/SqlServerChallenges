@@ -1,7 +1,7 @@
 @using SqlServerChallenges.Core.Common.Results
 @using SqlServerChallenges.Core.Services.QueryExecutor
 
-@model Result<SqlServerChallenges.Core.Services.QueryExecutor.OutputTable>
+@model Result<OutputTable>
 
 @{
     OutputTable? queryResult = Model.Failed ? null : Model.Value;

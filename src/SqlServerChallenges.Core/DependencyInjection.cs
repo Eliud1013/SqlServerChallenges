@@ -9,6 +9,7 @@ using SqlServerChallenges.Core.Services;
 using SqlServerChallenges.Core.Services.QueryExecutor;
 using SqlServerChallenges.Core.Services.QueryReader;
 using SqlServerChallenges.Core.Services.QueryResultComparer;
+using SqlServerChallenges.Core.Services.SampleOutput;
 
 namespace SqlServerChallenges.Core;
 
@@ -33,7 +34,6 @@ public static class DependencyInjection
         });
 
         services.AddMemoryCache();
-        services.AddTransient(typeof(IPipelineBehavior<,>), typeof(CacheableQueryBehavior<,>));
 
         services.AddSingleton<MsSqlQuerySyntaxChecker>();
 
@@ -47,6 +47,8 @@ public static class DependencyInjection
         services.AddScoped<QueryReaderDispatcher>();
 
         services.AddSingleton<QueryResultComparer>();
+
+        services.AddScoped<ISampleOutputProvider, SampleOutputProvider>();
 
         return services;
     }
