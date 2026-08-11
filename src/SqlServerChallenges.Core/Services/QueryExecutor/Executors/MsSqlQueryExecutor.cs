@@ -22,7 +22,7 @@ public class MsSqlQueryExecutor : IQueryExecutor
             await _connection.OpenAsync(ct);
             await using var command = new SqlCommand(query, _connection);
             command.CommandTimeout = 6;
-            
+
             await using var reader = await command.ExecuteReaderAsync(ct);
             var table = new DataTable();
 
@@ -54,6 +54,10 @@ public class MsSqlQueryExecutor : IQueryExecutor
                 229 => QueryErrorType.PermissionDenied,
                 _ => QueryErrorType.Unknown
             };
+        }
+        finally
+        {
+            await _connection.CloseAsync();
         }
     }
 }
