@@ -59,7 +59,7 @@
 
     .challenges-page__index {
         text-align: center;
-        color: var(--clr-secondary);
+        color: var(--clr-secondary) !important;
         font-family: var(--ff-mono);
         font-size: 0.84rem;
     }
