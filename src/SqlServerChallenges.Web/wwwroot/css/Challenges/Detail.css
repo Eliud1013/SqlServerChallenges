@@ -183,26 +183,47 @@
 .challenge-detail__panel,
 .challenge-detail__workbench,
 .challenge-detail__editor-wrap,
-.challenge-detail__results,
-.challenge-detail__gutter {
+.challenge-detail__results {
     box-sizing: border-box;
 }
 
-.challenge-detail__gutter {
-    z-index: 5;
-    background: rgba(255, 255, 255, 0.07);
-    transition: background 0.2s ease;
+.gutter {
+    width: 0.5rem;
+    position: relative;
 }
 
-.challenge-detail__gutter:hover {
-    background: rgba(0, 212, 160, 0.25);
+.gutter::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.08);
+    transition: background 0.2s ease, box-shadow 0.2s ease;
 }
 
-.challenge-detail__gutter.gutter-horizontal {
+.gutter.gutter-horizontal::after {
+    width: 3px;
+    height: 3rem;
+}
+
+.gutter.gutter-vertical::after {
+    width: 3rem;
+    height: 3px;
+}
+
+.gutter:hover::after,
+.gutter:active::after {
+    background: var(--clr-primary);
+    box-shadow: 0 0 8px rgba(0, 211, 159, 0.55);
+}
+
+.gutter.gutter-horizontal {
     cursor: col-resize;
 }
 
-.challenge-detail__gutter.gutter-vertical {
+.gutter.gutter-vertical {
     cursor: row-resize;
 }
 
