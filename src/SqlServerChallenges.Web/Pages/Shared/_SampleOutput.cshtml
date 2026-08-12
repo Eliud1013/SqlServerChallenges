@@ -1,10 +1,10 @@
 @using SqlServerChallenges.Core.Common.Results
 @using SqlServerChallenges.Core.Services.QueryExecutor
 
-@model Result<OutputTable>
+@model OutputTable
 
 @{
-    OutputTable? queryResult = Model.Failed ? null : Model.Value;
+    OutputTable? queryResult = Model;
 }
 
 @if (queryResult == null)
@@ -14,7 +14,6 @@
 }
 
 <table class="table table-sm table-borderless mb-0">
-
     <thead>
     <tr>
         @foreach (var column in queryResult.Columns)

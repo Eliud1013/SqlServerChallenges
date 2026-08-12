@@ -51,7 +51,12 @@ public class Index : PageModel
     public async Task<IActionResult> OnGetSampleOutput(Guid ChallengeId)
     {
         var result = await _sampleOutputProvider.GetForChallengeAsync(ChallengeId, rowLimit: 3);
-        
-        return Partial("_SampleOutput", result);
+
+        if (result.Failed)
+        {
+            // TODO: Handle error properly
+        }
+
+        return Partial("_SampleOutput", result.Value);
     }
 }
