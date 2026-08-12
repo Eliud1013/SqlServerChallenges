@@ -33,7 +33,7 @@
     </header>
 
     <div class="challenge-detail__body">
-        <div class="d-flex flex-grow-1 flex-shrink-1 flex-row p-3" id="challenge-detail-col">
+        <div class="d-flex flex-grow-1 flex-shrink-1 flex-row p-3">
             <aside class="challenge-detail__panel" id="challenge-detail-left">
                 <div class="challenge-detail__tabs">
                     <button class="challenge-detail__tab is-active">Description</button>
@@ -55,42 +55,13 @@
                     <h1 class="challenge-detail__title">@Model.Info.Title</h1>
                     <p class="challenge-detail__description">@Model.Info.Description</p>
 
-                    <h2 class="challenge-detail__label">
+                    <h2 class="challenge-detail__label mt-4">
                         <i class="bi bi-table me-1"></i>Expected output
                     </h2>
+                    
                     <div class="challenge-detail__sample">
-                        <div class="table-responsive">
-                            <table class="table challenge-detail__table mb-0">
-                                <thead>
-                                <tr>
-                                    <th>BusinessEntityID</th>
-                                    <th>PersonType</th>
-                                    <th>FirstName</th>
-                                    div
-                                    <th>LastName</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr>
-                                    <td>1</td>
-                                    <td>EM</td>
-                                    <td>Ken</td>
-                                    <td>Sánchez</td>
-                                </tr>
-                                <tr>
-                                    <td>2</td>
-                                    <td>EM</td>
-                                    <td>Terri</td>
-                                    <td>Duffy</td>
-                                </tr>
-                                <tr>
-                                    <td>3</td>
-                                    <td>EM</td>
-                                    <td>Roberto</td>
-                                    <td>Tamburello</td>
-                                </tr>
-                                </tbody>
-                            </table>
+                        <div class="challenge-detail__sample__body">
+                            <partial name="_SampleOutput" model="@Model.Info.SampleOutput"/>
                         </div>
                     </div>
                 </section>
