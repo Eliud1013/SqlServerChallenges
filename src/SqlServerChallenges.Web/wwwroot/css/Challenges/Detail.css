@@ -285,6 +285,46 @@
     white-space: pre-line;
 }
 
+.challenge-detail__vote-btn {
+    border: 1px solid rgba(255, 255, 255, 0.03);
+    border-radius: var(--radius-xl);
+    background-color: #151722;
+    color: var(--clr-secondary);
+    padding: 3px 14px;
+    transition: color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease,
+        background-color 0.2s ease, transform 0.2s ease;
+
+    &:hover {
+        color: var(--clr-body);
+        transform: translateY(-1px);
+    }
+}
+
+.challenge-detail__vote-btn--clicked-up {
+    border-color: var(--clr-primary);
+    background-color: rgba(0, 211, 159, 0.07);
+    color: var(--clr-primary);
+
+    & > .challenge-detail__vote-count {
+        color: var(--clr-primary);
+    }
+}
+
+.challenge-detail__vote-btn--clicked-down {
+    border-color: var(--bs-danger);
+    background-color: rgba(var(--bs-danger-rgb), 0.07);
+    color: #f87171;
+
+    & > .challenge-detail__vote-count {
+        color: #f87171;
+    }
+}
+
+.challenge-detail__vote-count {
+    font-family: var(--ff-mono);
+    font-size: 0.85rem;
+}
+
 .challenge-detail__label {
     display: flex;
     align-items: center;

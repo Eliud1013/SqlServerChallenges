@@ -54,8 +54,25 @@
 
                     <h1 class="challenge-detail__title">@Model.Info.Title</h1>
                     <p class="challenge-detail__description pt-2">@Model.Info.Description</p>
+                    <div class="d-flex gap-2 mt-3">
+                        <button id="vote-up"
+                                class="challenge-detail__vote-btn"
+                                hx-post="/"
+                                hx-swap="none"
+                                hx-on::before-request="toggleVote('up')">
+                            <i class="bi bi-hand-thumbs-up "></i>
+                            <span class="challenge-detail__vote-count">12</span>
+                        </button>
+                        <button id="vote-down"
+                                class="challenge-detail__vote-btn"
+                                hx-post="/"
+                                hx-swap="none"
+                                hx-on::before-request="toggleVote('down')">
+                            <i class="bi bi-hand-thumbs-down"></i>
+                        </button>
+                    </div>
 
-                    <h2 class="challenge-detail__label mt-4">
+                    <h2 class="challenge-detail__label mt-4 pt-3">
                         <i class="bi bi-table me-1"></i>Expected output
                     </h2>
 
@@ -200,6 +217,23 @@
 @section Scripts {
     <script src="https://unpkg.com/split.js@1.6.5/dist/split.min.js"></script>
     <script>
+        function toggleVote(type) {
+            const upBtn = document.getElementById('vote-up')
+            const downBtn = document.getElementById('vote-down')
+            
+            if(type === 'up') {
+                upBtn.classList.toggle('challenge-detail__vote-btn--clicked-up');
+                downBtn.classList.remove('challenge-detail__vote-btn--clicked-down');
+                return;
+            }
+            
+            if(type === 'down') {
+                downBtn.classList.toggle('challenge-detail__vote-btn--clicked-down');
+                upBtn.classList.remove('challenge-detail__vote-btn--clicked-up');
+            }
+            
+        }
+
         (function () {
             Split(['#challenge-detail-left', '#challenge-detail-right'], {
                 sizes: [50, 50],
