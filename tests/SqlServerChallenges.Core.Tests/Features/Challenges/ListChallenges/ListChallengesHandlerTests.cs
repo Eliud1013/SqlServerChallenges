@@ -27,18 +27,10 @@ public class ListChallengesHandlerTests : IClassFixture<SqlServerFixture>, IAsyn
     [Fact]
     public async Task ShouldReturnAllChallenges_WhenNoFiltersAreProvided()
     {
-        _dbContext.Challenges.Add(new Challenge
-        {
-            Id = Guid.NewGuid(),
-            Title = "Basic SELECT",
-            Slug = "basic-select",
-            TaskDescription = "Write a SELECT query",
-            Difficulty = ChallengeDifficulty.Easy,
-            RequiresOrdering = false,
-            CreatedAt = DateTime.UtcNow,
-            UpdatedAt = DateTime.UtcNow,
-            Category = new Category { Name = "Basic Queries" }
-        });
+        var challenge = new ChallengeBuilder()
+            .Build();
+
+        _dbContext.Challenges.Add(challenge);
 
         await _dbContext.SaveChangesAsync();
 
@@ -56,91 +48,54 @@ public class ListChallengesHandlerTests : IClassFixture<SqlServerFixture>, IAsyn
     [Fact]
     public async Task ShouldFilterByCategory_WhenCategoryIsProvided()
     {
-        _dbContext.Challenges.Add(new Challenge
-        {
-            Id = Guid.NewGuid(),
-            Title = "Basic SELECT",
-            Slug = "basic-select",
-            TaskDescription = "Write a SELECT query",
-            Difficulty = ChallengeDifficulty.Easy,
-            RequiresOrdering = false,
-            CreatedAt = DateTime.UtcNow,
-            UpdatedAt = DateTime.UtcNow,
-            Category = new Category
+        var challenge = new ChallengeBuilder()
+            .WithTitle("Basic select")
+            .WithCategory(new Category
             {
-                Name = "Basic SELECT"
-            }
-        });
+                Name = "SELECT"
+            })
+            .Build();
 
+        _dbContext.Challenges.AddRange(challenge, new ChallengeBuilder().Build());
         await _dbContext.SaveChangesAsync();
 
         var handler = new ListChallengesHandler(_dbContext);
 
-        var result = await handler.Handle(new ListChallengesQuery(null, "Basic SELECT", null), CancellationToken.None);
+        var result = await handler.Handle(new ListChallengesQuery(null, CategoryName: "SELECT", null),
+            CancellationToken.None);
 
         result.Succeeded.Should().BeTrue();
-        result.Value.Should().ContainSingle(c => c.Title == "Basic SELECT");
+        result.Value.Should().ContainSingle(c => c.Title == "Basic select");
         result.Value.Select(v => v.Category).Should().NotBeEmpty();
+        result.Value.Select(v => v.Category).Should().BeEqualTo("SELECT");
     }
 
     [Fact]
     public async Task ShouldFilterByTitle_WhenTitleIsProvided()
     {
-        _dbContext.Challenges.Add(new Challenge
-        {
-            Id = Guid.NewGuid(),
-            Title = "Basic SELECT",
-            Slug = "basic-select",
-            TaskDescription = "Write a SELECT query",
-            Difficulty = ChallengeDifficulty.Easy,
-            RequiresOrdering = false,
-            CreatedAt = DateTime.UtcNow,
-            UpdatedAt = DateTime.UtcNow,
-            Category = new Category { Name = "Basic Queries" },
-            Solutions = new List<ChallengeSolution>
-            {
-                new ChallengeSolution
-                {
-                    DatabaseProvider = DatabaseProvider.SqlServer,
-                    SolutionSql = "SELECT 1"
-                },
-            }
-        });
+        var challenge = new ChallengeBuilder()
+            .WithTitle("Basic select")
+            .Build();
 
+        _dbContext.Challenges.Add(challenge);
         await _dbContext.SaveChangesAsync();
 
         var handler = new ListChallengesHandler(_dbContext);
 
-        var result = await handler.Handle(new ListChallengesQuery("Basic", null, null), CancellationToken.None);
+        var result = await handler.Handle(new ListChallengesQuery("Basic select", null, null), CancellationToken.None);
 
         result.Succeeded.Should().BeTrue();
-        result.Value.Should().ContainSingle(c => c.Title == "Basic SELECT");
+        result.Value.Should().ContainSingle(c => c.Title == "Basic select");
     }
 
     [Fact]
     public async Task ShouldFilterByDifficulty_WhenDifficultyIsProvided()
     {
-        _dbContext.Challenges.Add(new Challenge
-        {
-            Id = Guid.NewGuid(),
-            Title = "Basic SELECT",
-            Slug = "basic-select",
-            TaskDescription = "Write a SELECT query",
-            Difficulty = ChallengeDifficulty.Medium,
-            RequiresOrdering = false,
-            CreatedAt = DateTime.UtcNow,
-            UpdatedAt = DateTime.UtcNow,
-            Category = new Category { Name = "Basic Queries" },
-            Solutions = new List<ChallengeSolution>()
-            {
-                new ChallengeSolution
-                {
-                    DatabaseProvider = DatabaseProvider.SqlServer,
-                    SolutionSql = "SELECT 1"
-                },
-            }
-        });
+        var challenge = new ChallengeBuilder()
+            .WithDifficulty(ChallengeDifficulty.Medium)
+            .Build();
 
+        _dbContext.Challenges.Add(challenge);
         await _dbContext.SaveChangesAsync();
 
         var handler = new ListChallengesHandler(_dbContext);
@@ -150,6 +105,6 @@ public class ListChallengesHandlerTests : IClassFixture<SqlServerFixture>, IAsyn
 
         result.Succeeded.Should().BeTrue();
         result.Value.Should()
-            .ContainSingle(c => c.Title == "Basic SELECT" && c.Difficulty == ChallengeDifficulty.Medium);
+            .ContainSingle(c => c.Difficulty == ChallengeDifficulty.Medium);
     }
 }

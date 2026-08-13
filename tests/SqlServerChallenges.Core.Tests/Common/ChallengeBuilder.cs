@@ -13,6 +13,8 @@ public class ChallengeBuilder
     private Guid _id = Guid.NewGuid();
     private string _title = "Basic SELECT";
     private string _slug => $"{ToSlug(_title)}-{_id}";
+    private static int _currentNumber = 1;
+    private int _number = Interlocked.Increment(ref _currentNumber);
     private string _taskDescription = "Write a SELECT query";
     private ChallengeDifficulty _difficulty = ChallengeDifficulty.Easy;
     private bool _requiresOrdering = false;
@@ -27,6 +29,12 @@ public class ChallengeBuilder
         return this;
     }
 
+    public ChallengeBuilder WithNumber(int number)
+    {
+        _number = number;
+        return this;
+    }
+    
     public ChallengeBuilder WithTaskDescription(string taskDescription)
     {
         _taskDescription = taskDescription;
@@ -82,6 +90,7 @@ public class ChallengeBuilder
             Id = _id,
             Title = _title,
             Slug = _slug,
+            Number = _number,
             TaskDescription = _taskDescription,
             Difficulty = _difficulty,
             RequiresOrdering = _requiresOrdering,

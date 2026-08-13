@@ -48,18 +48,13 @@ public class MsSqlQueryExecutorTests : BaseIntegrationTest
     [Fact]
     public async Task ShouldReturnData_WhenQueryingExistingData()
     {
-        _dbContext.Challenges.Add(new Challenge
-        {
-            Id = Guid.NewGuid(),
-            Title = "Basic SELECT",
-            Slug = "basic-select",
-            TaskDescription = "Write a SELECT query",
-            Difficulty = ChallengeDifficulty.Easy,
-            RequiresOrdering = false,
-            CreatedAt = DateTime.UtcNow,
-            UpdatedAt = DateTime.UtcNow,
-            Category = new Category { Name = "Basic Queries" }
-        });
+        var challenge = new ChallengeBuilder()
+            .WithTitle("Basic Select")
+            .WithTaskDescription("Write a basic select query")
+            .WithDifficulty(ChallengeDifficulty.Easy)
+            .Build();
+
+        _dbContext.Challenges.Add(challenge);
 
         await _dbContext.SaveChangesAsync();
 
@@ -74,13 +69,13 @@ public class MsSqlQueryExecutorTests : BaseIntegrationTest
         var row = result.Rows[0];
         var columns = result.Columns;
         
-        row["Title"].Should().Be("Basic SELECT");
-        row["TaskDescription"].Should().Be("Write a SELECT query");
+        row["Title"].Should().Be("Basic Select");
+        row["TaskDescription"].Should().Be("Write a basic select query");
         row["Difficulty"].Should().Be(nameof(ChallengeDifficulty.Easy));
         columns.Should().Contain("Title");
         columns.Should().Contain("TaskDescription");
         columns.Should().Contain("Difficulty");
-        columns.Count.Should().Be(9);
+        columns.Count.Should().Be(10);
     }
 
     [Fact]
