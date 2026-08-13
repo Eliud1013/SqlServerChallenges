@@ -17,5 +17,6 @@ public sealed class Challenge
     public required DateTime CreatedAt { get; init; }
     public required DateTime UpdatedAt { get; init; }
     public ICollection<ChallengeSolution> Solutions { get; init; } = [];
+    public ICollection<ChallengeVote.ChallengeVote> Votes { get; init; } = [];
     public Category Category { get; init; } = null!;
 }

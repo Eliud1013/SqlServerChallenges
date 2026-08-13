@@ -22,17 +22,17 @@ public class ChallengeConfiguration : IEntityTypeConfiguration<Challenge>
         builder.Property(x => x.Slug)
             .HasMaxLength(120)
             .IsRequired();
-        
+
         builder.Property(x => x.Number)
             .IsRequired();
 
         builder.Property(x => x.TaskDescription)
             .HasMaxLength(200)
             .IsRequired();
-        
+
         builder.Property(x => x.RequiresOrdering)
             .IsRequired();
-        
+
         builder.Property(x => x.Difficulty)
             .HasConversion<string>()
             .IsRequired();
@@ -45,14 +45,18 @@ public class ChallengeConfiguration : IEntityTypeConfiguration<Challenge>
 
         builder.HasOne(x => x.Category)
             .WithMany(c => c.Challenges);
-            
-        builder.HasMany(c => c.Solutions)
+
+        builder.HasMany(x => x.Solutions)
             .WithOne(s => s.Challenge)
             .HasForeignKey(s => s.ChallengeId);
-        
+
+        builder.HasMany(x => x.Votes)
+            .WithOne()
+            .HasForeignKey(v => v.ChallengeId);
+
         builder.HasIndex(x => x.Slug)
             .IsUnique();
-        
+
         builder.HasIndex(x => x.Number)
             .IsUnique();
     }
