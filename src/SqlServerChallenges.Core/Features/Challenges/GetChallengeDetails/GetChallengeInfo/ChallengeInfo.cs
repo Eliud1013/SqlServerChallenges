@@ -5,6 +5,7 @@ namespace SqlServerChallenges.Core.Features.Challenges.GetChallengeDetails.GetCh
 
 public record ChallengeInfo(
     string Title,
+    int Number,
     string Description,
     ChallengeDifficulty Difficulty,
     string Category,

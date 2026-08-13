@@ -7,6 +7,7 @@ public sealed record ChallengeEntry(
     Guid Id,
     string Title,
     string Slug,
+    int Number,
     string Description,
     string Category,
     ChallengeDifficulty Difficulty,

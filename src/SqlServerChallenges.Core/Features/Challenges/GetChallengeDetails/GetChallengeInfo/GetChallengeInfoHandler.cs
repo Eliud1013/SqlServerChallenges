@@ -34,6 +34,7 @@ public class GetChallengeInfoHandler : IQueryHandler<GetChallengeInfoQuery, Chal
 
         return new ChallengeInfo(
             challenge.Title,
+            challenge.Number,
             challenge.TaskDescription,
             challenge.Difficulty,
             challenge.Category.Name,

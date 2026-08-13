@@ -2,4 +2,6 @@ namespace SqlServerChallenges.Core.Features.Challenges.GetChallengeDetails.GetCh
 
 public sealed record ChallengeState(
     int CommentCount,
+    int UpVotes,
+    bool IsUpVoted,
     bool IsSolved);

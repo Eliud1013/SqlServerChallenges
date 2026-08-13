@@ -22,9 +22,9 @@ public class ChallengeConfiguration : IEntityTypeConfiguration<Challenge>
         builder.Property(x => x.Slug)
             .HasMaxLength(120)
             .IsRequired();
-
-        builder.HasIndex(x => x.Slug)
-            .IsUnique();
+        
+        builder.Property(x => x.Number)
+            .IsRequired();
 
         builder.Property(x => x.TaskDescription)
             .HasMaxLength(200)
@@ -50,5 +50,10 @@ public class ChallengeConfiguration : IEntityTypeConfiguration<Challenge>
             .WithOne(s => s.Challenge)
             .HasForeignKey(s => s.ChallengeId);
         
+        builder.HasIndex(x => x.Slug)
+            .IsUnique();
+        
+        builder.HasIndex(x => x.Number)
+            .IsUnique();
     }
 }

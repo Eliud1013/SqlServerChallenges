@@ -1,17 +1,13 @@
 @using SqlServerChallenges.Core.Features.Challenges.ListChallenges
 @model IReadOnlyList<ChallengeEntry>
 
-@{
-    int challengeNumber = 1;
-}
 
 @foreach (var challenge in Model)
 {
     <tr data-bs-toggle="collapse" data-bs-target="#collapse-@challenge.Id" aria-expanded="false"
         aria-controls="collapse-@challenge.Id" style="cursor: pointer;">
         <td class="challenges-page__index">
-            @(challengeNumber < 10 ? $"0{challengeNumber}" : challengeNumber)
-            @{ challengeNumber++; }
+            @(challenge.Number < 10 ? $"0{challenge.Number}" : challenge.Number)
         </td>
         <td class="text-end">
             <span class="challenges-page__status @(challenge.Solved ? "is-solved" : "")" aria-hidden="true">

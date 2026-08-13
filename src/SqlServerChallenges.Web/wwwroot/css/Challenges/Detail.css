@@ -31,7 +31,7 @@
     color: var(--clr-secondary);
     border: none;
     background: transparent;
-    
+
     &:hover {
         color: var(--clr-body);
         background: rgba(255, 255, 255, 0.05);
@@ -307,11 +307,14 @@
     border: 1px solid rgba(255, 255, 255, 0.05);
     border-radius: var(--radius-md);
     background: var(--bg-table-col);
-    max-height: 15rem;
+    max-height: 23rem;
     overflow-x: auto;
     display: flex;
-    flex-direction: column;
     scrollbar-width: none;
+}
+
+.challenge-detail__sample tr:hover {
+    background: rgba(255, 255, 255, 0.02);
 }
 
 .challenge-detail__sample::-webkit-scrollbar {
@@ -376,6 +379,11 @@
 
 .challenge-detail__comment-text {
     margin: 0;
+
+    tr:hover {
+        background: rgba(255, 255, 255, 0.02);
+    }
+
     font-size: 0.78rem;
     line-height: 1.5;
     color: #aeb8d0;

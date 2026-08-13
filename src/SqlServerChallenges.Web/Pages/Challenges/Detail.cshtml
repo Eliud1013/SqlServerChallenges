@@ -29,7 +29,7 @@
         <button class="challenge-detail__nav-arrow" title="Random challenge">
             <i class="bi bi-shuffle "></i>
         </button>
-        
+
     </header>
 
     <div class="challenge-detail__body">
@@ -40,7 +40,7 @@
                     <button class="challenge-detail__tab">Schema</button>
                     <button class="challenge-detail__tab">Comments</button>
                 </div>
-                
+
                 <section class="challenge-detail__tab-panel is-active" data-tab="description" role="tabpanel">
                     <div class="d-flex align-items-center gap-2 mb-2">
                         <span class="challenges-page__index challenges-page__index--small">#01</span>
@@ -53,12 +53,12 @@
                     </div>
 
                     <h1 class="challenge-detail__title">@Model.Info.Title</h1>
-                    <p class="challenge-detail__description">@Model.Info.Description</p>
+                    <p class="challenge-detail__description pt-2">@Model.Info.Description</p>
 
                     <h2 class="challenge-detail__label mt-4">
                         <i class="bi bi-table me-1"></i>Expected output
                     </h2>
-                    
+
                     <div class="challenge-detail__sample">
                         <div class="challenge-detail__sample__body">
                             <partial name="_SampleOutput" model="@Model.Info.SampleOutput"/>
@@ -114,7 +114,7 @@
                     </div>
                 </section>
             </aside>
-            
+
             <div class="challenge-detail__workbench" id="challenge-detail-right">
                 <header class="challenge-detail__workbench-bar">
                 <span class="challenge-detail__workbench-title">
@@ -130,9 +130,10 @@
 
                 <div class="challenge-detail__split challenge-detail__split--row" id="challenge-detail-row">
                     <div class="challenge-detail__editor-wrap" id="challenge-detail-editor">
-                    <textarea class="challenge-detail__editor" id="challenge-detail-sql"
-                              spellcheck="false" aria-label="SQL editor" autocomplete="off">SELECT
-</textarea>
+                        <textarea
+                            class="challenge-detail__editor" id="challenge-detail-sql"
+                            spellcheck="false" aria-label="SQL editor" autocomplete="off">SELECT
+                    </textarea>
                     </div>
 
                     <section class="challenge-detail__results" id="challenge-detail-results">
@@ -201,7 +202,7 @@
     <script>
         (function () {
             Split(['#challenge-detail-left', '#challenge-detail-right'], {
-                sizes: [42, 58],
+                sizes: [50, 50],
                 minSize: [280, 600],
                 gutterSize: 6,
                 direction: 'horizontal',
