@@ -1,5 +1,8 @@
 using SqlServerChallenges.Core;
+using SqlServerChallenges.Core.Authentication;
 using SqlServerChallenges.Core.Data;
+using SqlServerChallenges.Web.Authentication;
+using SqlServerChallenges.Web.Common;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,6 +10,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 builder.Services.AddApplicationCore(builder.Configuration);
 
+builder.Services.AddScoped<IUserContext, UserContext>();
+builder.Services.AddSingleton<IDateTimeProvider, DateTimeProvider>();
 
 var app = builder.Build();
     

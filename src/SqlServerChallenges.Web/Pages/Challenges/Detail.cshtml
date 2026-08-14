@@ -56,16 +56,19 @@
                     <p class="challenge-detail__description pt-2">@Model.Info.Description</p>
                     <div class="d-flex gap-2 mt-3">
                         <button id="vote-up"
-                                class="challenge-detail__vote-btn"
-                                hx-post="/"
+                                class="challenge-detail__vote-btn @(Model.State.IsUpVoted ? "challenge-detail__vote-btn--clicked-up" : "")"
+                                hx-post="?handler=Vote"
+                                hx-vals='{"challengeId": "@Model.ChallengeId", "type": "upVote"}'
                                 hx-swap="none"
                                 hx-on::before-request="toggleVote('up')">
                             <i class="bi bi-hand-thumbs-up "></i>
-                            <span class="challenge-detail__vote-count">12</span>
+                            <span
+                                class="challenge-detail__vote-count">@Model.State.UpVotes</span>
                         </button>
                         <button id="vote-down"
                                 class="challenge-detail__vote-btn"
-                                hx-post="/"
+                                hx-post="?handler=Vote"
+                                hx-vals='{"challengeId": "@Model.ChallengeId", "type": "downVote"}'
                                 hx-swap="none"
                                 hx-on::before-request="toggleVote('down')">
                             <i class="bi bi-hand-thumbs-down"></i>
@@ -220,18 +223,18 @@
         function toggleVote(type) {
             const upBtn = document.getElementById('vote-up')
             const downBtn = document.getElementById('vote-down')
-            
-            if(type === 'up') {
+
+            if (type === 'up') {
                 upBtn.classList.toggle('challenge-detail__vote-btn--clicked-up');
                 downBtn.classList.remove('challenge-detail__vote-btn--clicked-down');
                 return;
             }
-            
-            if(type === 'down') {
+
+            if (type === 'down') {
                 downBtn.classList.toggle('challenge-detail__vote-btn--clicked-down');
                 upBtn.classList.remove('challenge-detail__vote-btn--clicked-up');
             }
-            
+
         }
 
         (function () {
