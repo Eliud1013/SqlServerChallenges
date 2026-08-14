@@ -18,6 +18,7 @@ public record Error
 
     public static readonly Error None = new(string.Empty, string.Empty);
     public static readonly Error NullValue = new("Error.NullValue", "The operation resulted in a null value.");
+    public static readonly Error Unauthorized = new("Error.Unauthorized", "Authentication failed");
 }
 
 public sealed record Error<TValue> : Error

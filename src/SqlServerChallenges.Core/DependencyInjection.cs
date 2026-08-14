@@ -31,6 +31,7 @@ public static class DependencyInjection
         {
             options.RegisterServicesFromAssembly(typeof(DependencyInjection).Assembly);
             options.AddOpenBehavior(typeof(CacheableQueryBehavior<,>));
+            options.AddOpenBehavior(typeof(AuthenticatedRequestBehavior<,>));
         });
 
         services.AddMemoryCache();
