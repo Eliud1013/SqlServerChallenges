@@ -1,13 +1,16 @@
 @page "/Challenges/{slug}"
-@model SqlServerChallenges.Web.Pages.Challenges.Detail
+@model Detail
 @{
     Layout = "_BaseLayout";
     ViewData["Title"] = Model.Info.Title;
+    var challengeNumber = Model.Info.Number;
 }
 
 @section Styles {
     <link rel="stylesheet" href="~/css/Challenges/Detail.css" asp-append-version="true"/>
 }
+
+@Html.AntiForgeryToken()
 
 <div class="challenge-detail bg-body">
     <header class="challenge-detail__subbar d-flex w-100 px-4">
@@ -31,7 +34,6 @@
         </button>
 
     </header>
-
     <div class="challenge-detail__body">
         <div class="d-flex flex-grow-1 flex-shrink-1 flex-row p-3">
             <aside class="challenge-detail__panel" id="challenge-detail-left">
@@ -43,7 +45,9 @@
 
                 <section class="challenge-detail__tab-panel is-active" data-tab="description" role="tabpanel">
                     <div class="d-flex align-items-center gap-2 mb-2">
-                        <span class="challenges-page__index challenges-page__index--small">#01</span>
+                        <span class="challenges-page__index challenges-page__index--small">
+                            #@(challengeNumber < 10 ? $"0{challengeNumber}" : challengeNumber)
+                        </span>
                         <span class="challenges__badge challenges__badge--category">@Model.Info.Category</span>
                         <span
                             class="challenges__badge challenge__badge--@Model.Info.Difficulty.ToString().ToLowerInvariant()">
@@ -58,19 +62,21 @@
                         <button id="vote-up"
                                 class="challenge-detail__vote-btn @(Model.State.IsUpVoted ? "challenge-detail__vote-btn--clicked-up" : "")"
                                 hx-post="?handler=Vote"
-                                hx-vals='{"challengeId": "@Model.ChallengeId", "type": "upVote"}'
+                                hx-vals='{"challengeId": "@Model.Info.ChallengeId", "type": "UpVote"}'
                                 hx-swap="none"
-                                hx-on::before-request="toggleVote('up')">
-                            <i class="bi bi-hand-thumbs-up "></i>
-                            <span
-                                class="challenge-detail__vote-count">@Model.State.UpVotes</span>
+                                hx-on::before-request="toggleVote('up')"
+                                hx-on::after-request="if (!event.detail.successful) toggleVote('up')">
+                            <i class="bi bi-hand-thumbs-up"></i>
+                            <span class="challenge-detail__vote-count">@Model.State.UpVotes</span>
                         </button>
+
                         <button id="vote-down"
-                                class="challenge-detail__vote-btn"
+                                class="challenge-detail__vote-btn @(Model.State.IsDownVoted ? "challenge-detail__vote-btn--clicked-down" : "")"
                                 hx-post="?handler=Vote"
-                                hx-vals='{"challengeId": "@Model.ChallengeId", "type": "downVote"}'
+                                hx-vals='{"challengeId": "@Model.Info.ChallengeId", "type": "DownVote"}'
                                 hx-swap="none"
-                                hx-on::before-request="toggleVote('down')">
+                                hx-on::before-request="toggleVote('down')"
+                                hx-on::after-request="if (!event.detail.successful) toggleVote('down')">
                             <i class="bi bi-hand-thumbs-down"></i>
                         </button>
                     </div>
@@ -221,20 +227,24 @@
     <script src="https://unpkg.com/split.js@1.6.5/dist/split.min.js"></script>
     <script>
         function toggleVote(type) {
-            const upBtn = document.getElementById('vote-up')
-            const downBtn = document.getElementById('vote-down')
+            const upBtn = document.getElementById('vote-up');
+            const downBtn = document.getElementById('vote-down');
+            const countSpan = upBtn.querySelector('.challenge-detail__vote-count');
+            const count = parseInt(countSpan.textContent, 10);
 
             if (type === 'up') {
-                upBtn.classList.toggle('challenge-detail__vote-btn--clicked-up');
+                const toggledOn = upBtn.classList.toggle('challenge-detail__vote-btn--clicked-up');
                 downBtn.classList.remove('challenge-detail__vote-btn--clicked-down');
-                return;
+                countSpan.textContent = toggledOn ? count + 1 : count - 1;
             }
 
             if (type === 'down') {
-                downBtn.classList.toggle('challenge-detail__vote-btn--clicked-down');
-                upBtn.classList.remove('challenge-detail__vote-btn--clicked-up');
+                const toggledOn = downBtn.classList.toggle('challenge-detail__vote-btn--clicked-down');
+                if (toggledOn && upBtn.classList.contains('challenge-detail__vote-btn--clicked-up')) {
+                    upBtn.classList.remove('challenge-detail__vote-btn--clicked-up');
+                    countSpan.textContent = count - 1;
+                }
             }
-
         }
 
         (function () {
