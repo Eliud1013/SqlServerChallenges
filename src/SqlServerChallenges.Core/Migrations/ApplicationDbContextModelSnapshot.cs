@@ -133,7 +133,7 @@ namespace SqlServerChallenges.Core.Migrations
 
                     b.HasKey("ChallengeId", "UserId");
 
-                    b.ToTable("ChallengeVotes", (string)null);
+                    b.ToTable("ChallengeVotes", "Challenges");
                 });
 
             modelBuilder.Entity("SqlServerChallenges.Core.Data.Entities.Challenge", b =>

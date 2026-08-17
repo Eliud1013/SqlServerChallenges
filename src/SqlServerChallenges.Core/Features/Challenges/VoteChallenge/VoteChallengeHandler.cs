@@ -25,14 +25,14 @@ public class VoteChallengeHandler : ICommandHandler<VoteChallengeCommand>
 
     public async Task<Result> Handle(VoteChallengeCommand request, CancellationToken cancellationToken)
     {
+        var challenge = await _dbContext.Challenges
+            .AnyAsync(c => c.Id == request.ChallengeId, cancellationToken);
+
+        if (!challenge)
+            return ChallengesErrors.NotFound;
+
         var userId = _userContext.UserId!;
         var challengeId = request.ChallengeId;
-
-        var challengeExists = await _dbContext.Challenges
-            .AnyAsync(c => c.Id == challengeId, cancellationToken);
-
-        if (!challengeExists)
-            return ChallengesErrors.NotFound;
 
         var now = _clock.UtcNow;
         var currentVote = await _dbContext.Votes
@@ -63,6 +63,7 @@ public class VoteChallengeHandler : ICommandHandler<VoteChallengeCommand>
         }
 
         await _dbContext.SaveChangesAsync(cancellationToken);
+
         return Result.Success();
     }
 }

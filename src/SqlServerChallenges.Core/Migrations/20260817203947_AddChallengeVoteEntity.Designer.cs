@@ -12,7 +12,7 @@ using SqlServerChallenges.Core.Data;
 namespace SqlServerChallenges.Core.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260813224303_AddChallengeVoteEntity")]
+    [Migration("20260817203947_AddChallengeVoteEntity")]
     partial class AddChallengeVoteEntity
     {
         /// <inheritdoc />
@@ -136,7 +136,7 @@ namespace SqlServerChallenges.Core.Migrations
 
                     b.HasKey("ChallengeId", "UserId");
 
-                    b.ToTable("ChallengeVotes", (string)null);
+                    b.ToTable("ChallengeVotes", "Challenges");
                 });
 
             modelBuilder.Entity("SqlServerChallenges.Core.Data.Entities.Challenge", b =>

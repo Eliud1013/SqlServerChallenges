@@ -22,7 +22,7 @@ public class GetChallengeInfoHandler : IQueryHandler<GetChallengeInfoQuery, Chal
     {
         var challenge = await _dbContext.Challenges
             .Include(c => c.Category)
-            .FirstOrDefaultAsync(c => c.Id == request.ChallengeId, cancellationToken);
+            .FirstOrDefaultAsync(c => c.Slug == request.Slug, cancellationToken);
 
         if (challenge is null)
             return ChallengesErrors.NotFound;
@@ -33,6 +33,7 @@ public class GetChallengeInfoHandler : IQueryHandler<GetChallengeInfoQuery, Chal
             return ChallengesErrors.UnknownError;
 
         return new ChallengeInfo(
+            challenge.Id,
             challenge.Title,
             challenge.Number,
             challenge.TaskDescription,

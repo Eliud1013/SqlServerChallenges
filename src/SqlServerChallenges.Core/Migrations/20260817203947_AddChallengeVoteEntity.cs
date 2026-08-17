@@ -13,6 +13,7 @@ namespace SqlServerChallenges.Core.Migrations
         {
             migrationBuilder.CreateTable(
                 name: "ChallengeVotes",
+                schema: "Challenges",
                 columns: table => new
                 {
                     ChallengeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -37,7 +38,8 @@ namespace SqlServerChallenges.Core.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "ChallengeVotes");
+                name: "ChallengeVotes",
+                schema: "Challenges");
         }
     }
 }
