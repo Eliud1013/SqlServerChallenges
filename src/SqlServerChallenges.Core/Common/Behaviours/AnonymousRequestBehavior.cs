@@ -5,12 +5,12 @@ using SqlServerChallenges.Core.Common.Results;
 
 namespace SqlServerChallenges.Core.Common.Behaviours;
 
-public class AuthenticatedRequestBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
+public class AnonymousRequestBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
     where TRequest : notnull
 {
     private readonly IUserContext _userContext;
 
-    public AuthenticatedRequestBehavior(IUserContext userContext)
+    public AnonymousRequestBehavior(IUserContext userContext)
     {
         _userContext = userContext;
     }
@@ -20,10 +20,7 @@ public class AuthenticatedRequestBehavior<TRequest, TResponse> : IPipelineBehavi
         RequestHandlerDelegate<TResponse> next,
         CancellationToken cancellationToken)
     {
-        if (request is not IAuthenticatedRequest)
-            return await next(cancellationToken);
-
-        if (!_userContext.IsAuthenticated)
+        if (request is not IAnonymousRequest && !_userContext.IsAuthenticated)
             return Unauthorized<TResponse>();
 
         return await next(cancellationToken);
