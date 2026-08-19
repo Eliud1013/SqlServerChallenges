@@ -176,9 +176,6 @@
     padding: 0.75rem;
 }
 
-.challenge-detail__split--row {
-    flex-direction: column;
-}
 
 .challenge-detail__panel,
 .challenge-detail__workbench,
@@ -190,6 +187,16 @@
 .gutter {
     width: 0.5rem;
     position: relative;
+}
+
+.gutter.gutter-horizontal {
+    height: 100%;
+    cursor: col-resize;
+}
+
+.gutter.gutter-vertical {
+    width: 100%;
+    cursor: row-resize;
 }
 
 .gutter::after {
@@ -217,14 +224,6 @@
 .gutter:active::after {
     background: var(--clr-primary);
     box-shadow: 0 0 8px rgba(0, 211, 159, 0.55);
-}
-
-.gutter.gutter-horizontal {
-    cursor: col-resize;
-}
-
-.gutter.gutter-vertical {
-    cursor: row-resize;
 }
 
 /* ---- Floating panels ---- */
