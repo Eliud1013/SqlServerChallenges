@@ -35,7 +35,7 @@
 
     </header>
     <div class="challenge-detail__body">
-        <div class="d-flex flex-grow-1 flex-shrink-1 flex-row p-3">
+        <div class="d-flex flex-grow-1 flex-shrink-1 flex-row p-3 gap-1">
             <aside class="challenge-detail__panel" id="challenge-detail-left">
                 <div class="challenge-detail__tabs">
                     <button class="challenge-detail__tab is-active">Description</button>
@@ -154,10 +154,9 @@
                     </button>
                 </header>
 
-                <div class="d-flex flex-column h-50 flex-grow-1">
+                <div class="d-flex flex-column flex-grow-1 flex-shrink-1">
                     <div class="challenge-detail__editor-wrap" id="challenge-detail-editor">
                     </div>
-
                     <section class="challenge-detail__results" id="challenge-detail-results">
                         <header class="challenge-detail__results-header">
                             <span class="challenge-detail__label challenge-detail__label--inline mb-0">Results</span>
@@ -222,7 +221,6 @@
 @section Scripts {
     <script src="https://unpkg.com/split.js@1.6.5/dist/split.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.45.0/min/vs/loader.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.45.0/min/vs/loader.min.js"></script>
 
     <script>
         let editor;
@@ -252,7 +250,7 @@
                 language: 'sql',
                 theme: 'mi-tema-sql',
                 fontFamily: 'Fira Code, Consolas, monospace',
-                automaticLayout: true,
+                automaticLayout: false,
                 fontSize: 14,
                 minimap: {enabled: false},
                 scrollBeyondLastLine: false,
@@ -287,11 +285,13 @@
 
         (function () {
             Split(['#challenge-detail-left', '#challenge-detail-right'], {
-                sizes: [50, 50],
-                minSize: [280, 600],
+                sizes: [150, 200],
+                minSize: [350, 200],
                 gutterSize: 6,
                 direction: 'horizontal',
                 cursor: 'col-resize',
+                onDrag: () => editor?.layout(),
+                onDragEnd: () => editor?.layout()
             });
 
             Split(['#challenge-detail-editor', '#challenge-detail-results'], {
@@ -300,6 +300,8 @@
                 gutterSize: 6,
                 direction: 'vertical',
                 cursor: 'row-resize',
+                onDrag: () => editor?.layout(),
+                onDragEnd: () => editor?.layout()
             });
 
             const tabs = document.querySelectorAll('.challenge-detail__tab');
