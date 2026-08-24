@@ -15,7 +15,7 @@ public class MsSqlQueryExecutor : IQueryExecutor
         _connection = connection;
     }
 
-    public async Task<QueryExecutorResult> ExecuteQueryAsync(string query, int? rowLimit = 50, CancellationToken ct = default)
+    public async Task<QueryExecutorResult> ExecuteQueryAsync(string query, int? rowLimit = null, CancellationToken ct = default)
     {
         try
         {
@@ -33,7 +33,7 @@ public class MsSqlQueryExecutor : IQueryExecutor
 
             int rowNumber = 0;
 
-            while (rowNumber < rowLimit && await reader.ReadAsync(ct))
+            while ((rowLimit is null || rowNumber < rowLimit) && await reader.ReadAsync(ct))
             {
                 var row = table.NewRow();
 

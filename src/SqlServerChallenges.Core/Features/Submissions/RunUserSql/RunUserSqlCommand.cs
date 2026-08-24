@@ -7,4 +7,4 @@ namespace SqlServerChallenges.Core.Features.Submissions.RunUserSql;
 public sealed record RunUserSqlCommand(
     Guid ChallengeId,
     string UserQuery,
-    DatabaseProvider provider) : ICommand<QueryExecutorResult>;
+    DatabaseProvider provider) : ICommand<RunResult>;
