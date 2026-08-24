@@ -146,7 +146,22 @@
                 <span class="challenge-detail__workbench-title">
                     <i class="bi bi-terminal me-2"></i>T-SQL · SQL Server1
                 </span>
-                    <button type="button" class="btn btn-primary challenge-detail__run" id="challenge-detail-run">
+                    <button type="button" class="btn btn-primary challenge-detail__run" id="challenge-detail-run"
+                            hx-post="?handler=RunCode"
+                            hx-vals='{"challengeId": "@Model.Info.ChallengeId"}'
+                            hx-target="#challenge-detail__result-body"
+                            hx-swap="innerHTML"
+                            hx-indicator="#challenge-detail-run-spinner"
+                            hx-on::before-request="
+                                document.getElementById('challenge-detail-results-idle').classList.add('d-none');
+                                document.getElementById('challenge-detail-results-running').classList.remove('d-none');
+                                this.querySelector('#challenge-detail-run-text').textContent = 'Running...';
+                                this.disabled = true;"
+                            hx-on::after-request="
+                                this.querySelector('#challenge-detail-run-icon').classList.remove('d-none');
+                                this.querySelector('#challenge-detail-run-text').textContent = 'Run';
+                                this.disabled = false;
+                                document.getElementById('challenge-detail-results-running').classList.add('d-none');">
                         <i class="bi bi-play-fill me-1" id="challenge-detail-run-icon"></i>
                         <span class="spinner-border spinner-border-sm me-1 d-none" id="challenge-detail-run-spinner"
                               role="status" aria-hidden="true"></span>
@@ -154,17 +169,14 @@
                     </button>
                 </header>
 
-                <div class="d-flex flex-column flex-grow-1 flex-shrink-1">
+                <div class="d-flex flex-column flex-grow-1 flex-shrink-1" style="min-width: 0">
                     <div class="challenge-detail__editor-wrap" id="challenge-detail-editor">
                     </div>
                     <section class="challenge-detail__results" id="challenge-detail-results">
-                        <header class="challenge-detail__results-header">
-                            <span class="challenge-detail__label challenge-detail__label--inline mb-0">Results</span>
-                            <span class="challenge-detail__results-count d-none" id="challenge-detail-results-count">
-                            <i class="bi bi-check-circle me-1"></i><span id="challenge-detail-row-count"></span>
-                        </span>
-                        </header>
 
+                        <div class="" id="challenge-detail__result-body">
+
+                        </div>
                         <div class="challenge-detail__results-state" id="challenge-detail-results-idle">
                             <i class="bi bi-play-circle challenge-detail__results-icon" aria-hidden="true"></i>
                             <p>Press Run to see results</p>
@@ -176,41 +188,6 @@
                             <p>Executing query...</p>
                         </div>
 
-                        <div class="challenge-detail__results-table-wrap d-none"
-                             id="challenge-detail-results-table-wrap">
-                            <div class="table-responsive">
-                                <table class="table challenge-detail__table mb-0">
-                                    <thead>
-                                    <tr>
-                                        <th>BusinessEntityID</th>
-                                        <th>PersonType</th>
-                                        <th>FirstName</th>
-                                        <th>LastName</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <tr>
-                                        <td>1</td>
-                                        <td>EM</td>
-                                        <td>Ken</td>
-                                        <td>Sánchez</td>
-                                    </tr>
-                                    <tr>
-                                        <td>2</td>
-                                        <td>EM</td>
-                                        <td>Terri</td>
-                                        <td>Duffy</td>
-                                    </tr>
-                                    <tr>
-                                        <td>3</td>
-                                        <td>EM</td>
-                                        <td>Roberto</td>
-                                        <td>Tamburello</td>
-                                    </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
                     </section>
                 </div>
             </div>
@@ -258,6 +235,28 @@
                 roundedSelection: false,
                 tabSize: 4
             });
+
+            Split(['#challenge-detail-left', '#challenge-detail-right'], {
+                sizes: [40, 60],
+                minSize: [350, 400],
+                gutterSize: 6,
+                direction: 'horizontal',
+                cursor: 'col-resize',
+                onDrag: () => editor?.layout(),
+                onDragEnd: () => editor?.layout()
+            });
+
+            Split(['#challenge-detail-editor', '#challenge-detail-results'], {
+                sizes: [60, 40],
+                minSize: [160, 140],
+                gutterSize: 6,
+                direction: 'vertical',
+                cursor: 'row-resize',
+                onDrag: () => editor?.layout(),
+                onDragEnd: () => editor?.layout()
+            });
+
+            editor.layout();
         });
     </script>
 
@@ -283,68 +282,19 @@
             }
         }
 
-        (function () {
-            Split(['#challenge-detail-left', '#challenge-detail-right'], {
-                sizes: [150, 200],
-                minSize: [350, 200],
-                gutterSize: 6,
-                direction: 'horizontal',
-                cursor: 'col-resize',
-                onDrag: () => editor?.layout(),
-                onDragEnd: () => editor?.layout()
+        document.getElementById('challenge-detail-run').addEventListener('htmx:configRequest', function (e) {
+            e.detail.parameters.sql = editor.getValue();
+        });
+
+        const tabs = document.querySelectorAll('.challenge-detail__tab');
+        const panels = document.querySelectorAll('.challenge-detail__tab-panel');
+
+        tabs.forEach((tab) => {
+            tab.addEventListener('click', () => {
+                const target = tab.textContent.trim().toLowerCase();
+                tabs.forEach((t) => t.classList.toggle('is-active', t === tab));
+                panels.forEach((p) => p.classList.toggle('is-active', p.dataset.tab === target));
             });
-
-            Split(['#challenge-detail-editor', '#challenge-detail-results'], {
-                sizes: [60, 40],
-                minSize: [160, 140],
-                gutterSize: 6,
-                direction: 'vertical',
-                cursor: 'row-resize',
-                onDrag: () => editor?.layout(),
-                onDragEnd: () => editor?.layout()
-            });
-
-            const tabs = document.querySelectorAll('.challenge-detail__tab');
-            const panels = document.querySelectorAll('.challenge-detail__tab-panel');
-
-            tabs.forEach((tab) => {
-                tab.addEventListener('click', () => {
-                    const target = tab.textContent.trim().toLowerCase();
-                    tabs.forEach((t) => t.classList.toggle('is-active', t === tab));
-                    panels.forEach((p) => p.classList.toggle('is-active', p.dataset.tab === target));
-                });
-            });
-
-            const runBtn = document.getElementById('challenge-detail-run');
-            const runIcon = document.getElementById('challenge-detail-run-icon');
-            const runSpinner = document.getElementById('challenge-detail-run-spinner');
-            const runText = document.getElementById('challenge-detail-run-text');
-            const idle = document.getElementById('challenge-detail-results-idle');
-            const running = document.getElementById('challenge-detail-results-running');
-            const tableWrap = document.getElementById('challenge-detail-results-table-wrap');
-            const resultsCount = document.getElementById('challenge-detail-results-count');
-            const rowCount = document.getElementById('challenge-detail-row-count');
-
-            runBtn.addEventListener('click', () => {
-                if (runBtn.disabled) return;
-                runBtn.disabled = true;
-                runIcon.classList.add('d-none');
-                runSpinner.classList.remove('d-none');
-                runText.textContent = 'Running...';
-                idle.classList.add('d-none');
-                running.classList.remove('d-none');
-
-                setTimeout(() => {
-                    runBtn.disabled = false;
-                    runIcon.classList.remove('d-none');
-                    runSpinner.classList.add('d-none');
-                    runText.textContent = 'Run';
-                    running.classList.add('d-none');
-                    tableWrap.classList.remove('d-none');
-                    rowCount.textContent = '3 rows';
-                    resultsCount.classList.remove('d-none');
-                }, 900);
-            });
-        })();
+        });
     </script>
 }
