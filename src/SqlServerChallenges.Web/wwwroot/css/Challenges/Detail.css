@@ -243,7 +243,7 @@
 .challenge-detail__workbench {
     display: flex;
     flex-direction: column;
-    flex: 0 1 auto;
+    flex: 1 1 auto;
     min-width: 0;
     min-height: 0;
     overflow: hidden;
@@ -459,7 +459,6 @@
 /* ---- Editor ---- */
 
 .challenge-detail__editor-wrap {
-    flex: 1 1 0%;
     min-width: 0;
     min-height: 0;
     overflow: hidden;
@@ -472,19 +471,16 @@
 .challenge-detail__results {
     display: flex;
     flex-direction: column;
-    flex: 1 1 0%;
     min-width: 0;
     min-height: 0;
+    overflow: hidden;
     border-top: 1px solid rgba(255, 255, 255, 0.06);
 }
 
-.challenge-detail__results-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex: 0 0 auto;
-    padding: 0.5rem 0.9rem;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+#challenge-detail__result-body {
+    flex: 1 1 0;
+    min-height: 0;
+    overflow-y: auto;
 }
 
 .challenge-detail__results-count {
