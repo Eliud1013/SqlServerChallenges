@@ -39,15 +39,26 @@ setup_sql=$(cat << EOF
       WHERE name = '$DB_SETUP_LOGIN'
   )
   BEGIN
-      CREATE LOGIN submission
-      WITH PASSWORD = '$DB_SETUP_PASSWORD';
-      
+      CREATE LOGIN $DB_SETUP_LOGIN
+      WITH PASSWORD = '$DB_SETUP_PASSWORD',
+        DEFAULT_DATABASE = AdventureWorks2022;
+  END
+  
+  IF NOT EXISTS (
+      SELECT 1
+      FROM sys.database_principals
+      WHERE name = '$DB_SETUP_USER'
+  )
+  BEGIN
       CREATE USER $DB_SETUP_USER
       FOR LOGIN $DB_SETUP_LOGIN;
-          
-      ALTER ROLE db_datareader
-      ADD MEMBER $DB_SETUP_USER;
-  END
+              
+      GRANT SELECT ON SCHEMA::Person TO $DB_SETUP_USER;
+      GRANT SELECT ON SCHEMA::Production TO $DB_SETUP_USER;
+      GRANT SELECT ON SCHEMA::Purchasing TO $DB_SETUP_USER;
+      GRANT SELECT ON SCHEMA::Sales TO $DB_SETUP_USER;
+      GRANT SELECT ON SCHEMA::HumanResources TO $DB_SETUP_USER;
+ END
   GO
     
 EOF
