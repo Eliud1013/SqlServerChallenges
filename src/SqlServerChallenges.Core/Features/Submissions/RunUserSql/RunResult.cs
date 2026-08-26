@@ -1,3 +1,4 @@
+using SqlServerChallenges.Core.Services;
 using SqlServerChallenges.Core.Services.QueryExecutor;
 
 namespace SqlServerChallenges.Core.Features.Submissions.RunUserSql;
@@ -5,7 +6,9 @@ namespace SqlServerChallenges.Core.Features.Submissions.RunUserSql;
 public sealed record RunResult
 {
     public bool IsSuccess { get; }
+    public IReadOnlyList<SqlSyntaxError>? SyntaxErrors { get; }
     public QueryErrorType? ErrorType { get; }
+    public string? ErrorMessage { get; }
 
     public IReadOnlyList<string> UserColumns { get; }
     public IReadOnlyList<string> ExpectedColumns { get; }
@@ -20,10 +23,21 @@ public sealed record RunResult
     public bool ColumnCountMatch { get; }
     public bool RowCountMatch { get; }
 
-    private RunResult(QueryErrorType errorType)
+    private RunResult(QueryErrorType errorType, string errorMessage)
     {
         IsSuccess = false;
         ErrorType = errorType;
+        ErrorMessage = errorMessage;
+        UserColumns = [];
+        ExpectedColumns = [];
+        UserRows = [];
+        ExpectedRows = [];
+    }
+    
+    private RunResult(IReadOnlyList<SqlSyntaxError> syntaxErrors)
+    {
+        IsSuccess = false;
+        SyntaxErrors = syntaxErrors;
         UserColumns = [];
         ExpectedColumns = [];
         UserRows = [];
@@ -45,8 +59,8 @@ public sealed record RunResult
         RowCountMatch = UserRowCount == ExpectedRowCount;
     }
 
-    public static RunResult Error(QueryErrorType errorType) => new(errorType);
-
+    public static RunResult Error(QueryErrorType type, string message) => new(type, message);
+    public static RunResult SyntaxError(IReadOnlyList<SqlSyntaxError> errors) => new (errors);
     public static RunResult FromResults(OutputTable userResult, OutputTable expectedResult) =>
         new(userResult, expectedResult);
 

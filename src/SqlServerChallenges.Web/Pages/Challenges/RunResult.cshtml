@@ -1,20 +1,48 @@
 @using SqlServerChallenges.Core.Features.Submissions.RunUserSql
 @using SqlServerChallenges.Core.Services.QueryExecutor
+@using System.Text.Json
 @model RunResult
 
 @if (!Model.IsSuccess)
 {
-    <div class="run-result__error">
-        <i class="bi bi-exclamation-triangle run-result__error-icon"></i>
-        <span class="run-result__error-text">
-            @(Model.ErrorType switch
-            {
-                QueryErrorType.QueryTimeout => "Query timed out (6s limit)",
-                QueryErrorType.PermissionDenied => "Permission denied",
-                _ => "An error occurred while executing the query"
-            })
-        </span>
-    </div>
+    @if (Model.SyntaxErrors is { Count: > 0 })
+    {
+        var errorsJson = JsonSerializer.Serialize(Model.SyntaxErrors, 
+            new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase });
+        
+        <div class="run-result__error" data-syntax-errors='@Html.Raw(errorsJson)'>
+            <div class="run-result__error-header">
+                <i class="bi bi-exclamation-triangle run-result__error-icon"></i>
+                <span class="run-result__error-title">Syntax Error</span>
+            </div>
+            <ul class="run-result__error-list">
+                @foreach (var err in Model.SyntaxErrors)
+                {
+                    <li class="run-result__error-message">
+                        Line @err.Line, Column @err.Column: @err.Message
+                    </li>
+                }
+            </ul>
+        </div>
+    }
+    else
+    {
+        <div class="run-result__error">
+            <div class="run-result__error-header">
+                <i class="bi bi-exclamation-triangle run-result__error-icon"></i>
+                <span class="run-result__error-title">
+                    @(Model.ErrorType switch
+                    {
+                        QueryErrorType.QueryTimeout => "Query Timeout",
+                        QueryErrorType.PermissionDenied => "Permission Denied",
+                        QueryErrorType.InvalidQuery => "Invalid Query",
+                        _ => "Query Error"
+                    })
+                </span>
+            </div>
+            <p class="run-result__error-message">@Model.ErrorMessage</p>
+        </div>
+    }
     return;
 }
 

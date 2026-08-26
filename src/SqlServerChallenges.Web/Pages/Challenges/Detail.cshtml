@@ -261,6 +261,27 @@
     </script>
 
     <script>
+        function clearSyntaxMarkers() {
+            if (editor) monaco.editor.setModelMarkers(editor.getModel(), 'owner', []);
+        }
+
+        function applySyntaxMarkers() {
+            const el = document.querySelector('#challenge-detail__result-body [data-syntax-errors]');
+            if (!el || !editor) return;
+            try {
+                const errors = JSON.parse(el.dataset.syntaxErrors);
+                const markers = errors.map(e => ({
+                    severity: monaco.MarkerSeverity.Error,
+                    message: e.message,
+                    startLineNumber: e.line,
+                    startColumn: 1,
+                    endLineNumber: e.line,
+                    endColumn: Number.MAX_SAFE_INTEGER
+                }));
+                monaco.editor.setModelMarkers(editor.getModel(), 'owner', markers);
+            } catch {}
+        }
+
         function toggleVote(type) {
             const upBtn = document.getElementById('vote-up');
             const downBtn = document.getElementById('vote-down');
@@ -285,6 +306,9 @@
         document.getElementById('challenge-detail-run').addEventListener('htmx:configRequest', function (e) {
             e.detail.parameters.sql = editor.getValue();
         });
+
+        document.getElementById('challenge-detail-run').addEventListener('htmx:beforeRequest', clearSyntaxMarkers);
+        document.getElementById('challenge-detail__result-body').addEventListener('htmx:afterSwap', applySyntaxMarkers);
 
         const tabs = document.querySelectorAll('.challenge-detail__tab');
         const panels = document.querySelectorAll('.challenge-detail__tab-panel');

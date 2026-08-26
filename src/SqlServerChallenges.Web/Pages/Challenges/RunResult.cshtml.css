@@ -10,9 +10,9 @@
 
 .run-result__error {
     display: flex;
-    align-items: center;
-    gap: 0.6rem;
-    padding: 1rem;
+    flex-direction: column;
+    gap: 0.4rem;
+    padding: 0.75rem 1rem;
     background: rgba(239, 68, 68, 0.08);
     border: 1px solid rgba(239, 68, 68, 0.2);
     border-radius: var(--radius-md);
@@ -20,9 +20,39 @@
     font-size: 0.8rem;
 }
 
+.run-result__error-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
 .run-result__error-icon {
-    font-size: 1.1rem;
+    font-size: 1rem;
     flex-shrink: 0;
+}
+
+.run-result__error-title {
+    font-weight: 600;
+    font-size: 0.8rem;
+}
+
+.run-result__error-message {
+    margin: 0;
+    color: #fca5a5;
+    font-size: 0.75rem;
+    line-height: 1.4;
+}
+
+.run-result__error-list {
+    margin: 0;
+    padding-left: 1.2rem;
+    list-style: none;
+}
+
+.run-result__error-list li::before {
+    content: "\2022";
+    color: #f87171;
+    margin-right: 0.4rem;
 }
 
 .run-result__cards {

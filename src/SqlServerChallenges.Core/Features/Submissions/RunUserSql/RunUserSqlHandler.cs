@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using SqlServerChallenges.Core.Common.CQRS;
 using SqlServerChallenges.Core.Common.Results;
 using SqlServerChallenges.Core.Data;
@@ -12,15 +13,17 @@ public class RunUserSqlHandler : ICommandHandler<RunUserSqlCommand, RunResult>
     private readonly ApplicationDbContext _dbContext;
     private readonly SyntaxCheckerDispatcher _syntaxCheckerDispatcher;
     private readonly QueryExecutorDispatcher _queryExecutorDispatcher;
+    private readonly ILogger<RunUserSqlHandler> _logger; 
 
 
     public RunUserSqlHandler(
         ApplicationDbContext dbContext,
         SyntaxCheckerDispatcher syntaxCheckerDispatcher,
-        QueryExecutorDispatcher queryExecutorDispatcher)
+        QueryExecutorDispatcher queryExecutorDispatcher, ILogger<RunUserSqlHandler> logger)
     {
         _dbContext = dbContext;
         _queryExecutorDispatcher = queryExecutorDispatcher;
+        _logger = logger;
         _syntaxCheckerDispatcher = syntaxCheckerDispatcher;
     }
 
@@ -41,15 +44,13 @@ public class RunUserSqlHandler : ICommandHandler<RunUserSqlCommand, RunResult>
         var syntaxValidationResult = _syntaxCheckerDispatcher.Validate(userQuery, provider);
 
         if (syntaxValidationResult.IsInvalid)
-            return SubmissionErrors.SyntaxError(syntaxValidationResult.Errors);
+            return RunResult.SyntaxError(syntaxValidationResult.Errors);
 
-        var queryResult =
-            await _queryExecutorDispatcher.ExecuteQueryAsync(userQuery, provider, defaultRowLimit, ct: cancellationToken);
+        var queryResult = await _queryExecutorDispatcher
+            .ExecuteQueryAsync(userQuery, provider, defaultRowLimit, ct: cancellationToken);
 
         if (!queryResult.IsSuccess)
-        {
-            return RunResult.Error(queryResult.ErrorType);
-        }
+            return RunResult.Error(queryResult.ErrorType, queryResult.ErrorMessage);
 
         var expected = await _dbContext.Solutions
             .Where(s => s.ChallengeId == request.ChallengeId && s.DatabaseProvider == provider)
@@ -63,7 +64,11 @@ public class RunUserSqlHandler : ICommandHandler<RunUserSqlCommand, RunResult>
             await _queryExecutorDispatcher.ExecuteQueryAsync(expected, provider, defaultRowLimit, ct: cancellationToken);
 
         if (!expectedResult.IsSuccess)
-            return RunResult.Error(expectedResult.ErrorType);
+        {
+            _logger.LogCritical($"Solution query execution failed. challengeId: {challenge.Id} provider: {provider}");
+            return RunResult.Error(expectedResult.ErrorType, "An error ocurred");
+        }
+
 
         return RunResult.FromResults(queryResult.OutputTable, expectedResult.OutputTable);
     }
