@@ -155,6 +155,7 @@
                             hx-on::before-request="
                                 document.getElementById('challenge-detail-results-idle').classList.add('d-none');
                                 document.getElementById('challenge-detail-results-running').classList.remove('d-none');
+                                document.getElementById('challenge-detail__result-body').classList.remove('d-none');
                                 this.querySelector('#challenge-detail-run-text').textContent = 'Running...';
                                 this.disabled = true;"
                             hx-on::after-request="
@@ -174,7 +175,7 @@
                     </div>
                     <section class="challenge-detail__results" id="challenge-detail-results">
 
-                        <div class="" id="challenge-detail__result-body">
+                        <div class="d-none" id="challenge-detail__result-body">
 
                         </div>
                         <div class="challenge-detail__results-state" id="challenge-detail-results-idle">
@@ -227,7 +228,7 @@
                 language: 'sql',
                 theme: 'mi-tema-sql',
                 fontFamily: 'Fira Code, Consolas, monospace',
-                automaticLayout: false,
+                automaticLayout: true,
                 fontSize: 14,
                 minimap: {enabled: false},
                 scrollBeyondLastLine: false,
@@ -241,9 +242,7 @@
                 minSize: [350, 400],
                 gutterSize: 6,
                 direction: 'horizontal',
-                cursor: 'col-resize',
-                onDrag: () => editor?.layout(),
-                onDragEnd: () => editor?.layout()
+                cursor: 'col-resize'
             });
 
             Split(['#challenge-detail-editor', '#challenge-detail-results'], {
@@ -251,9 +250,7 @@
                 minSize: [160, 140],
                 gutterSize: 6,
                 direction: 'vertical',
-                cursor: 'row-resize',
-                onDrag: () => editor?.layout(),
-                onDragEnd: () => editor?.layout()
+                cursor: 'row-resize'
             });
 
             editor.layout();

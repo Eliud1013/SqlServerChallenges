@@ -7,9 +7,9 @@
 {
     @if (Model.SyntaxErrors is { Count: > 0 })
     {
-        var errorsJson = JsonSerializer.Serialize(Model.SyntaxErrors, 
+        var errorsJson = JsonSerializer.Serialize(Model.SyntaxErrors,
             new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase });
-        
+
         <div class="run-result__error" data-syntax-errors='@Html.Raw(errorsJson)'>
             <div class="run-result__error-header">
                 <i class="bi bi-exclamation-triangle run-result__error-icon"></i>
@@ -34,6 +34,7 @@
                     @(Model.ErrorType switch
                     {
                         QueryErrorType.QueryTimeout => "Query Timeout",
+                        QueryErrorType.InvalidColumn => "Invalid Column",
                         QueryErrorType.PermissionDenied => "Permission Denied",
                         QueryErrorType.InvalidQuery => "Invalid Query",
                         _ => "Query Error"
@@ -43,6 +44,7 @@
             <p class="run-result__error-message">@Model.ErrorMessage</p>
         </div>
     }
+
     return;
 }
 
@@ -54,7 +56,8 @@
                 <span>Columns</span>
             </div>
             <div class="run-result__card-body">
-                <span class="run-result__big @(Model.ColumnCountMatch ? "run-result__big--ok" : "run-result__big--fail")">
+                <span
+                    class="run-result__big @(Model.ColumnCountMatch ? "run-result__big--ok" : "run-result__big--fail")">
                     @Model.UserColumns.Count
                 </span>
                 <span class="run-result__sep">/</span>
@@ -80,97 +83,114 @@
             </div>
         </div>
 
-        <div class="run-result__card @(Model.RowCountMatch ? "run-result__card--ok" : "run-result__card--fail")">
+        <div class="run-result__card @(Model.RowMatchCount == Model.ExpectedRowCount ? "run-result__card--ok" : "run-result__card--fail")">
             <div class="run-result__card-header">
                 <i class="bi bi-list-ol"></i>
                 <span>Rows</span>
             </div>
             <div class="run-result__card-body">
-                <span class="run-result__big @(Model.RowCountMatch ? "run-result__big--ok" : "run-result__big--fail")">
-                    @Model.UserRowCount
+                <span class="run-result__big @(Model.RowMatchCount == Model.ExpectedRowCount ? "run-result__big--ok" : "run-result__big--fail")">
+                    @Model.RowMatchCount
                 </span>
                 <span class="run-result__sep">/</span>
                 <span class="run-result__big run-result__big--expected">@Model.ExpectedRowCount</span>
             </div>
             <div class="run-result__card-label">
-                @(Model.RowCountMatch ? "Match" : $"Expected {@Model.ExpectedRowCount} rows")
+                @(Model.RowMatchCount == Model.ExpectedRowCount ? "All rows match" : $"{Model.ExpectedRowCount - Model.RowMatchCount} rows differ")
             </div>
         </div>
     </div>
 
-    <!-- Column names detail (only if they differ) -->
-    @if (!Model.ColumnsMatch)
-    {
-        <div class="run-result__section">
-            <div class="run-result__section-title">
-                <i class="bi bi-diagram-3 me-1"></i>Column Comparison
-            </div>
-            <div class="run-result__col-compare">
-                <div class="run-result__col-list">
-                    <span class="run-result__col-label">Yours</span>
-                    @foreach (var col in Model.UserColumns)
-                    {
-                        var match = Model.ExpectedColumns.Contains(col, StringComparer.OrdinalIgnoreCase);
-                        <code class="run-result__col-name @(match ? "run-result__col-name--ok" : "run-result__col-name--fail")">
-                            @col
-                        </code>
-                    }
-                </div>
-                <div class="run-result__col-list">
-                    <span class="run-result__col-label">Expected</span>
-                    @foreach (var col in Model.ExpectedColumns)
-                    {
-                        var match = Model.UserColumns.Contains(col, StringComparer.OrdinalIgnoreCase);
-                        <code class="run-result__col-name @(match ? "run-result__col-name--ok" : "run-result__col-name--miss")">
-                            @col
-                        </code>
-                    }
-                </div>
-            </div>
-        </div>
-    }
-
-    <!-- Rows table -->
-    <div class="run-result__section">
-        <div class="run-result__section-title">
-            <i class="bi bi-table me-1"></i>Result (@Model.UserRowCount rows)
-        </div>
-        <div class="run-result__table-wrap">
-            <table class="table table-sm table-borderless mb-0">
-                <thead>
-                    <tr>
-                        <th class="run-result__th-status"></th>
-                        @foreach (var col in Model.UserColumns)
-                        {
-                            <th>@col</th>
-                        }
-                    </tr>
-                </thead>
-                <tbody>
-                    @for (var i = 0; i < Model.UserRows.Count; i++)
-                    {
-                        var matched = Model.IsRowMatch(i);
-                        var userRow = Model.UserRows[i];
-                        <tr class="@(matched ? "run-result__row--ok" : "run-result__row--fail")">
-                            <td class="run-result__td-status">
-                                @if (matched)
-                                {
-                                    <i class="bi bi-check-circle-fill run-result__status--ok"></i>
-                                }
-                                else
-                                {
-                                    <i class="bi bi-x-circle-fill run-result__status--fail"></i>
-                                }
-                            </td>
+    <div class="accordion run-result__accordion">
+        <div class="accordion-item">
+            <h2 class="accordion-header">
+                <button class="accordion-button run-result__accordion-btn" type="button"
+                        data-bs-toggle="collapse" data-bs-target="#run-result-cols" aria-expanded="true">
+                    Column Comparison<i class="bi bi-chevron-right text-secondary ms-auto"></i>
+                </button>
+            </h2>
+            <div id="run-result-cols" class="accordion-collapse collapse show">
+                <div class="accordion-body run-result__accordion-body">
+                    <div class="run-result__col-compare">
+                        <div class="run-result__col-list">
+                            <span class="run-result__col-label">Yours</span>
                             @foreach (var col in Model.UserColumns)
                             {
-                                var cellValue = userRow.TryGetValue(col, out var v) ? v?.ToString() : null;
-                                <td>@(string.IsNullOrEmpty(cellValue) ? "-" : cellValue)</td>
+                                var match = Model.ExpectedColumns.Contains(col, StringComparer.OrdinalIgnoreCase);
+                                <code
+                                    class="run-result__col-name @(match ? "run-result__col-name--ok" : "run-result__col-name--fail")">
+                                    @col
+                                </code>
                             }
-                        </tr>
-                    }
-                </tbody>
-            </table>
+                        </div>
+                        <div class="run-result__col-list">
+                            <span class="run-result__col-label">Expected</span>
+                            @foreach (var col in Model.ExpectedColumns)
+                            {
+                                var match = Model.UserColumns.Contains(col, StringComparer.OrdinalIgnoreCase);
+                                <code
+                                    class="run-result__col-name @(match ? "run-result__col-name--ok" : "run-result__col-name--miss")">
+                                    @col
+                                </code>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+
+        <!-- Rows table -->
+        <div class="accordion-item">
+            <h2 class="accordion-header">
+                <button class="accordion-button run-result__accordion-btn @(Model.ColumnsMatch ? "" : "collapsed")"
+                        type="button"
+                        data-bs-toggle="collapse" data-bs-target="#run-result-rows"
+                        aria-expanded="@(Model.ColumnsMatch ? "false" : "true")">
+                    Result (@Model.UserRowCount rows)<i class="bi bi-chevron-right text-secondary ms-auto"></i>
+                </button>
+            </h2>
+            <div id="run-result-rows" class="accordion-collapse collapse @(Model.ColumnsMatch ? "" : "show")">
+                <div class="accordion-body run-result__accordion-body">
+                    <div class="run-result__table-wrap">
+                        <table class="table table-sm table-borderless mb-0">
+                            <thead>
+                            <tr>
+                                <th class="run-result__th-status"></th>
+                                @foreach (var col in Model.UserColumns)
+                                {
+                                    <th>@col</th>
+                                }
+                            </tr>
+                            </thead>
+                            <tbody>
+                            @for (var i = 0; i < Model.UserRows.Count; i++)
+                            {
+                                var matched = Model.IsRowMatch(i);
+                                var userRow = Model.UserRows[i];
+                                <tr class="@(matched ? "run-result__row--ok" : "run-result__row--fail")">
+                                    <td class="run-result__td-status">
+                                        @if (matched)
+                                        {
+                                            <i class="bi bi-check-circle-fill run-result__status--ok"></i>
+                                        }
+                                        else
+                                        {
+                                            <i class="bi bi-x-circle-fill run-result__status--fail"></i>
+                                        }
+                                    </td>
+                                    @foreach (var col in Model.UserColumns)
+                                    {
+                                        var cellValue = userRow.TryGetValue(col, out var v) ? v?.ToString() : null;
+                                        <td>@(string.IsNullOrEmpty(cellValue) ? "-" : cellValue)</td>
+                                    }
+                                </tr>
+                            }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>

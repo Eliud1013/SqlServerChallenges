@@ -223,3 +223,47 @@
 .run-result__row--fail td {
     background: rgba(239, 68, 68, 0.03);
 }
+
+.run-result__accordion {
+    --bs-accordion-bg: var(--bg-elevated);
+    --bs-accordion-border-color: rgba(255, 255, 255, 0.06);
+    --bs-accordion-btn-bg: transparent;
+    --bs-accordion-btn-color: var(--clr-secondary);
+    --bs-accordion-btn-focus-box-shadow: none;
+    --bs-accordion-active-bg: var(--bg-elevated);
+    --bs-accordion-active-color: var(--clr-body);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+}
+
+.run-result__accordion-btn {
+    display: flex;
+    align-items: center;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    padding: 0.75rem 0.75rem;
+}
+
+.run-result__accordion-btn::after {
+    display: none !important;
+}
+
+.run-result__accordion-btn:not(.collapsed) {
+    color: var(--clr-body);
+}
+
+.run-result__accordion-btn .bi {
+    font-size: 0.75rem;
+    transition: transform 0.2s ease;
+}
+
+.run-result__accordion-btn:not(.collapsed) .bi {
+    transform: rotate(90deg);
+}
+
+.run-result__accordion-body {
+    padding: 0;
+}

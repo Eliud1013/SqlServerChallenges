@@ -1,5 +1,6 @@
 using System.Data;
 using FluentAssertions;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 using SqlServerChallenges.Core.Data.Entities.ChallengeSolutions;
@@ -35,7 +36,8 @@ public class RunUserSqlHandlerTests : BaseIntegrationTest
             _dbContext,
             syntaxDispatcher,
             executorDispatcher,
-            NullLogger<RunUserSqlHandler>.Instance);
+            NullLogger<RunUserSqlHandler>.Instance,
+            new MemoryCache(new MemoryCacheOptions()));
 
         var command = new RunUserSqlCommand(Guid.NewGuid(), "SELECT 1", DatabaseProvider.SqlServer);
         var result = await handler.Handle(command, CancellationToken.None);

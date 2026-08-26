@@ -21,7 +21,7 @@ public sealed record RunResult
 
     public bool ColumnsMatch { get; }
     public bool ColumnCountMatch { get; }
-    public bool RowCountMatch { get; }
+    public int RowMatchCount { get; }
 
     private RunResult(QueryErrorType errorType, string errorMessage)
     {
@@ -51,12 +51,19 @@ public sealed record RunResult
         ExpectedColumns = expectedResult.Columns;
         UserRowCount = userResult.Rows.Count;
         ExpectedRowCount = expectedResult.Rows.Count;
-        UserRows = userResult.Rows;
-        ExpectedRows = expectedResult.Rows;
+        UserRows = userResult.Rows.Cast<IReadOnlyDictionary<string, object?>>().ToList();
+        ExpectedRows = expectedResult.Rows.Cast<IReadOnlyDictionary<string, object?>>().ToList();
 
         ColumnCountMatch = UserColumns.Count == ExpectedColumns.Count;
         ColumnsMatch = UserColumns.SequenceEqual(ExpectedColumns, StringComparer.OrdinalIgnoreCase);
-        RowCountMatch = UserRowCount == ExpectedRowCount;
+        
+        var maxRows = Math.Min(UserRowCount, ExpectedRowCount);
+        RowMatchCount = 0;
+        for (int i = 0; i < maxRows; i++)
+        {
+            if (IsRowMatch(i))
+                RowMatchCount++;
+        }
     }
 
     public static RunResult Error(QueryErrorType type, string message) => new(type, message);
