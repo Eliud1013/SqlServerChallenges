@@ -4,5 +4,6 @@ public enum QueryErrorType
 {
     QueryTimeout,
     PermissionDenied,
+    InvalidQuery,
     Unknown
 }

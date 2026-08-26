@@ -1,5 +1,6 @@
 using System.Data;
 using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.Logging;
 using SqlServerChallenges.Core.Data.Entities.ChallengeSolutions;
 
 namespace SqlServerChallenges.Core.Services.QueryExecutor;
@@ -9,13 +10,16 @@ public class MsSqlQueryExecutor : IQueryExecutor
     public DatabaseProvider Provider => DatabaseProvider.SqlServer;
 
     private readonly SqlConnection _connection;
+    private readonly ILogger<MsSqlQueryExecutor> _logger;
 
-    public MsSqlQueryExecutor(SqlConnection connection)
+    public MsSqlQueryExecutor(SqlConnection connection, ILogger<MsSqlQueryExecutor> logger)
     {
         _connection = connection;
+        _logger = logger;
     }
 
-    public async Task<QueryExecutorResult> ExecuteQueryAsync(string query, int? rowLimit = null, CancellationToken ct = default)
+    public async Task<QueryExecutorResult> ExecuteQueryAsync(string query, int? rowLimit = null,
+        CancellationToken ct = default)
     {
         try
         {
@@ -50,10 +54,16 @@ public class MsSqlQueryExecutor : IQueryExecutor
         {
             return ex.Number switch
             {
-                -2 => QueryErrorType.QueryTimeout,
-                229 => QueryErrorType.PermissionDenied,
-                _ => QueryErrorType.Unknown
+                -2 => new QueryError(QueryErrorType.QueryTimeout, "The query took too long to execute."),
+                229 => new QueryError(QueryErrorType.PermissionDenied, "You do not have permission to execute this query."),
+                2812 => new QueryError(QueryErrorType.InvalidQuery, "The query contains an invalid statement or calls a function/procedure that does not exist."),
+                _ =>  new QueryError(QueryErrorType.Unknown, "An error occurred while executing the query."),
             };
+        }
+        catch (Exception ex)
+        {
+            _logger.LogCritical(ex, "An exception ocurred while running user query");
+            return new QueryError(QueryErrorType.Unknown, "An error ocurred while executing your query");
         }
         finally
         {

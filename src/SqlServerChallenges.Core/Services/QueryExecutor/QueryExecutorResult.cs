@@ -6,11 +6,13 @@ public record OutputTable(
     IReadOnlyList<string> Columns,
     IReadOnlyList<IReadOnlyDictionary<string, object?>> Rows);
 
+public record QueryError(QueryErrorType Type, string Message);
+
 public sealed record QueryExecutorResult
 {
     public bool IsSuccess { get; }
     private readonly OutputTable? _outputTable;
-    private readonly QueryErrorType? _errorType;
+    private readonly QueryError? _queryError;
 
     private QueryExecutorResult(IReadOnlyList<string> columns, IReadOnlyList<IReadOnlyDictionary<string, object?>> rows)
     {
@@ -18,23 +20,26 @@ public sealed record QueryExecutorResult
         _outputTable = new(columns, rows);
     }
 
-    private QueryExecutorResult(QueryErrorType errorType)
+    private QueryExecutorResult(QueryErrorType errorType, string message)
     {
         IsSuccess = false;
-        _errorType = errorType;
+        _queryError = new QueryError(errorType, message);
     }
-    
-    public OutputTable OutputTable => _outputTable
-        ?? throw new InvalidOperationException("The result does not contain a table.");
-    
-    public IReadOnlyList<string> Columns => _outputTable?.Columns
-        ?? throw new InvalidOperationException("The result does not contain a table."); 
-    
-    public IReadOnlyList<IReadOnlyDictionary<string, object?>> Rows => _outputTable?.Rows
-        ?? throw new InvalidOperationException("The result does not contain a table.");
 
-    public QueryErrorType ErrorType => _errorType
-        ?? throw new InvalidOperationException("The result does not contain an error.");
+    public OutputTable OutputTable =>
+        _outputTable ?? throw new InvalidOperationException("The result does not contain a table.");
+
+    public IReadOnlyList<string> Columns =>
+        _outputTable?.Columns ?? throw new InvalidOperationException("The result does not contain a table.");
+
+    public IReadOnlyList<IReadOnlyDictionary<string, object?>> Rows =>
+        _outputTable?.Rows ?? throw new InvalidOperationException("The result does not contain a table.");
+
+    public QueryErrorType ErrorType =>
+        _queryError?.Type ?? throw new InvalidOperationException("The result does not contain an error.");
+
+    public string ErrorMessage =>
+        _queryError?.Message ?? throw new InvalidOperationException("The result does not contain an error.");
 
     public static implicit operator QueryExecutorResult(DataTable table)
     {
@@ -49,6 +54,6 @@ public sealed record QueryExecutorResult
 
         return new QueryExecutorResult(columns, rows);
     }
-
-    public static implicit operator QueryExecutorResult(QueryErrorType errorType) => new(errorType);
+    
+    public static implicit operator QueryExecutorResult(QueryError error) => new(error.Type, error.Message);
 }
