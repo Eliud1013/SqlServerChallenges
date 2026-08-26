@@ -55,7 +55,8 @@ public class MsSqlQueryExecutor : IQueryExecutor
             return ex.Number switch
             {
                 -2 => new QueryError(QueryErrorType.QueryTimeout, "The query took too long to execute."),
-                229 => new QueryError(QueryErrorType.PermissionDenied, "You do not have permission to execute this query."),
+                207 => new QueryError(QueryErrorType.InvalidColumn, ex.Message),
+                229 or 3701 => new QueryError(QueryErrorType.PermissionDenied, "You do not have permission to execute this query."),
                 2812 => new QueryError(QueryErrorType.InvalidQuery, "The query contains an invalid statement or calls a function/procedure that does not exist."),
                 _ =>  new QueryError(QueryErrorType.Unknown, "An error occurred while executing the query."),
             };
