@@ -1,5 +1,6 @@
 using System.Data;
 using FluentAssertions;
+using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 using SqlServerChallenges.Core.Data.Entities.ChallengeSolutions;
 using SqlServerChallenges.Core.Features.Submissions.RunUserSql;
@@ -33,7 +34,8 @@ public class RunUserSqlHandlerTests : BaseIntegrationTest
         var handler = new RunUserSqlHandler(
             _dbContext,
             syntaxDispatcher,
-            executorDispatcher);
+            executorDispatcher,
+            NullLogger<RunUserSqlHandler>.Instance);
 
         var command = new RunUserSqlCommand(Guid.NewGuid(), "SELECT 1", DatabaseProvider.SqlServer);
         var result = await handler.Handle(command, CancellationToken.None);

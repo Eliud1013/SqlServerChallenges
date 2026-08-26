@@ -43,5 +43,6 @@ public class MsSqlQuerySyntaxCheckerTests
         yield return ["SELECT * FORM users", false];
         yield return ["INSERT INTO (message) VALUES ('hello')", false];
         yield return ["UPDAT accounts SET balance = 0", false];
+        yield return ["UL48gU5t9ltVExbo", false];
     }
 }

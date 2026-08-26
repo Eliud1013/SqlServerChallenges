@@ -1,5 +1,7 @@
 using FluentAssertions;
 using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using SqlServerChallenges.Core.Data.Entities;
 using SqlServerChallenges.Core.Data.Entities.Categories;
 using SqlServerChallenges.Core.Data.Entities.Challenges;
@@ -11,6 +13,8 @@ namespace SqlServerChallenges.Core.Tests.Services.QueryExecutor;
 
 public class MsSqlQueryExecutorTests : BaseIntegrationTest
 {
+    private readonly ILogger<MsSqlQueryExecutor> _logger = NullLogger<MsSqlQueryExecutor>.Instance;
+
     public MsSqlQueryExecutorTests(SqlServerFixture fixture) : base(fixture)
     {
     }
@@ -19,8 +23,8 @@ public class MsSqlQueryExecutorTests : BaseIntegrationTest
     public async Task ShouldReturnQueryResult_WhenQueryIsValid()
     {
         await using var connection = new SqlConnection(_fixture._connectionString);
+        var executor = new MsSqlQueryExecutor(connection, _logger);
 
-        var executor = new MsSqlQueryExecutor(connection);
         string query = "SELECT 1";
 
         var result = await executor.ExecuteQueryAsync(query);
@@ -35,8 +39,8 @@ public class MsSqlQueryExecutorTests : BaseIntegrationTest
     public async Task ShouldReturnTimeoutError_WhenQueryExceedsTimeout()
     {
         await using var connection = new SqlConnection(_fixture._connectionString);
+        var executor = new MsSqlQueryExecutor(connection, _logger);
 
-        var executor = new MsSqlQueryExecutor(connection);
         string query = "WAITFOR DELAY '00:00:30';";
 
         var result = await executor.ExecuteQueryAsync(query);
@@ -59,7 +63,7 @@ public class MsSqlQueryExecutorTests : BaseIntegrationTest
         await _dbContext.SaveChangesAsync();
 
         await using var connection = new SqlConnection(_fixture._connectionString);
-        var executor = new MsSqlQueryExecutor(connection);
+        var executor = new MsSqlQueryExecutor(connection, _logger);
 
         string query = "SELECT * FROM Challenges.Challenges";
         var result = await executor.ExecuteQueryAsync(query);
@@ -68,7 +72,7 @@ public class MsSqlQueryExecutorTests : BaseIntegrationTest
         result.Rows.Count.Should().Be(1);
         var row = result.Rows[0];
         var columns = result.Columns;
-        
+
         row["Title"].Should().Be("Basic Select");
         row["TaskDescription"].Should().Be("Write a basic select query");
         row["Difficulty"].Should().Be(nameof(ChallengeDifficulty.Easy));
@@ -79,25 +83,24 @@ public class MsSqlQueryExecutorTests : BaseIntegrationTest
     }
 
     [Fact]
-    public async Task ShouldRespectMaxBatchRows_WhenExceedingLimit()
+    public async Task ShouldRespectMaxBatchRows_WhenLimitIsProvided()
     {
         await using var connection = new SqlConnection(_fixture._connectionString);
-        var executor = new MsSqlQueryExecutor(connection);
+        var executor = new MsSqlQueryExecutor(connection, _logger);
 
         string query = "SELECT value FROM generate_series(1,100);";
-        var result = await executor.ExecuteQueryAsync(query);
+        var result = await executor.ExecuteQueryAsync(query, rowLimit: 50);
 
         result.IsSuccess.Should().BeTrue();
         result.Rows.Count.Should().Be(50);
     }
-
-
+    
     [Fact]
     public async Task ShouldReturnPermissionDeniedError_WhenUserLacksTableAccess()
     {
         await using var setupConnection = new SqlConnection(_fixture._connectionString);
         await setupConnection.OpenAsync();
-        
+
         var setupCommand = new SqlCommand(@"
             CREATE TABLE TestTable(Id INT PRIMARY KEY);
             CREATE USER test_user
@@ -106,7 +109,7 @@ public class MsSqlQueryExecutorTests : BaseIntegrationTest
         await setupCommand.ExecuteNonQueryAsync();
 
         await using var connection = new SqlConnection(_fixture._connectionString);
-        var executor = new MsSqlQueryExecutor(connection);
+        var executor = new MsSqlQueryExecutor(connection, _logger);
 
         string query = @"
             EXECUTE AS USER = 'test_user';

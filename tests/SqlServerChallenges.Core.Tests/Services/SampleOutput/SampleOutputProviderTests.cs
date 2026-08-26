@@ -2,6 +2,7 @@ using System.Data;
 using FluentAssertions;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 using SqlServerChallenges.Core.Data.Entities.ChallengeSolutions;
 using SqlServerChallenges.Core.Services.QueryExecutor;
@@ -21,7 +22,7 @@ public class SampleOutputProviderTests : BaseIntegrationTest
         _cache = new MemoryCache(new MemoryCacheOptions());
         _queryExecutorDispatcher = new QueryExecutorDispatcher(new List<IQueryExecutor>
         {
-            new MsSqlQueryExecutor(new SqlConnection(_fixture._connectionString))
+            new MsSqlQueryExecutor(new SqlConnection(_fixture._connectionString), NullLogger<MsSqlQueryExecutor>.Instance)
         });
     }
 
