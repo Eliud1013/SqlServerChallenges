@@ -58,6 +58,9 @@ public class RunUserSqlHandler : ICommandHandler<RunUserSqlCommand, RunResult>
         if (!queryResult.IsSuccess)
             return RunResult.Error(queryResult.ErrorType, queryResult.ErrorMessage);
 
+        if (!challenge.RequiresOrdering)
+            queryResult.OutputTable.OrderRows();
+
         var cacheKey = CacheKeys.Challenges.ExpectedOutput(request.ChallengeId, request.Provider);
 
         if (!_cache.TryGetValue(cacheKey, out OutputTable? expectedOutput))
@@ -81,10 +84,7 @@ public class RunUserSqlHandler : ICommandHandler<RunUserSqlCommand, RunResult>
             }
         
             if (!challenge.RequiresOrdering)
-            {
-                queryResult.OutputTable.OrderRows();
                 expectedResult.OutputTable.OrderRows();
-            }
 
             expectedOutput = expectedResult.OutputTable;
 

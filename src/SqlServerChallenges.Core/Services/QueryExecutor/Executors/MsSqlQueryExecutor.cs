@@ -1,6 +1,7 @@
 using System.Data;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Logging;
+using Microsoft.SqlServer.TransactSql.ScriptDom;
 using SqlServerChallenges.Core.Data.Entities.ChallengeSolutions;
 
 namespace SqlServerChallenges.Core.Services.QueryExecutor;
@@ -29,10 +30,20 @@ public class MsSqlQueryExecutor : IQueryExecutor
 
             await using var reader = await command.ExecuteReaderAsync(ct);
             var table = new DataTable();
+            int columnCount = 1;
 
             for (int i = 0; i < reader.FieldCount; i++)
             {
-                table.Columns.Add(reader.GetName(i), reader.GetFieldType(i));
+                var columnName = reader.GetName(i);
+                var columnType = reader.GetFieldType(i) ?? typeof(string);
+
+                if (table.Columns.Contains(columnName))
+                {
+                    table.Columns.Add($"{columnName}_{columnCount++}", columnType);
+                    continue;
+                }
+
+                table.Columns.Add(columnName, columnType);
             }
 
             int rowNumber = 0;
@@ -56,9 +67,11 @@ public class MsSqlQueryExecutor : IQueryExecutor
             {
                 -2 => new QueryError(QueryErrorType.QueryTimeout, "The query took too long to execute."),
                 207 => new QueryError(QueryErrorType.InvalidColumn, ex.Message),
-                229 or 3701 => new QueryError(QueryErrorType.PermissionDenied, "You do not have permission to execute this query."),
-                2812 => new QueryError(QueryErrorType.InvalidQuery, "The query contains an invalid statement or calls a function/procedure that does not exist."),
-                _ =>  new QueryError(QueryErrorType.Unknown, "An error occurred while executing the query."),
+                229 or 3701 => new QueryError(QueryErrorType.PermissionDenied,
+                    "You do not have permission to execute this query."),
+                2812 => new QueryError(QueryErrorType.InvalidQuery,
+                    "The query contains an invalid statement or calls a function/procedure that does not exist."),
+                _ => new QueryError(QueryErrorType.Unknown, "An error occurred while executing the query."),
             };
         }
         catch (Exception ex)
