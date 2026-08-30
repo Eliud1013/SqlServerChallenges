@@ -48,7 +48,7 @@ public class SampleOutputProvider : ISampleOutputProvider
         if (solutionSql is null)
             throw new InvalidOperationException($"Solution SQL not found for challengeId: {challengeId}");
 
-        var queryResult = await _queryExecutorDispatcher.ExecuteQueryAsync(solutionSql, provider, rowLimit, cancellationToken);
+        var queryResult = await _queryExecutorDispatcher.ExecuteQueryAsync(solutionSql, provider, rowLimit, ct: cancellationToken);
 
         if (!queryResult.IsSuccess)
             throw new InvalidOperationException($"Failed to execute solution query for challengeId: {challengeId} {queryResult.ErrorType}");

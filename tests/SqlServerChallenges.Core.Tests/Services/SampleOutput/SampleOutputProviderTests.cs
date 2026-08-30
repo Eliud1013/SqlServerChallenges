@@ -63,6 +63,7 @@ public class SampleOutputProviderTests : BaseIntegrationTest
         sqlExecutorMock.Setup(m => m.ExecuteQueryAsync(
             It.IsAny<string>(),
             It.IsAny<int?>(),
+            false,
             It.IsAny<CancellationToken>())
         ).ReturnsAsync(new DataTable());
 
@@ -81,7 +82,7 @@ public class SampleOutputProviderTests : BaseIntegrationTest
         var lastResult = await outputSample.GetForChallengeAsync(challenge.Id, 3);
 
         sqlExecutorMock.Verify(
-            x => x.ExecuteQueryAsync(It.IsAny<string>(), It.IsAny<int?>(), It.IsAny<CancellationToken>()), Times.Once);
+            x => x.ExecuteQueryAsync(It.IsAny<string>(), It.IsAny<int?>(), false, It.IsAny<CancellationToken>()), Times.Once);
         
         firstResult.Succeeded.Should().BeTrue();
         lastResult.Succeeded.Should().BeTrue();

@@ -16,11 +16,12 @@ public class QueryExecutorDispatcher
         string query,
         DatabaseProvider provider,
         int? rowLimit = null,
+        bool includePlan = false,
         CancellationToken ct = default)
     {
         if (!_executors.TryGetValue(provider, out var executor))
             throw new InvalidOperationException("Provider not found");
 
-        return await executor.ExecuteQueryAsync(query, rowLimit, ct: ct);
+        return await executor.ExecuteQueryAsync(query, rowLimit, includePlan, ct: ct);
     }
 }

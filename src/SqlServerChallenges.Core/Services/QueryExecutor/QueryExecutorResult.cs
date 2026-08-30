@@ -2,27 +2,6 @@ using System.Data;
 
 namespace SqlServerChallenges.Core.Services.QueryExecutor;
 
-public record QueryError(QueryErrorType Type, string Message);
-
-public record OutputTable
-{
-    public IReadOnlyList<string> Columns { get;  }
-    public IList<IDictionary<string, object?>> Rows { get; private set; }
-
-    public OutputTable(IReadOnlyList<string> columns, IList<IDictionary<string, object?>> rows)
-    {
-        Columns = columns;
-        Rows = rows;
-    }
-
-    public void OrderRows()
-    {
-        var orderBy = Columns.First();
-        Rows = Rows.OrderBy(r => r[orderBy]?.ToString() ?? "")
-            .ToList();
-    }
-}
-
 public sealed record QueryExecutorResult
 {
     public bool IsSuccess { get; }

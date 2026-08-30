@@ -1,7 +1,7 @@
 using System.Data;
+using System.Xml.Linq;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Logging;
-using Microsoft.SqlServer.TransactSql.ScriptDom;
 using SqlServerChallenges.Core.Data.Entities.ChallengeSolutions;
 
 namespace SqlServerChallenges.Core.Services.QueryExecutor;
@@ -19,47 +19,65 @@ public class MsSqlQueryExecutor : IQueryExecutor
         _logger = logger;
     }
 
-    public async Task<QueryExecutorResult> ExecuteQueryAsync(string query, int? rowLimit = null,
+    public async Task<QueryExecutorResult> ExecuteQueryAsync(
+        string query,
+        int? rowLimit = null,
+        bool includePlan = false,
         CancellationToken ct = default)
     {
         try
         {
             await _connection.OpenAsync(ct);
+
+            if (includePlan) await ExecuteNonQueryAsync("SET STATISTICS XML ON", ct);
+
             await using var command = new SqlCommand(query, _connection);
             command.CommandTimeout = 6;
 
-            await using var reader = await command.ExecuteReaderAsync(ct);
-            var table = new DataTable();
-            int columnCount = 1;
-
-            for (int i = 0; i < reader.FieldCount; i++)
+            await using (var reader = await command.ExecuteReaderAsync(ct))
             {
-                var columnName = reader.GetName(i);
-                var columnType = reader.GetFieldType(i) ?? typeof(string);
-
-                if (table.Columns.Contains(columnName))
-                {
-                    table.Columns.Add($"{columnName}_{columnCount++}", columnType);
-                    continue;
-                }
-
-                table.Columns.Add(columnName, columnType);
-            }
-
-            int rowNumber = 0;
-
-            while ((rowLimit is null || rowNumber < rowLimit) && await reader.ReadAsync(ct))
-            {
-                var row = table.NewRow();
+                var table = new DataTable();
+                int columnCount = 1;
 
                 for (int i = 0; i < reader.FieldCount; i++)
-                    row[i] = reader.IsDBNull(i) ? DBNull.Value : reader.GetValue(i);
+                {
+                    var columnName = reader.GetName(i);
+                    var columnType = reader.GetFieldType(i) ?? typeof(string);
 
-                table.Rows.Add(row);
-                rowNumber++;
+                    if (table.Columns.Contains(columnName))
+                    {
+                        table.Columns.Add($"{columnName}_{columnCount++}", columnType);
+                        continue;
+                    }
+
+                    table.Columns.Add(columnName, columnType);
+                }
+
+                int rowNumber = 0;
+
+                while ((rowLimit is null || rowNumber < rowLimit) && await reader.ReadAsync(ct))
+                {
+                    var row = table.NewRow();
+
+                    for (int i = 0; i < reader.FieldCount; i++)
+                        row[i] = reader.IsDBNull(i) ? DBNull.Value : reader.GetValue(i);
+
+                    table.Rows.Add(row);
+                    rowNumber++;
+                }
+
+                QueryExecutorResult result = table;
+
+                if (includePlan && result.IsSuccess)
+                {
+                    await reader.NextResultAsync(ct);
+                    await reader.ReadAsync(ct);
+                    var plan = reader.GetString(0);
+                    result.OutputTable.WithPlan(plan);
+                }
+
+                return result;
             }
-
-            return table;
         }
         catch (SqlException ex)
         {
@@ -76,12 +94,22 @@ public class MsSqlQueryExecutor : IQueryExecutor
         }
         catch (Exception ex)
         {
-            _logger.LogCritical(ex, "An exception ocurred while running user query");
-            return new QueryError(QueryErrorType.Unknown, "An error ocurred while executing your query");
+            _logger.LogCritical(ex, "An exception occurred while running user query");
+            return new QueryError(QueryErrorType.Unknown, "An error occurred while executing your query");
         }
         finally
         {
+            if (includePlan)
+                await ExecuteNonQueryAsync("SET STATISTICS XML OFF", ct);
+
             await _connection.CloseAsync();
         }
+    }
+
+    private async Task ExecuteNonQueryAsync(string sql, CancellationToken ct)
+    {
+        await using var command = new SqlCommand(sql, _connection);
+        command.CommandTimeout = 6;
+        await command.ExecuteNonQueryAsync(ct);
     }
 }
