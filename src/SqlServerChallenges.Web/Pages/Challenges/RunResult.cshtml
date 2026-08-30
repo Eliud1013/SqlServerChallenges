@@ -83,20 +83,37 @@
             </div>
         </div>
 
-        <div class="run-result__card @(Model.RowMatchCount == Model.ExpectedRowCount ? "run-result__card--ok" : "run-result__card--fail")">
+        <div class="run-result__card @(Model.RowMatchCount == Model.ExpectedComparedRowCount ? "run-result__card--ok" : "run-result__card--fail")">
             <div class="run-result__card-header">
                 <i class="bi bi-list-ol"></i>
-                <span>Rows</span>
+                <span>Compared Rows</span>
             </div>
             <div class="run-result__card-body">
-                <span class="run-result__big @(Model.RowMatchCount == Model.ExpectedRowCount ? "run-result__big--ok" : "run-result__big--fail")">
+                <span class="run-result__big @(Model.RowMatchCount == Model.ExpectedComparedRowCount ? "run-result__big--ok" : "run-result__big--fail")">
                     @Model.RowMatchCount
                 </span>
                 <span class="run-result__sep">/</span>
-                <span class="run-result__big run-result__big--expected">@Model.ExpectedRowCount</span>
+                <span class="run-result__big run-result__big--expected">@Model.ExpectedComparedRowCount</span>
             </div>
             <div class="run-result__card-label">
-                @(Model.RowMatchCount == Model.ExpectedRowCount ? "All rows match" : $"{Model.ExpectedRowCount - Model.RowMatchCount} rows differ")
+                @(Model.RowMatchCount == Model.ExpectedComparedRowCount ? "All rows match" : $"{Model.ExpectedComparedRowCount - Model.RowMatchCount} rows differ")
+            </div>
+        </div>
+        
+        <div class="run-result__card @(Model.UserTotalRowCount == Model.ExpectedTotalRowCount ? "run-result__card--ok" : "run-result__card--fail")">
+            <div class="run-result__card-header">
+                <i class="bi bi-list-ol"></i>
+                <span>Row Amount</span>
+            </div>
+            <div class="run-result__card-body">
+                <span class="run-result__big @(Model.UserTotalRowCount == Model.ExpectedTotalRowCount ? "run-result__big--ok" : "run-result__big--fail")">
+                    @(Model.UserTotalRowCount?.ToString() ?? "?")
+                </span>
+                <span class="run-result__sep">/</span>
+                <span class="run-result__big run-result__big--expected">@(Model.ExpectedTotalRowCount?.ToString() ?? "?")</span>
+            </div>
+            <div class="run-result__card-label">
+                @(Model.UserTotalRowCount == Model.ExpectedTotalRowCount ? "Retrieved row amount matches" : "Retrieved row amount differs")
             </div>
         </div>
     </div>
@@ -147,7 +164,7 @@
                         type="button"
                         data-bs-toggle="collapse" data-bs-target="#run-result-rows"
                         aria-expanded="@(Model.ColumnsMatch ? "false" : "true")">
-                    Result (@Model.UserRowCount rows)<i class="bi bi-chevron-right text-secondary ms-auto"></i>
+                    Result (@Model.UserComparedRowCount rows)<i class="bi bi-chevron-right text-secondary ms-auto"></i>
                 </button>
             </h2>
             <div id="run-result-rows" class="accordion-collapse collapse @(Model.ColumnsMatch ? "" : "show")">

@@ -6,16 +6,17 @@
     min-height: 0;
     gap: 0.75rem;
     font-size: 0.8rem;
+    container-type: inline-size;
+    container-name: run-resultc;
 }
 
 .run-result__error {
     display: flex;
     flex-direction: column;
+    margin-left: 0.5rem;
+    margin-top: 0.5rem;
     gap: 0.4rem;
     padding: 0.75rem 1rem;
-    background: rgba(239, 68, 68, 0.08);
-    border: 1px solid rgba(239, 68, 68, 0.2);
-    border-radius: var(--radius-md);
     color: #f87171;
     font-size: 0.8rem;
 }
@@ -27,19 +28,19 @@
 }
 
 .run-result__error-icon {
-    font-size: 1rem;
+    font-size: 1.1rem;
     flex-shrink: 0;
 }
 
 .run-result__error-title {
     font-weight: 600;
-    font-size: 0.8rem;
+    font-size: 1.1rem;
 }
 
 .run-result__error-message {
     margin: 0;
     color: #fca5a5;
-    font-size: 0.75rem;
+    font-size: 0.84rem;
     line-height: 1.4;
 }
 
@@ -57,7 +58,7 @@
 
 .run-result__cards {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(4, 1fr);
     gap: 0.5rem;
 }
 
@@ -266,4 +267,10 @@
 
 .run-result__accordion-body {
     padding: 0;
+}
+
+@container run-resultc (max-width: 500px) {
+    .run-result__cards {
+        grid-template-columns: repeat(2, 1fr);
+    }
 }

@@ -200,11 +200,13 @@
 .gutter.gutter-horizontal {
     height: 100%;
     cursor: col-resize;
+    padding-inline: 4px;
 }
 
 .gutter.gutter-vertical {
     width: 100%;
     cursor: row-resize;
+    padding-block: 7px;
 }
 
 .gutter::after {

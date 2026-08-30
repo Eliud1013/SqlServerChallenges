@@ -155,14 +155,15 @@
                             hx-on::before-request="
                                 document.getElementById('challenge-detail-results-idle').classList.add('d-none');
                                 document.getElementById('challenge-detail-results-running').classList.remove('d-none');
-                                document.getElementById('challenge-detail__result-body').classList.remove('d-none');
+                                document.getElementById('challenge-detail__result-body').classList.add('d-none');
                                 this.querySelector('#challenge-detail-run-text').textContent = 'Running...';
                                 this.disabled = true;"
                             hx-on::after-request="
                                 this.querySelector('#challenge-detail-run-icon').classList.remove('d-none');
                                 this.querySelector('#challenge-detail-run-text').textContent = 'Run';
                                 this.disabled = false;
-                                document.getElementById('challenge-detail-results-running').classList.add('d-none');">
+                                document.getElementById('challenge-detail-results-running').classList.add('d-none');
+                                document.getElementById('challenge-detail__result-body').classList.remove('d-none');">
                         <i class="bi bi-play-fill me-1" id="challenge-detail-run-icon"></i>
                         <span class="spinner-border spinner-border-sm me-1 d-none" id="challenge-detail-run-spinner"
                               role="status" aria-hidden="true"></span>
