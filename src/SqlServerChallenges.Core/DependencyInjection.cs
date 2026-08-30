@@ -10,7 +10,6 @@ using SqlServerChallenges.Core.Services.QueryExecutor;
 using SqlServerChallenges.Core.Services.QueryReader;
 using SqlServerChallenges.Core.Services.QueryResultComparer;
 using SqlServerChallenges.Core.Services.SampleOutput;
-
 namespace SqlServerChallenges.Core;
 
 public static class DependencyInjection

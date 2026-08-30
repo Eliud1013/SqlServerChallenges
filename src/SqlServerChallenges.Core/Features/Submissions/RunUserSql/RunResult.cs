@@ -6,6 +6,7 @@ namespace SqlServerChallenges.Core.Features.Submissions.RunUserSql;
 public sealed record RunResult
 {
     public bool IsSuccess { get; }
+    
     public IReadOnlyList<SqlSyntaxError>? SyntaxErrors { get; }
     public QueryErrorType? ErrorType { get; }
     public string? ErrorMessage { get; }
@@ -13,15 +14,18 @@ public sealed record RunResult
     public IReadOnlyList<string> UserColumns { get; }
     public IReadOnlyList<string> ExpectedColumns { get; }
 
-    public int UserRowCount { get; }
-    public int ExpectedRowCount { get; }
+    public int UserComparedRowCount { get; }
+    public int ExpectedComparedRowCount { get; }
+    public int RowMatchCount { get; }
+
+    public long? UserTotalRowCount { get; }
+    public long? ExpectedTotalRowCount { get; }
 
     public IReadOnlyList<IReadOnlyDictionary<string, object?>> UserRows { get; }
     public IReadOnlyList<IReadOnlyDictionary<string, object?>> ExpectedRows { get; }
 
     public bool ColumnsMatch { get; }
     public bool ColumnCountMatch { get; }
-    public int RowMatchCount { get; }
 
     private RunResult(QueryErrorType errorType, string errorMessage)
     {
@@ -49,16 +53,22 @@ public sealed record RunResult
         IsSuccess = true;
         UserColumns = userResult.Columns;
         ExpectedColumns = expectedResult.Columns;
-        UserRowCount = userResult.Rows.Count;
-        ExpectedRowCount = expectedResult.Rows.Count;
+        
+        UserComparedRowCount = userResult.Rows.Count;
+        ExpectedComparedRowCount = expectedResult.Rows.Count;
+        
         UserRows = userResult.Rows.Cast<IReadOnlyDictionary<string, object?>>().ToList();
         ExpectedRows = expectedResult.Rows.Cast<IReadOnlyDictionary<string, object?>>().ToList();
 
         ColumnCountMatch = UserColumns.Count == ExpectedColumns.Count;
         ColumnsMatch = UserColumns.SequenceEqual(ExpectedColumns, StringComparer.OrdinalIgnoreCase);
-        
-        var maxRows = Math.Min(UserRowCount, ExpectedRowCount);
+
+        UserTotalRowCount = userResult.Plan?.EstimateRows;
+        ExpectedTotalRowCount = expectedResult.Plan?.EstimateRows;
+
+        var maxRows = Math.Min(UserComparedRowCount, ExpectedComparedRowCount);
         RowMatchCount = 0;
+        
         for (int i = 0; i < maxRows; i++)
         {
             if (IsRowMatch(i))

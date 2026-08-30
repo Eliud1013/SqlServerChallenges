@@ -18,7 +18,6 @@ public class RunUserSqlHandler : ICommandHandler<RunUserSqlCommand, RunResult>
     private readonly ILogger<RunUserSqlHandler> _logger;
     private readonly IMemoryCache _cache;
 
-
     public RunUserSqlHandler(
         ApplicationDbContext dbContext,
         SyntaxCheckerDispatcher syntaxCheckerDispatcher,
@@ -45,15 +44,15 @@ public class RunUserSqlHandler : ICommandHandler<RunUserSqlCommand, RunResult>
             return SubmissionErrors.ChallengeNotFound;
 
         var userQuery = request.UserQuery;
-        var provider = request.Provider;
+        var databaseProvider = request.Provider;
 
-        var syntaxValidationResult = _syntaxCheckerDispatcher.Validate(userQuery, provider);
+        var syntaxValidationResult = _syntaxCheckerDispatcher.Validate(userQuery, databaseProvider);
 
         if (syntaxValidationResult.IsInvalid)
             return RunResult.SyntaxError(syntaxValidationResult.Errors);
 
         var queryResult = await _queryExecutorDispatcher
-            .ExecuteQueryAsync(userQuery, provider, defaultRowLimit, ct: cancellationToken);
+            .ExecuteQueryAsync(userQuery, databaseProvider, defaultRowLimit, includePlan: true, ct: cancellationToken);
 
         if (!queryResult.IsSuccess)
             return RunResult.Error(queryResult.ErrorType, queryResult.ErrorMessage);
@@ -66,7 +65,7 @@ public class RunUserSqlHandler : ICommandHandler<RunUserSqlCommand, RunResult>
         if (!_cache.TryGetValue(cacheKey, out OutputTable? expectedOutput))
         {
             var expected = await _dbContext.Solutions
-                .Where(s => s.ChallengeId == request.ChallengeId && s.DatabaseProvider == provider)
+                .Where(s => s.ChallengeId == request.ChallengeId && s.DatabaseProvider == databaseProvider)
                 .Select(s => s.SolutionSql)
                 .FirstOrDefaultAsync(cancellationToken);
 
@@ -74,12 +73,16 @@ public class RunUserSqlHandler : ICommandHandler<RunUserSqlCommand, RunResult>
                 return SubmissionErrors.ChallengeNotFound;
 
             var expectedResult =
-                await _queryExecutorDispatcher.ExecuteQueryAsync(expected, provider, defaultRowLimit,
+                await _queryExecutorDispatcher.ExecuteQueryAsync(
+                    query: expected,
+                    provider: databaseProvider,
+                    rowLimit: defaultRowLimit,
+                    includePlan: true,
                     ct: cancellationToken);
 
             if (!expectedResult.IsSuccess)
             {
-                _logger.LogCritical($"Solution query execution failed. challengeId: {challenge.Id} provider: {provider}");
+                _logger.LogCritical($"Solution query execution failed. challengeId: {challenge.Id} provider: {databaseProvider}");
                 return RunResult.Error(expectedResult.ErrorType, "An error occurred");
             }
         
