@@ -72,8 +72,12 @@ public class MsSqlQueryExecutor : IQueryExecutor
                 {
                     await reader.NextResultAsync(ct);
                     await reader.ReadAsync(ct);
-                    var plan = reader.GetString(0);
-                    result.OutputTable.WithPlan(plan);
+                    
+                    if (reader.HasRows)
+                    {
+                        var plan = reader.GetString(0);
+                        result.OutputTable.WithPlan(plan);
+                    }
                 }
 
                 return result;
@@ -84,8 +88,8 @@ public class MsSqlQueryExecutor : IQueryExecutor
             return ex.Number switch
             {
                 -2 => new QueryError(QueryErrorType.QueryTimeout, "The query took too long to execute."),
-                207 => new QueryError(QueryErrorType.InvalidColumn, ex.Message),
-                229 or 3701 => new QueryError(QueryErrorType.PermissionDenied,
+                207 or 208 => new QueryError(QueryErrorType.InvalidIdentifier, ex.Message),
+                229 or 262 or 3701 => new QueryError(QueryErrorType.PermissionDenied,
                     "You do not have permission to execute this query."),
                 2812 => new QueryError(QueryErrorType.InvalidQuery,
                     "The query contains an invalid statement or calls a function/procedure that does not exist."),

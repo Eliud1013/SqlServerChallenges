@@ -57,8 +57,10 @@ public class RunUserSqlHandler : ICommandHandler<RunUserSqlCommand, RunResult>
         if (!queryResult.IsSuccess)
             return RunResult.Error(queryResult.ErrorType, queryResult.ErrorMessage);
 
-        if (!challenge.RequiresOrdering)
-            queryResult.OutputTable.OrderRows();
+        var queryTable = queryResult.OutputTable;
+        
+        if (!challenge.RequiresOrdering && queryTable.Rows.Any())
+            queryTable.OrderRows();
 
         var cacheKey = CacheKeys.Challenges.ExpectedOutput(request.ChallengeId, request.Provider);
 
@@ -82,10 +84,11 @@ public class RunUserSqlHandler : ICommandHandler<RunUserSqlCommand, RunResult>
 
             if (!expectedResult.IsSuccess)
             {
-                _logger.LogCritical($"Solution query execution failed. challengeId: {challenge.Id} provider: {databaseProvider}");
+                _logger.LogCritical(
+                    $"Solution query execution failed. challengeId: {challenge.Id} provider: {databaseProvider}");
                 return RunResult.Error(expectedResult.ErrorType, "An error occurred");
             }
-        
+
             if (!challenge.RequiresOrdering)
                 expectedResult.OutputTable.OrderRows();
 
@@ -97,6 +100,6 @@ public class RunUserSqlHandler : ICommandHandler<RunUserSqlCommand, RunResult>
             });
         }
 
-        return RunResult.FromResults(queryResult.OutputTable, expectedOutput!);
+        return RunResult.FromResults(queryTable, expectedOutput!);
     }
 }

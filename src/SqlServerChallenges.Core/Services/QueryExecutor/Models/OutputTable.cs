@@ -5,10 +5,10 @@ namespace SqlServerChallenges.Core.Services.QueryExecutor;
 public record OutputTable
 {
     public IReadOnlyList<string> Columns { get;  }
-    public IList<IDictionary<string, object?>> Rows { get; private set; }
+    public IReadOnlyList<IReadOnlyDictionary<string, object?>> Rows { get; private set; }
     public QueryPlanInfo? Plan { get; private set; }
 
-    public OutputTable(IReadOnlyList<string> columns, IList<IDictionary<string, object?>> rows)
+    public OutputTable(IReadOnlyList<string> columns, IReadOnlyList<IReadOnlyDictionary<string, object?>> rows)
     {
         Columns = columns;
         Rows = rows;

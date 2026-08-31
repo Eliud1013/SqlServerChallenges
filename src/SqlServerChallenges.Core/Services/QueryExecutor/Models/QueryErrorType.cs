@@ -3,7 +3,7 @@ namespace SqlServerChallenges.Core.Services.QueryExecutor;
 public enum QueryErrorType
 {
     QueryTimeout,
-    InvalidColumn,
+    InvalidIdentifier,
     PermissionDenied,
     InvalidQuery,
     Unknown

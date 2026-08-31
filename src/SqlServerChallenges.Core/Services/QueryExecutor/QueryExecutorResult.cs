@@ -8,7 +8,7 @@ public sealed record QueryExecutorResult
     private readonly OutputTable? _outputTable;
     private readonly QueryError? _queryError;
 
-    private QueryExecutorResult(IReadOnlyList<string> columns, IList<IDictionary<string, object?>> rows)
+    private QueryExecutorResult(IReadOnlyList<string> columns, IReadOnlyList<IReadOnlyDictionary<string, object?>> rows)
     {
         IsSuccess = true;
         _outputTable = new(columns, rows);
@@ -26,7 +26,7 @@ public sealed record QueryExecutorResult
     public IReadOnlyList<string> Columns =>
         _outputTable?.Columns ?? throw new InvalidOperationException("The result does not contain a table.");
 
-    public IList<IDictionary<string, object?>> Rows =>
+    public IReadOnlyList<IReadOnlyDictionary<string, object?>> Rows =>
         _outputTable?.Rows ?? throw new InvalidOperationException("The result does not contain a table.");
 
     public QueryErrorType ErrorType =>
@@ -42,11 +42,11 @@ public sealed record QueryExecutorResult
             .ToList();
 
         var rows = table.AsEnumerable()
-            .Select(r => (IDictionary<string, object?>)columns
+            .Select(r => (IReadOnlyDictionary<string, object?>)columns
                 .ToDictionary(c => c, c => r[c] is DBNull ? null : r[c]))
             .ToList();
 
-        return new QueryExecutorResult(columns, rows);
+        return new QueryExecutorResult(columns.AsReadOnly(), rows.AsReadOnly());
     }
 
     public static implicit operator QueryExecutorResult(QueryError error) => new(error.Type, error.Message);
