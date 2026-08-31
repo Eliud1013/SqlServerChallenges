@@ -30,6 +30,9 @@ setup_sql=$(cat << EOF
     REPLACE;
   GO
   
+  ALTER DATABASE AdventureWorks2022 
+  SET READ_ONLY WITH NO_WAIT
+  
   USE AdventureWorks2022
   GO
   

@@ -34,7 +34,7 @@
                     @(Model.ErrorType switch
                     {
                         QueryErrorType.QueryTimeout => "Query Timeout",
-                        QueryErrorType.InvalidColumn => "Invalid Column",
+                        QueryErrorType.InvalidIdentifier => "Invalid Identifier",
                         QueryErrorType.PermissionDenied => "Permission Denied",
                         QueryErrorType.InvalidQuery => "Invalid Query",
                         _ => "Query Error"
