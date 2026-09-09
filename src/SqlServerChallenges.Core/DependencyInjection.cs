@@ -6,10 +6,14 @@ using Microsoft.Extensions.DependencyInjection;
 using SqlServerChallenges.Core.Common.Behaviours;
 using SqlServerChallenges.Core.Data;
 using SqlServerChallenges.Core.Services;
+using SqlServerChallenges.Core.Services.ConnectionProvider;
 using SqlServerChallenges.Core.Services.QueryExecutor;
 using SqlServerChallenges.Core.Services.QueryReader;
 using SqlServerChallenges.Core.Services.QueryResultComparer;
 using SqlServerChallenges.Core.Services.SampleOutput;
+using SqlServerChallenges.Core.Services.SchemaReader;
+using SqlServerChallenges.Core.Services.TableReferenceExtractor;
+
 namespace SqlServerChallenges.Core;
 
 public static class DependencyInjection
@@ -23,7 +27,7 @@ public static class DependencyInjection
         });
 
         services.AddScoped<SqlConnection>(_
-            => new SqlConnection(configuration.GetConnectionString("AdventureWorksConnection"))
+            => new SqlConnection(configuration.GetConnectionString("AdventureWorks"))
         );
 
         services.AddMediatR(options =>
@@ -49,6 +53,14 @@ public static class DependencyInjection
         services.AddSingleton<QueryResultComparer>();
 
         services.AddScoped<ISampleOutputProvider, SampleOutputProvider>();
+
+        services.AddScoped<ITableReferencesExtractor, MsSqlTableReferencesExtractor>();
+        services.AddScoped<TableReferencesExtractorDispatcher>();
+
+        services.AddScoped<IDbConnectionProvider, DbConnectionProvider>();
+        
+        services.AddScoped<InformationSchemaReader>();
+        
 
         return services;
     }
