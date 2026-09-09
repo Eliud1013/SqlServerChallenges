@@ -9,7 +9,7 @@ public class MsSqlTableReferencesExtractor : ITableReferencesExtractor
 {
     public DatabaseProvider Provider => DatabaseProvider.SqlServer;
 
-    public IDictionary<string, List<string>> Extract(string sql)
+    public IReadOnlyDictionary<string, List<string>> Extract(string sql)
     {
         var parser = new TSql160Parser(initialQuotedIdentifiers: true);
         using var reader = new StringReader(sql);
@@ -61,7 +61,7 @@ public class MsSqlTableReferencesExtractor : ITableReferencesExtractor
                         tableName
                     };
                 }
-                else
+                else if (!schema.Contains(tableName))
                 {
                     schema.Add(tableName);
                 }

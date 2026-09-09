@@ -11,7 +11,7 @@ public class TableReferencesExtractorDispatcher
         _extractors = extractors.ToDictionary(x => x.Provider);
     }
 
-    public IDictionary<string, List<string>> Extract(string sql, DatabaseProvider provider)
+    public IReadOnlyDictionary<string, List<string>> Extract(string sql, DatabaseProvider provider)
     {
         if (!_extractors.TryGetValue(provider, out var extractor))
             throw new InvalidOperationException();
