@@ -96,16 +96,12 @@
                     <h2 class="challenge-detail__label">
                         <i class="bi bi-diagram-3 me-1"></i>Table definitions
                     </h2>
-                    <pre class="challenge-detail__schema">CREATE TABLE Person.Person (
-    BusinessEntityID INT          NOT NULL,
-    PersonType       NCHAR(2)     NOT NULL,
-    NameStyle        BIT          NOT NULL,
-    Title            NVARCHAR(8)  NULL,
-    FirstName        NVARCHAR(50) NOT NULL,
-    MiddleName       NVARCHAR(50) NULL,
-    LastName         NVARCHAR(50) NOT NULL,
-    EmailPromotion   INT          NOT NULL
-);</pre>
+                    <div hx-get="?handler=ChallengeSchema"
+                         hx-vals='{"challengeId": "@Model.Info.ChallengeId"}'
+                         hx-trigger="revealed"
+                         hx-swap="innerHTML">
+                        <p class="text-secondary" style="margin: 0">Loading table definitions…</p>
+                    </div>
                 </section>
 
                 <section class="challenge-detail__tab-panel" data-tab="comments" role="tabpanel">
@@ -248,7 +244,7 @@
 
             Split(['#challenge-detail-editor', '#challenge-detail-results'], {
                 sizes: [60, 40],
-                minSize: [160, 140],
+                minSize: [160, 100],
                 gutterSize: 6,
                 direction: 'vertical',
                 cursor: 'row-resize'

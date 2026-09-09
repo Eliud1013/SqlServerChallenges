@@ -5,6 +5,7 @@ using SqlServerChallenges.Core.Data.Entities.ChallengeSolutions;
 using SqlServerChallenges.Core.Data.Entities.ChallengeVote;
 using SqlServerChallenges.Core.Features.Challenges.GetChallengeDetails.GetChallengeInfo;
 using SqlServerChallenges.Core.Features.Challenges.GetChallengeDetails.GetChallengeState;
+using SqlServerChallenges.Core.Features.Challenges.GetChallengeSchema;
 using SqlServerChallenges.Core.Features.Challenges.VoteChallenge;
 using SqlServerChallenges.Core.Features.Submissions.RunUserSql;
 
@@ -71,4 +72,20 @@ public class Detail : PageModel
 
         return new NoContentResult();
     }
+
+    public async Task<IActionResult> OnGetChallengeSchema(Guid ChallengeId)
+    {
+        var provider = DatabaseProvider.SqlServer;
+
+        var result = await _sender.Send(new GetChallengeSchemaQuery(ChallengeId, provider));
+        
+        if (result.Failed)
+        {
+            // Handle error somehow
+            return BadRequest();
+        }
+
+        return Partial("TablesDefinition", result.Value);
+    }
+
 }

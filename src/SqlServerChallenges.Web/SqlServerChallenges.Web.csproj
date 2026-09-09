@@ -7,6 +7,12 @@
       <Content Update="Pages\Challenges\_ChallengeRows.cshtml">
         <DependentUpon>Index.cshtml</DependentUpon>
       </Content>
+      <Content Update="Pages\Challenges\RunResult.cshtml">
+        <DependentUpon>Detail.cshtml</DependentUpon>
+      </Content>
+      <Content Update="Pages\Challenges\TablesDefinition.cshtml">
+        <DependentUpon>Detail.cshtml</DependentUpon>
+      </Content>
     </ItemGroup>
     
     <ItemGroup>
@@ -27,6 +33,12 @@
     
     <ItemGroup>
       <Folder Include="wwwroot\img\" />
+    </ItemGroup>
+    
+    <ItemGroup>
+      <Compile Update="Pages\Challenges\TablesDefinition.cshtml">
+        <DependentUpon>Detail.cshtml</DependentUpon>
+      </Compile>
     </ItemGroup>
 
 </Project>

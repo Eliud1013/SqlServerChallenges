@@ -1,0 +1,18 @@
+@using SqlServerChallenges.Core.Services.SchemaReader
+@model IReadOnlyDictionary<string, IReadOnlyList<ColumnInfo>>
+
+<div style="display: flex; flex-direction: column; gap: 0.85rem">
+    @foreach (var (tableIdentifier, columns) in Model)
+    {
+        <pre class="challenge-detail__schema">CREATE TABLE @tableIdentifier (
+@for (var i = 0; i < columns.Count; i++)
+{
+    var column = columns[i];
+    var nullable = column.IsNullable ? "NULL" : "NOT NULL";
+    var suffix = i < columns.Count - 1 ? "," : "";
+    <text>    @column.Name.PadRight(16) @column.Type.PadRight(13)@nullable@suffix
+</text>
+    }
+    );</pre>
+    }
+</div>
