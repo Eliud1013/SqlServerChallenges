@@ -57,8 +57,8 @@ public sealed record RunResult
         UserComparedRowCount = userResult.Rows.Count;
         ExpectedComparedRowCount = expectedResult.Rows.Count;
         
-        UserRows = userResult.Rows.Cast<IReadOnlyDictionary<string, object?>>().ToList();
-        ExpectedRows = expectedResult.Rows.Cast<IReadOnlyDictionary<string, object?>>().ToList();
+        UserRows = userResult.Rows.ToList();
+        ExpectedRows = expectedResult.Rows.ToList();
 
         ColumnCountMatch = UserColumns.Count == ExpectedColumns.Count;
         ColumnsMatch = UserColumns.SequenceEqual(ExpectedColumns, StringComparer.OrdinalIgnoreCase);

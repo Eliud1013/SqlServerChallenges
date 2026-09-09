@@ -103,7 +103,7 @@ public class MsSqlQueryExecutor : IQueryExecutor
         }
         finally
         {
-            if (includePlan)
+            if (_connection.State == ConnectionState.Open  && includePlan)
                 await ExecuteNonQueryAsync("SET STATISTICS XML OFF", ct);
 
             await _connection.CloseAsync();
