@@ -96,11 +96,17 @@
                     <h2 class="challenge-detail__label">
                         <i class="bi bi-diagram-3 me-1"></i>Table definitions
                     </h2>
-                    <div hx-get="?handler=ChallengeSchema"
+                    <div id="challenge-detail-schema"
+                         hx-get="?handler=ChallengeSchema"
                          hx-vals='{"challengeId": "@Model.Info.ChallengeId"}'
-                         hx-trigger="revealed"
-                         hx-swap="innerHTML">
-                        <p class="text-secondary" style="margin: 0">Loading table definitions…</p>
+                         hx-trigger="intersect once"
+                         hx-swap="innerHTML"
+                         hx-indicator="#challenge-detail-schema-loading">
+                        <p class="challenge-detail__schema-loading text-secondary" id="challenge-detail-schema-loading">
+                            <span class="spinner-border spinner-border-sm me-1" role="status"
+                                  aria-hidden="true"></span>
+                            Loading table definitions…
+                        </p>
                     </div>
                 </section>
 

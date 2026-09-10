@@ -373,6 +373,13 @@
     display: none;
 }
 
+.challenge-detail__schema-loading {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0.25rem 0 0;
+}
+
 .challenge-detail__schema {
     margin: 0;
     padding: 0.9rem 1rem;
