@@ -32,6 +32,7 @@ function toggleVote(type) {
 
 const runButton = document.getElementById('challenge-detail-run');
 const resultBody = document.getElementById('challenge-detail__result-body');
+const schemaContainer = document.getElementById('challenge-detail-schema');
 const tabs = document.querySelectorAll('.challenge-detail__tab');
 const panels = document.querySelectorAll('.challenge-detail__tab-panel');
 
@@ -40,6 +41,10 @@ runButton.addEventListener('htmx:configRequest', function (e) {
 });
 
 resultBody.addEventListener('htmx:afterSwap', applySyntaxMarkers);
+
+schemaContainer.addEventListener('shown.bs.collapse', function (e) {
+    e.target.scrollIntoView({behavior: 'smooth', block: 'nearest'});
+});
 
 tabs.forEach((tab) => {
     tab.addEventListener('click', () => {

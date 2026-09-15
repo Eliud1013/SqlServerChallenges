@@ -308,17 +308,100 @@
     margin: 0.25rem 0 0;
 }
 
-.challenge-detail__schema {
-    margin: 0;
-    padding: 0.9rem 1rem;
-    background: var(--bg-codebox);
-    border: 1px solid rgba(255, 255, 255, 0.05);
+/* ---- Schema accordion ---- */
+
+.schema-accordion {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.schema-accordion__empty {
+    margin: 0.5rem 0 0;
+    color: #8b97b2;
+    font-size: 0.8rem;
+}
+
+.schema-acc__item {
+    overflow-anchor: none;
+    background: var(--bg-elevated);
+    border: 1px solid rgba(255, 255, 255, 0.08);
     border-radius: var(--radius-md);
+    overflow: hidden;
+}
+
+.schema-acc__header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    width: 100%;
+    padding: 0.55rem 0.75rem;
+    border: 0;
+    background: transparent;
     font-family: var(--ff-mono);
-    font-size: 0.75rem;
-    line-height: 1.55;
-    color: #aeb8d0;
-    overflow-x: auto;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--clr-body);
+    text-align: left;
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.15s ease;
+}
+
+.schema-acc__header:hover {
+    background: rgba(255, 255, 255, 0.04);
+}
+
+.schema-acc__chevron {
+    margin-left: auto;
+    color: #8b97b2;
+    font-size: 0.72rem;
+    transition: transform 0.18s ease;
+}
+
+.schema-acc__header.collapsed .schema-acc__chevron {
+    transform: rotate(-90deg);
+}
+
+.schema-acc__columns {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.schema-acc__column {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    padding: 0.32rem 0.75rem;
+    font-family: var(--ff-mono);
+    font-size: 0.68rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+    white-space: nowrap;
+}
+
+.schema-acc__column:last-child {
+    border-bottom: 0;
+}
+
+.schema-acc__column-name {
+    flex: 1 1 auto;
+    min-width: 0;
+    color: #dde4f0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.schema-acc__column-type {
+    color: var(--clr-primary);
+    text-transform: uppercase;
+}
+
+.schema-acc__column-null {
+    flex: 0 0 auto;
+    color: #7d8aa5;
+    font-size: 0.62rem;
 }
 
 .challenge-detail__chat {
