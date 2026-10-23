@@ -29,6 +29,9 @@ public sealed record QueryExecutorResult
     public IReadOnlyList<IReadOnlyDictionary<string, object?>> Rows =>
         _outputTable?.Rows ?? throw new InvalidOperationException("The result does not contain a table.");
 
+    public QueryError QueryError =>
+        _queryError ?? throw new InvalidOperationException("The result does not contain an error.");
+
     public QueryErrorType ErrorType =>
         _queryError?.Type ?? throw new InvalidOperationException("The result does not contain an error.");
 

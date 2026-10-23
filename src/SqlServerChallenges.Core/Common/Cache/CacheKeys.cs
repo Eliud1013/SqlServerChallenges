@@ -6,10 +6,18 @@ public static class CacheKeys
 {
     public static class Challenges
     {
-        public static string SolutionSample(Guid challengeId, int rowLimit) => $"Challenge.SolutionSample.{challengeId}.{rowLimit}";
+        public static string SolutionSample(Guid challengeId, int rowLimit) =>
+            $"Challenge.SolutionSample.{challengeId}.{rowLimit}";
+
         public static string Info(string slug) => $"Challenge.Info.{slug}";
-        public static string ExpectedOutput(Guid challengeId, DatabaseProvider provider) => $"Challenge.ExpectedOutput:{challengeId}.{provider}";
-        public static string Schema(Guid challengeId, DatabaseProvider provider) => $"Challenge.Schema.{challengeId}.{provider}";
-        
+
+        public static string ExpectedOutput(Guid challengeId, DatabaseProvider provider) =>
+            $"Challenge.ExpectedOutput.{challengeId}.{provider}";
+
+        public static string Schema(Guid challengeId, DatabaseProvider provider) =>
+            $"Challenge.Schema.{challengeId}.{provider}";
+
+        public static string Solution(Guid challengeId, DatabaseProvider provider) =>
+            $"Challenge.Solution.{challengeId}.{provider}";
     }
 }
