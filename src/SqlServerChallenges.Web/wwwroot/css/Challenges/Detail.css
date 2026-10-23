@@ -298,7 +298,27 @@
     min-width: 0;
     overflow: auto;
     contain: layout;
-    scrollbar-width: none;
+    scrollbar-width: thin;
+    scrollbar-color: var(--bg-hover) transparent;
+}
+
+.challenge-detail__sample::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+.challenge-detail__sample::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.challenge-detail__sample::-webkit-scrollbar-thumb {
+    background-color: var(--bg-hover);
+    border-radius: var(--radius-md);
+    border: 2px solid transparent;
+}
+
+.challenge-detail__sample::-webkit-scrollbar-thumb:hover {
+    background-color: var(--clr-secondary);
 }
 
 .challenge-detail__sample tr:hover {
@@ -600,10 +620,30 @@
 .challenge-detail__sample__body {
     min-width: 0;
     min-height: 0;
-    overflow: auto;
-    scrollbar-width: none;
+    overflow: visible;
 }
 
-.challenge-detail__sample__body::-webkit-scrollbar {
-    display: none;
+.challenge-detail__sample__body .table-responsive {
+    overflow: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--bg-hover) transparent;
+}
+
+.challenge-detail__sample__body .table-responsive::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+.challenge-detail__sample__body .table-responsive::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.challenge-detail__sample__body .table-responsive::-webkit-scrollbar-thumb {
+    background-color: var(--bg-hover);
+    border-radius: var(--radius-md);
+    border: 2px solid transparent;
+}
+
+.challenge-detail__sample__body .table-responsive::-webkit-scrollbar-thumb:hover {
+    background-color: var(--clr-secondary);
 }

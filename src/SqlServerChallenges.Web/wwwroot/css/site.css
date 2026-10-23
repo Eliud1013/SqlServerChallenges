@@ -1,4 +1,15 @@
 @layer components {
+    .challenges-page__index {
+        text-align: center;
+        color: var(--clr-secondary) !important;
+        font-family: var(--ff-mono);
+        font-size: 0.84rem;
+    }
+
+    .challenges-page__index--small {
+        font-size: 0.79rem;
+    }
+
     .challenges__badge {
         display: inline-block;
         padding: 2px 8px;

@@ -28,10 +28,15 @@ public class GetChallengeStateHandler : IQueryHandler<GetChallengeStateQuery, Ch
             .Where(c => c.Slug == request.Slug)
             .Select(c => c.Id)
             .FirstOrDefaultAsync(cancellationToken);
-        
+
         if (challengeId == Guid.Empty)
             return ChallengesErrors.NotFound;
-        
+
+        bool isSolved = await _dbContext.Submissions
+            .AnyAsync(s => s.ChallengeId == challengeId
+                           && s.UserId == _userContext.UserId
+                           && s.Passed, cancellationToken);
+
         var challengeState = await _dbContext.Challenges
             .Where(c => c.Slug == request.Slug)
             .Select(c => new ChallengeState(
@@ -39,7 +44,7 @@ public class GetChallengeStateHandler : IQueryHandler<GetChallengeStateQuery, Ch
                 UpVotes: c.Votes.Count(v => v.Type == VoteType.UpVote),
                 IsUpVoted: c.Votes.Any(v => v.UserId == _userContext.UserId && v.Type == VoteType.UpVote),
                 IsDownVoted: c.Votes.Any(v => v.UserId == _userContext.UserId && v.Type == VoteType.DownVote),
-                IsSolved: true // TODO: Determine whether the user has already solved the challenge
+                IsSolved: isSolved
             )).FirstOrDefaultAsync(cancellationToken);
 
         if (challengeState is null)

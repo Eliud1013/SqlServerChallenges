@@ -136,6 +136,30 @@ namespace SqlServerChallenges.Core.Migrations
                     b.ToTable("ChallengeVotes", "Challenges");
                 });
 
+            modelBuilder.Entity("SqlServerChallenges.Core.Data.Entities.Submissions.Submission", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("ChallengeId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("Passed")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("SubmittedAtUtc")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Submissions", (string)null);
+                });
+
             modelBuilder.Entity("SqlServerChallenges.Core.Data.Entities.Challenge", b =>
                 {
                     b.HasOne("SqlServerChallenges.Core.Data.Entities.Categories.Category", "Category")

@@ -1,5 +1,6 @@
 using System.Security.Cryptography;
 using Microsoft.EntityFrameworkCore;
+using SqlServerChallenges.Core.Authentication;
 using SqlServerChallenges.Core.Common.CQRS;
 using SqlServerChallenges.Core.Common.CQRS.Query;
 using SqlServerChallenges.Core.Common.Results;
@@ -11,10 +12,14 @@ namespace SqlServerChallenges.Core.Features.Challenges.ListChallenges;
 public class ListChallengesHandler : IQueryHandler<ListChallengesQuery, IReadOnlyList<ChallengeEntry>>
 {
     private readonly ApplicationDbContext _dbContext;
+    private readonly IUserContext _userContext;
 
-    public ListChallengesHandler(ApplicationDbContext dbContext)
+    public ListChallengesHandler(
+        ApplicationDbContext dbContext,
+        IUserContext userContext)
     {
         _dbContext = dbContext;
+        _userContext = userContext;
     }
 
     public async Task<Result<IReadOnlyList<ChallengeEntry>>> Handle(ListChallengesQuery request,
@@ -33,6 +38,11 @@ public class ListChallengesHandler : IQueryHandler<ListChallengesQuery, IReadOnl
 
         int acceptance = RandomNumberGenerator.GetInt32(0, 100);
 
+        var solvedChallenges = await _dbContext.Submissions
+            .Where(s => s.UserId == _userContext.UserId && s.Passed)
+            .Select(s => s.ChallengeId)
+            .ToHashSetAsync(cancellationToken);
+        
         return await query
             .OrderBy(c => c.Number)
             .Select(challenge => new ChallengeEntry(
@@ -44,7 +54,7 @@ public class ListChallengesHandler : IQueryHandler<ListChallengesQuery, IReadOnl
                 Category: challenge.Category.Name,
                 Difficulty: challenge.Difficulty,
                 Acceptance: acceptance,
-                Solved: true)
+                Solved: solvedChallenges.Contains(challenge.Id))
             ).ToListAsync(cancellationToken);
     }
 }
