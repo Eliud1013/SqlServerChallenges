@@ -55,7 +55,8 @@ public class SampleOutputProvider : ISampleOutputProvider
         
         _cache.Set(cacheKey, queryResult.OutputTable, new MemoryCacheEntryOptions
         {
-            Priority =  CacheItemPriority.High
+            Priority =  CacheItemPriority.High,
+            Size = queryResult.Rows.Count
         });
 
         return queryResult.OutputTable;

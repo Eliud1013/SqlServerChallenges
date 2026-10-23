@@ -49,16 +49,16 @@ public class RunUserSqlHandler : ICommandHandler<RunUserSqlCommand, RunResult>
         var syntaxValidationResult = _syntaxCheckerDispatcher.Validate(userQuery, databaseProvider);
 
         if (syntaxValidationResult.IsInvalid)
-            return RunResult.SyntaxError(syntaxValidationResult.Errors);
+            return RunResult.FromSyntaxError(syntaxValidationResult.Errors);
 
         var queryResult = await _queryExecutorDispatcher
             .ExecuteQueryAsync(userQuery, databaseProvider, defaultRowLimit, includePlan: true, ct: cancellationToken);
 
         if (!queryResult.IsSuccess)
-            return RunResult.Error(queryResult.ErrorType, queryResult.ErrorMessage);
+            return RunResult.FromQueryError(queryResult.ErrorType, queryResult.ErrorMessage);
 
         var queryTable = queryResult.OutputTable;
-        
+
         if (!challenge.RequiresOrdering && queryTable.Rows.Any())
             queryTable.OrderRows();
 
@@ -86,7 +86,7 @@ public class RunUserSqlHandler : ICommandHandler<RunUserSqlCommand, RunResult>
             {
                 _logger.LogCritical(
                     $"Solution query execution failed. challengeId: {challenge.Id} provider: {databaseProvider}");
-                return RunResult.Error(expectedResult.ErrorType, "An error occurred");
+                return RunResult.FromQueryError(expectedResult.ErrorType, "An error occurred");
             }
 
             if (!challenge.RequiresOrdering)
@@ -96,7 +96,8 @@ public class RunUserSqlHandler : ICommandHandler<RunUserSqlCommand, RunResult>
 
             _cache.Set(cacheKey, expectedOutput, new MemoryCacheEntryOptions
             {
-                Priority = CacheItemPriority.High
+                Priority = CacheItemPriority.High,
+                Size = 0,
             });
         }
 

@@ -76,8 +76,8 @@ public sealed record RunResult
         }
     }
 
-    public static RunResult Error(QueryErrorType type, string message) => new(type, message);
-    public static RunResult SyntaxError(IReadOnlyList<SqlSyntaxError> errors) => new (errors);
+    public static RunResult FromQueryError(QueryErrorType type, string message) => new(type, message);
+    public static RunResult FromSyntaxError(IReadOnlyList<SqlSyntaxError> errors) => new (errors);
     public static RunResult FromResults(OutputTable userResult, OutputTable expectedResult) =>
         new(userResult, expectedResult);
 
