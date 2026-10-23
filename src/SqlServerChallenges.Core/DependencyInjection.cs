@@ -1,4 +1,3 @@
-using MediatR;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -8,8 +7,6 @@ using SqlServerChallenges.Core.Data;
 using SqlServerChallenges.Core.Services;
 using SqlServerChallenges.Core.Services.ConnectionProvider;
 using SqlServerChallenges.Core.Services.QueryExecutor;
-using SqlServerChallenges.Core.Services.QueryReader;
-using SqlServerChallenges.Core.Services.QueryResultComparer;
 using SqlServerChallenges.Core.Services.SampleOutput;
 using SqlServerChallenges.Core.Services.SchemaReader;
 using SqlServerChallenges.Core.Services.TableReferenceExtractor;
@@ -37,7 +34,10 @@ public static class DependencyInjection
             options.AddOpenBehavior(typeof(AnonymousRequestBehavior<,>));
         });
 
-        services.AddMemoryCache();
+        services.AddMemoryCache(options =>
+        {
+            
+        });
 
         services.AddSingleton<MsSqlQuerySyntaxChecker>();
 
@@ -47,20 +47,15 @@ public static class DependencyInjection
         services.AddScoped<IQuerySyntaxChecker, MsSqlQuerySyntaxChecker>();
         services.AddScoped<SyntaxCheckerDispatcher>();
 
-        services.AddScoped<IQueryReader, MsSqlQueryReader>();
-        services.AddScoped<QueryReaderDispatcher>();
-
-        services.AddSingleton<QueryResultComparer>();
-
         services.AddScoped<ISampleOutputProvider, SampleOutputProvider>();
 
         services.AddScoped<ITableReferencesExtractor, MsSqlTableReferencesExtractor>();
         services.AddScoped<TableReferencesExtractorDispatcher>();
 
         services.AddScoped<IDbConnectionProvider, DbConnectionProvider>();
-        
+
         services.AddScoped<InformationSchemaReader>();
-        
+
 
         return services;
     }
