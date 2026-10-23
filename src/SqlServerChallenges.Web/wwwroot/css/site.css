@@ -1,28 +1,3 @@
-@layer base {
-    * {
-        scrollbar-width: thin;
-        scrollbar-color: var(--bg-hover) var(--bg-surface);
-    }
-
-    *::-webkit-scrollbar {
-        width: 8px;
-        height: 8px;
-    }
-
-    *::-webkit-scrollbar-track {
-        background: var(--bg-surface);
-    }
-
-    *::-webkit-scrollbar-thumb {
-        background-color: var(--bg-hover);
-        border-radius: var(--radius-md);
-        border: 2px solid var(--bg-surface);
-    }
-
-    *::-webkit-scrollbar-thumb:hover {
-        background-color: var(--clr-secondary);
-    }
-}
 @layer components {
     .challenges__badge {
         display: inline-block;
@@ -34,9 +9,10 @@
     }
 
     .challenges__badge--category {
-        color: var(--clr-secondary);
-        background: #181d2e;
-        border: 1px solid rgba(255, 255, 255, 0.05);
+        color: #7f8aa9;
+        background: rgba(49, 61, 88, 0.48);
+        border: 1px solid rgba(112, 126, 154, 0.14);
+        text-transform: uppercase;
     }
     
     .challenge__badge--easy {
@@ -56,17 +32,6 @@
         background: rgba(248, 113, 113, 0.1);
         border: 1px solid rgba(248, 113, 113, 0.2);
     }
-
-    .challenges-page__index {
-        text-align: center;
-        color: var(--clr-secondary) !important;
-        font-family: var(--ff-mono);
-        font-size: 0.84rem;
-    }
-
-    .challenges-page__index--small {
-        font-size: 0.79rem;
-    }
 }
 
 @layer variables {
@@ -75,7 +40,7 @@
         --clr-primary-rgb: 0, 211, 159;
 
         --clr-body: #E6E9F2;
-        --clr-body-contrast: #0D0F1B;
+        --clr-body-contrast: #0B0E17;
         --clr-body-rgb: 230, 233, 242;
         --clr-body-bg: #0B0E17;
         --clr-body-bg-rgb: 11, 14, 23;
@@ -122,12 +87,11 @@
     --bs-body-font-size: 1rem;
     --bs-body-font-family: var(--ff-body);
     --bs-font-monospace: var(--ff-mono);
-
+    
     --bs-border-radius-sm: var(--radius-sm);
     --bs-border-radius: var(--radius-md);
     --bs-border-radius-lg: var(--radius-lg);
     --bs-border-radius-xl: var(--radius-xl);
-
 }
 
 .btn-primary {
