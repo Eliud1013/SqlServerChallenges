@@ -13,6 +13,9 @@
       <Content Update="Pages\Challenges\TablesDefinition.cshtml">
         <DependentUpon>Detail.cshtml</DependentUpon>
       </Content>
+      <Content Update="Pages\Challenges\SubmissionResult.cshtml">
+        <DependentUpon>Detail.cshtml</DependentUpon>
+      </Content>
     </ItemGroup>
     
     <ItemGroup>
@@ -29,6 +32,7 @@
         <PrivateAssets>all</PrivateAssets>
       </PackageReference>
       <PackageReference Include="Microsoft.SqlServer.Types" Version="170.1000.7" />
+      <PackageReference Include="System.Security.Cryptography.Pkcs" Version="9.0.21" />
     </ItemGroup>
     
     <ItemGroup>
@@ -37,6 +41,9 @@
     
     <ItemGroup>
       <Compile Update="Pages\Challenges\TablesDefinition.cshtml">
+        <DependentUpon>Detail.cshtml</DependentUpon>
+      </Compile>
+      <Compile Update="Pages\Challenges\SubmissionResult.cshtml">
         <DependentUpon>Detail.cshtml</DependentUpon>
       </Compile>
     </ItemGroup>

@@ -33,11 +33,11 @@
             <i class="bi bi-shuffle "></i>
         </button>
     </header>
-    
+
     <div class="challenge-detail__body">
         <div class="challenge-detail__split-container">
             <aside class="challenge-detail__panel" id="challenge-detail-left">
-<div class="challenge-detail__tabs">
+                <div class="challenge-detail__tabs">
                     <button class="challenge-detail__tab is-active">Description</button>
                     <button class="challenge-detail__tab">Comments</button>
                 </div>
@@ -57,7 +57,7 @@
 
                     <h1 class="challenge-detail__title">@Model.Info.Title</h1>
                     <p class="challenge-detail__description pt-2">@Model.Info.Description</p>
-                 
+
                     <div class="d-flex gap-2 mt-3">
                         <button id="vote-up"
                                 class="challenge-detail__vote-btn @(Model.State.IsUpVoted ? "challenge-detail__vote-btn--clicked-up" : "")"
@@ -132,20 +132,38 @@
 
             <div class="challenge-detail__workbench" id="challenge-detail-right">
                 <header class="challenge-detail__workbench-bar">
-                <span class="challenge-detail__workbench-title">
-                    <i class="bi bi-terminal me-2"></i>T-SQL · SQL Server1
-                </span>
-                    <button type="button" class="btn btn-primary challenge-detail__run" id="challenge-detail-run"
-                            hx-post="?handler=RunCode"
-                            hx-vals='{"challengeId": "@Model.Info.ChallengeId"}'
-                            hx-target="#challenge-detail__result-body"
-                            hx-swap="innerHTML"
-                            hx-indicator="#challenge-detail-run-spinner">
-                        <i class="bi bi-play-fill me-1" id="challenge-detail-run-icon"></i>
+                    <span class="challenge-detail__workbench-title">
+                        <i class="bi bi-terminal me-2"></i>T-SQL · SQL Server1
+                    </span>
+                    
+                    <div class="d-flex gap-1">
                         <span class="spinner-border spinner-border-sm me-1 d-none" id="challenge-detail-run-spinner"
                               role="status" aria-hidden="true"></span>
-                        <span id="challenge-detail-run-text">Run</span>
-                    </button>
+                        
+                        <button type="button" 
+                                class="btn btn-primary challenge-detail__run" 
+                                id="challenge-detail-run"
+                                hx-post="?handler=RunCode"
+                                hx-vals='{"challengeId": "@Model.Info.ChallengeId"}'
+                                hx-target="#challenge-detail__result-body"
+                                hx-swap="innerHTML"
+                                hx-indicator="#challenge-detail-run-spinner">
+                            <i class="bi bi-play-fill me-1" ></i>
+                            <span id="challenge-detail-run-text">Run</span>
+                        </button>
+
+                        <button type="button"
+                                class="btn btn-primary challenge-detail__submit"
+                                id="challenge-detail-submit"
+                                hx-post="?handler=SubmitSolution"
+                                hx-vals='{"challengeId": "@Model.Info.ChallengeId"}'
+                                hx-target="#challenge-detail__result-body"
+                                hx-swap="innerHTML"
+                                hx-indicator="#challenge-detail-run-spinner">
+                            <i class="bi bi-play-fill me-1"></i>
+                            <span id="challenge-detail-run-text">Submit</span>
+                        </button>
+                    </div>
                 </header>
 
                 <div class="d-flex flex-column flex-grow-1 flex-shrink-1" style="min-width: 0; min-height: 0">
@@ -153,7 +171,7 @@
                     </div>
                     <section class="challenge-detail__results" id="challenge-detail-results">
                         <div class="d-none" id="challenge-detail__result-body"></div>
-                        
+
                         <div class="challenge-detail__results-state" id="challenge-detail-results-idle">
                             <i class="bi bi-play-circle challenge-detail__results-icon" aria-hidden="true"></i>
                             <p>Press Run to see results</p>

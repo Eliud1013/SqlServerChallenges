@@ -1,4 +1,5 @@
 using MediatR;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using SqlServerChallenges.Core.Data.Entities.ChallengeSolutions;
@@ -8,6 +9,7 @@ using SqlServerChallenges.Core.Features.Challenges.GetChallengeDetails.GetChalle
 using SqlServerChallenges.Core.Features.Challenges.GetChallengeSchema;
 using SqlServerChallenges.Core.Features.Challenges.VoteChallenge;
 using SqlServerChallenges.Core.Features.Submissions.RunUserSql;
+using SqlServerChallenges.Core.Features.Submissions.SubmitSolution;
 
 namespace SqlServerChallenges.Web.Pages.Challenges;
 
@@ -87,5 +89,19 @@ public class Detail : PageModel
 
         return Partial("TablesDefinition", result.Value);
     }
+        
+    public async Task<IActionResult> OnPostSubmitSolution(Guid ChallengeId, string sql)
+    {
+        var provider = DatabaseProvider.SqlServer;
 
+        var result = await _sender.Send(new SubmitSolutionCommand(ChallengeId, sql, provider));
+        
+        if (result.Failed)
+        {
+            // Handle error somehow
+            return BadRequest();
+        }
+
+        return Partial("SubmissionResult", result.Value);
+    }
 }

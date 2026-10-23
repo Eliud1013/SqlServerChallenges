@@ -31,13 +31,39 @@ function toggleVote(type) {
 }
 
 const runButton = document.getElementById('challenge-detail-run');
+const submitButton = document.getElementById('challenge-detail-submit');
 const resultBody = document.getElementById('challenge-detail__result-body');
 const schemaContainer = document.getElementById('challenge-detail-schema');
 const tabs = document.querySelectorAll('.challenge-detail__tab');
 const panels = document.querySelectorAll('.challenge-detail__tab-panel');
 
-runButton.addEventListener('htmx:configRequest', function (e) {
-    e.detail.parameters.sql = getEditorValue();
+[runButton, submitButton].forEach(button => {
+    button.addEventListener('htmx:configRequest', (e) => {
+        e.detail.parameters.sql = getEditorValue();
+    });
+
+    button.addEventListener("htmx:beforeRequest", (event) => {
+        clearSyntaxErrors();
+
+        document.getElementById('challenge-detail-results-idle').classList.add('d-none');
+        document.getElementById('challenge-detail-results-running').classList.remove('d-none');
+        document.getElementById('challenge-detail__result-body').classList.add('d-none');
+        
+        button.querySelector('#challenge-detail-run-text').textContent = 'Running...';
+        button.disabled = true;
+    });
+
+    button.addEventListener("htmx:afterRequest", (event) => {
+        document.getElementById('challenge-detail__result-body').classList.remove('d-none');
+        document.getElementById('challenge-detail-results-running').classList.add('d-none');
+
+        const btnText = event.currentTarget.id === "challenge-detail-run"
+            ? "Run"
+            : "Submit"
+        
+        button.querySelector('#challenge-detail-run-text').textContent = btnText;
+        button.disabled = false;
+    });
 });
 
 resultBody.addEventListener('htmx:afterSwap', applySyntaxMarkers);
@@ -52,28 +78,6 @@ tabs.forEach((tab) => {
         tabs.forEach((t) => t.classList.toggle('is-active', t === tab));
         panels.forEach((p) => p.classList.toggle('is-active', p.dataset.tab === target));
     });
-});
-
-runButton.addEventListener("htmx:beforeRequest", (event) => {
-    clearSyntaxErrors();
-
-    document.getElementById('challenge-detail-results-idle').classList.add('d-none');
-    document.getElementById('challenge-detail-results-running').classList.remove('d-none');
-    document.getElementById('challenge-detail__result-body').classList.add('d-none');
-
-    const button = event.currentTarget;
-    button.querySelector('#challenge-detail-run-text').textContent = 'Running...';
-    button.disabled = true;
-});
-
-runButton.addEventListener("htmx:afterRequest", (event) => {
-    document.getElementById('challenge-detail__result-body').classList.remove('d-none');
-    document.getElementById('challenge-detail-results-running').classList.add('d-none');
-
-    const button = event.currentTarget;
-    button.disabled = false;
-    button.querySelector('#challenge-detail-run-icon').classList.remove('d-none');
-    button.querySelector('#challenge-detail-run-text').textContent = 'Run';
 });
 
 window.toggleVote = toggleVote;

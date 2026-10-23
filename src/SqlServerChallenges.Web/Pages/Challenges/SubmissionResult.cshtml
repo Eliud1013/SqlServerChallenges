@@ -1,0 +1,12 @@
+@using SqlServerChallenges.Core.Features.Submissions.SubmitSolution;
+@model SubmissionResult
+
+
+@if (Model.Passed)
+{
+    <p class="text-primary h2">Accepted!</p>
+}
+else
+{
+    <p class="text-danger h2">Wrong Answer</p>
+}
