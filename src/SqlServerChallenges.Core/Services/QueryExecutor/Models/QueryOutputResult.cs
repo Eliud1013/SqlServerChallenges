@@ -2,19 +2,19 @@ using System.Data;
 
 namespace SqlServerChallenges.Core.Services.QueryExecutor;
 
-public sealed record QueryExecutorResult
+public sealed record QueryOutputResult
 {
     public bool IsSuccess { get; }
     private readonly OutputTable? _outputTable;
     private readonly QueryError? _queryError;
 
-    private QueryExecutorResult(IReadOnlyList<string> columns, IReadOnlyList<IReadOnlyDictionary<string, object?>> rows)
+    private QueryOutputResult(IReadOnlyList<string> columns, IReadOnlyList<IReadOnlyDictionary<string, object?>> rows)
     {
         IsSuccess = true;
         _outputTable = new(columns, rows);
     }
 
-    private QueryExecutorResult(QueryErrorType errorType, string message)
+    private QueryOutputResult(QueryErrorType errorType, string message)
     {
         IsSuccess = false;
         _queryError = new QueryError(errorType, message);
@@ -38,7 +38,7 @@ public sealed record QueryExecutorResult
     public string ErrorMessage =>
         _queryError?.Message ?? throw new InvalidOperationException("The result does not contain an error.");
 
-    public static implicit operator QueryExecutorResult(DataTable table)
+    public static implicit operator QueryOutputResult(DataTable table)
     {
         var columns = Enumerable.Range(0, table.Columns.Count)
             .Select(i => table.Columns[i].ColumnName)
@@ -49,8 +49,8 @@ public sealed record QueryExecutorResult
                 .ToDictionary(c => c, c => r[c] is DBNull ? null : r[c]))
             .ToList();
 
-        return new QueryExecutorResult(columns.AsReadOnly(), rows.AsReadOnly());
+        return new QueryOutputResult(columns.AsReadOnly(), rows.AsReadOnly());
     }
 
-    public static implicit operator QueryExecutorResult(QueryError error) => new(error.Type, error.Message);
+    public static implicit operator QueryOutputResult(QueryError error) => new(error.Type, error.Message);
 }
