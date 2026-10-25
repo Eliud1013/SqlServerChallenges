@@ -34,10 +34,7 @@ public static class DependencyInjection
             options.AddOpenBehavior(typeof(AnonymousRequestBehavior<,>));
         });
 
-        services.AddMemoryCache(options =>
-        {
-            
-        });
+        services.AddMemoryCache();
 
         services.AddSingleton<MsSqlQuerySyntaxChecker>();
 

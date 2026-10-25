@@ -14,19 +14,19 @@ public class RunUserSqlHandler : ICommandHandler<RunUserSqlCommand, RunResult>
 {
     private readonly ApplicationDbContext _dbContext;
     private readonly SyntaxCheckerDispatcher _syntaxCheckerDispatcher;
-    private readonly QueryExecutorDispatcher _queryExecutorDispatcher;
+    private readonly QueryExecutorDispatcher _executorDispatcher;
     private readonly ILogger<RunUserSqlHandler> _logger;
     private readonly IMemoryCache _cache;
 
     public RunUserSqlHandler(
         ApplicationDbContext dbContext,
         SyntaxCheckerDispatcher syntaxCheckerDispatcher,
-        QueryExecutorDispatcher queryExecutorDispatcher,
+        QueryExecutorDispatcher executorDispatcher,
         ILogger<RunUserSqlHandler> logger,
         IMemoryCache cache)
     {
         _dbContext = dbContext;
-        _queryExecutorDispatcher = queryExecutorDispatcher;
+        _executorDispatcher = executorDispatcher;
         _logger = logger;
         _cache = cache;
         _syntaxCheckerDispatcher = syntaxCheckerDispatcher;
@@ -44,15 +44,17 @@ public class RunUserSqlHandler : ICommandHandler<RunUserSqlCommand, RunResult>
             return SubmissionErrors.ChallengeNotFound;
 
         var userQuery = request.UserQuery;
-        var databaseProvider = request.Provider;
+        var dbProvider = request.Provider;
 
-        var syntaxValidationResult = _syntaxCheckerDispatcher.Validate(userQuery, databaseProvider);
+        var syntaxValidationResult = _syntaxCheckerDispatcher.Validate(userQuery, dbProvider);
 
         if (syntaxValidationResult.IsInvalid)
             return RunResult.FromSyntaxError(syntaxValidationResult.Errors);
 
-        var queryResult = await _queryExecutorDispatcher
-            .ExecuteQueryAsync(userQuery, databaseProvider, defaultRowLimit, includePlan: true, ct: cancellationToken);
+        var queryExecutor = _executorDispatcher.GetQueryExecutor(dbProvider);
+        
+        var queryResult = await queryExecutor
+            .ExecuteQueryAsync(userQuery, defaultRowLimit, includePlan: true, ct: cancellationToken);
 
         if (!queryResult.IsSuccess)
             return RunResult.FromQueryError(queryResult.ErrorType, queryResult.ErrorMessage);
@@ -62,12 +64,12 @@ public class RunUserSqlHandler : ICommandHandler<RunUserSqlCommand, RunResult>
         if (!challenge.RequiresOrdering && queryTable.Rows.Any())
             queryTable.OrderRows();
 
-        var cacheKey = CacheKeys.Challenges.ExpectedOutput(request.ChallengeId, request.Provider);
+        var cacheKey = CacheKeys.Challenges.ExpectedOutput(request.ChallengeId, dbProvider);
 
         if (!_cache.TryGetValue(cacheKey, out OutputTable? expectedOutput))
         {
             var expected = await _dbContext.Solutions
-                .Where(s => s.ChallengeId == request.ChallengeId && s.DatabaseProvider == databaseProvider)
+                .Where(s => s.ChallengeId == request.ChallengeId && s.DatabaseProvider == dbProvider)
                 .Select(s => s.SolutionSql)
                 .FirstOrDefaultAsync(cancellationToken);
 
@@ -75,9 +77,8 @@ public class RunUserSqlHandler : ICommandHandler<RunUserSqlCommand, RunResult>
                 return SubmissionErrors.ChallengeNotFound;
 
             var expectedResult =
-                await _queryExecutorDispatcher.ExecuteQueryAsync(
+                await queryExecutor.ExecuteQueryAsync(
                     query: expected,
-                    provider: databaseProvider,
                     rowLimit: defaultRowLimit,
                     includePlan: true,
                     ct: cancellationToken);
@@ -85,7 +86,7 @@ public class RunUserSqlHandler : ICommandHandler<RunUserSqlCommand, RunResult>
             if (!expectedResult.IsSuccess)
             {
                 _logger.LogCritical(
-                    $"Solution query execution failed. challengeId: {challenge.Id} provider: {databaseProvider}");
+                    $"Solution query execution failed. challengeId: {challenge.Id} provider: {dbProvider}");
                 return RunResult.FromQueryError(expectedResult.ErrorType, "An error occurred");
             }
 
