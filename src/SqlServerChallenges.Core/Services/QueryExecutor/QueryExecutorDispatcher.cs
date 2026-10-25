@@ -12,16 +12,11 @@ public class QueryExecutorDispatcher
         _executors = queryExecutors.ToDictionary(x => x.Provider);
     }
 
-    public async Task<QueryExecutorResult> ExecuteQueryAsync(
-        string query,
-        DatabaseProvider provider,
-        int? rowLimit = null,
-        bool includePlan = false,
-        CancellationToken ct = default)
+    public IQueryExecutor GetQueryExecutor(DatabaseProvider provider)
     {
         if (!_executors.TryGetValue(provider, out var executor))
             throw new InvalidOperationException("Provider not found");
 
-        return await executor.ExecuteQueryAsync(query, rowLimit, includePlan, ct: ct);
+        return executor;
     }
 }

@@ -1,4 +1,5 @@
 using System.Data;
+using System.Data.Common;
 using System.Xml.Linq;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Logging;
@@ -19,7 +20,7 @@ public class MsSqlQueryExecutor : IQueryExecutor
         _logger = logger;
     }
 
-    public async Task<QueryExecutorResult> ExecuteQueryAsync(
+    public async Task<QueryOutputResult> ExecuteQueryAsync(
         string query,
         int? rowLimit = null,
         bool includePlan = false,
@@ -66,13 +67,13 @@ public class MsSqlQueryExecutor : IQueryExecutor
                     rowNumber++;
                 }
 
-                QueryExecutorResult result = table;
+                QueryOutputResult result = table;
 
                 if (includePlan && result.IsSuccess)
                 {
                     await reader.NextResultAsync(ct);
                     await reader.ReadAsync(ct);
-                    
+
                     if (reader.HasRows)
                     {
                         var plan = reader.GetString(0);
@@ -85,16 +86,7 @@ public class MsSqlQueryExecutor : IQueryExecutor
         }
         catch (SqlException ex)
         {
-            return ex.Number switch
-            {
-                -2 => new QueryError(QueryErrorType.QueryTimeout, "The query took too long to execute."),
-                207 or 208 => new QueryError(QueryErrorType.InvalidIdentifier, ex.Message),
-                229 or 262 or 3701 => new QueryError(QueryErrorType.PermissionDenied,
-                    "You do not have permission to execute this query."),
-                2812 => new QueryError(QueryErrorType.InvalidQuery,
-                    "The query contains an invalid statement or calls a function/procedure that does not exist."),
-                _ => new QueryError(QueryErrorType.Unknown, "An error occurred while executing the query."),
-            };
+            return MapToQueryError(ex.Number, ex.Message);
         }
         catch (Exception ex)
         {
@@ -103,11 +95,62 @@ public class MsSqlQueryExecutor : IQueryExecutor
         }
         finally
         {
-            if (_connection.State == ConnectionState.Open  && includePlan)
+            if (_connection.State == ConnectionState.Open && includePlan)
                 await ExecuteNonQueryAsync("SET STATISTICS XML OFF", ct);
 
             await _connection.CloseAsync();
         }
+    }
+
+    public async Task<QueryReaderResult> ExecuteReaderAsync(string query, CancellationToken ct = default)
+    {
+        var command = new SqlCommand();
+        command.CommandText = query;
+        command.CommandTimeout = 6;
+
+        try
+        {
+            await _connection.OpenAsync(ct);
+            command.Connection = _connection;
+
+            var dataReader = await command.ExecuteReaderAsync(ct);
+
+            return new QueryReaderResult(_connection, command, dataReader);
+        }
+        catch (SqlException ex)
+        {
+            await command.DisposeAsync();
+
+            if (_connection.State == ConnectionState.Open)
+                await _connection.CloseAsync();
+
+
+            return MapToQueryError(ex.Number, ex.Message);
+        }
+        catch (Exception ex)
+        {
+            await command.DisposeAsync();
+
+            if (_connection.State == ConnectionState.Open)
+                await _connection.CloseAsync();
+
+            _logger.LogCritical(ex, "An exception occurred while running user query");
+            return new QueryError(QueryErrorType.Unknown, "An error occurred while executing your query");
+        }
+    }
+
+    private QueryError MapToQueryError(int number, string message)
+    {
+        return number switch
+        {
+            -2 => new QueryError(QueryErrorType.QueryTimeout, "The query took too long to execute."),
+            207 or 208 => new QueryError(QueryErrorType.InvalidIdentifier, message),
+            229 or 262 or 3701 => new QueryError(QueryErrorType.PermissionDenied,
+                "You do not have permission to execute this query."),
+            2812 => new QueryError(QueryErrorType.InvalidQuery,
+                "The query contains an invalid statement or calls a function/procedure that does not exist."),
+            _ => new QueryError(QueryErrorType.Unknown, "An error occurred while executing the query."),
+        };
     }
 
     private async Task ExecuteNonQueryAsync(string sql, CancellationToken ct)
