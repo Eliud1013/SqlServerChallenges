@@ -1,6 +1,6 @@
 using System.Data;
 
-namespace SqlServerChallenges.Core.Services.QueryExecutor;
+namespace SqlServerChallenges.Core.Services.QueryExecutor.Models;
 
 public sealed record QueryOutputResult
 {
@@ -46,7 +46,7 @@ public sealed record QueryOutputResult
 
         var rows = table.AsEnumerable()
             .Select(r => (IReadOnlyDictionary<string, object?>)columns
-                .ToDictionary(c => c, c => r[c] is DBNull ? null : r[c]))
+                .ToDictionary(c => c, c => r[c] is DBNull ? null : r[c], StringComparer.OrdinalIgnoreCase))
             .ToList();
 
         return new QueryOutputResult(columns.AsReadOnly(), rows.AsReadOnly());

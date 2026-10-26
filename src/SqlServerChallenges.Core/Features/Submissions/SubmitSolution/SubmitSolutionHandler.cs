@@ -75,7 +75,7 @@ public class SubmitSolutionHandler : ICommandHandler<SubmitSolutionCommand, Subm
             string solutionSql = challengeSolution.SolutionSql;
 
             var rowsCount = new Dictionary<string, int>();
-            await using var solutionReaderResult =  await queryExecutor.ExecuteReaderAsync(solutionSql, ct);
+            await using var solutionReaderResult = await queryExecutor.ExecuteReaderAsync(solutionSql, ct);
 
             if (!solutionReaderResult.IsSuccess)
                 throw new InvalidOperationException(
@@ -109,7 +109,10 @@ public class SubmitSolutionHandler : ICommandHandler<SubmitSolutionCommand, Subm
         {
             var k = GetKey(userReader);
             if (solutionRows.GetValueOrDefault(k) == 0)
-                return SubmissionResult.FromComparisionResult(passed: false);
+            {
+                solutionRows[k] = -1;
+                break;
+            }
 
             solutionRows[k]--;
         }

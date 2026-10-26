@@ -1,5 +1,5 @@
-using System.Data.Common;
 using SqlServerChallenges.Core.Data.Entities.ChallengeSolutions;
+using SqlServerChallenges.Core.Services.QueryExecutor.Models;
 
 namespace SqlServerChallenges.Core.Services.QueryExecutor;
 

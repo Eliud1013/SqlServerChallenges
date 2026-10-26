@@ -1,9 +1,8 @@
 using System.Data;
-using System.Data.Common;
-using System.Xml.Linq;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Logging;
 using SqlServerChallenges.Core.Data.Entities.ChallengeSolutions;
+using SqlServerChallenges.Core.Services.QueryExecutor.Models;
 
 namespace SqlServerChallenges.Core.Services.QueryExecutor;
 
