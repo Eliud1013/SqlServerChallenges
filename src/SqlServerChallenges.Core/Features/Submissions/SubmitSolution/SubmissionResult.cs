@@ -5,27 +5,27 @@ namespace SqlServerChallenges.Core.Features.Submissions.SubmitSolution;
 
 public class SubmissionResult
 {
-    public bool IsSuccess { get; }
+    public bool ExecutedSuccessfully { get; }
     public bool Passed { get; }
     public IReadOnlyList<SqlSyntaxError>? SyntaxErrors { get; }
     public QueryError? QueryError { get; }
 
     private SubmissionResult(bool passed)
     {
-        IsSuccess = true;
+        ExecutedSuccessfully = true;
         Passed = passed;
     }
 
     private SubmissionResult(IReadOnlyList<SqlSyntaxError> syntaxErrors)
     {
-        IsSuccess = false;
+        ExecutedSuccessfully = false;
         Passed = false;
         SyntaxErrors = syntaxErrors;
     }
 
     public SubmissionResult(QueryError queryError)
     {
-        IsSuccess = false;
+        ExecutedSuccessfully = false;
         Passed = false;
         QueryError = queryError;
     }
