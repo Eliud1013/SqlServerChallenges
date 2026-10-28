@@ -145,19 +145,29 @@ namespace SqlServerChallenges.Core.Migrations
                     b.Property<Guid>("ChallengeId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("Outcome")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<bool>("Passed")
                         .HasColumnType("bit");
 
                     b.Property<DateTime>("SubmittedAtUtc")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("UserId")
+                    b.Property<string>("SubmittedSql")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("Id");
 
-                    b.ToTable("Submissions", (string)null);
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Submissions", "Submissions");
                 });
 
             modelBuilder.Entity("SqlServerChallenges.Core.Data.Entities.Challenge", b =>

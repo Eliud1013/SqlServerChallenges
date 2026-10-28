@@ -6,5 +6,7 @@ public class Submission
     public required Guid ChallengeId { get; init; }
     public required string UserId { get; init; }
     public required bool Passed { get; init; }
+    public required string SubmittedSql { get; init; }
+    public required SubmissionOutcome Outcome { get; init; }
     public required DateTime SubmittedAtUtc { get; init; }
 }
