@@ -69,7 +69,7 @@ public class SubmitSolutionHandler : ICommandHandler<SubmitSolutionCommand, Subm
                 sql: userQuery,
                 outcome: SubmissionOutcome.SyntaxError,
                 ct);
-            
+
             return SubmissionResult.FromSyntaxError(syntaxValidationResult.Errors);
         }
 
@@ -115,7 +115,7 @@ public class SubmitSolutionHandler : ICommandHandler<SubmitSolutionCommand, Subm
         }
 
         var solutionRows = new Dictionary<string, int>(solutionDict!);
-        await using var userReaderResult = await queryExecutor.ExecuteReaderAsync(userQuery, ct);
+        await using var userReaderResult = await queryExecutor.ExecuteReaderAsync(userQuery, includePlan: true, ct: ct);
 
         if (!userReaderResult.IsSuccess)
         {
