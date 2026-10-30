@@ -13,5 +13,8 @@ public interface IQueryExecutor
         bool includePlan = false,
         CancellationToken ct = default);
 
-    Task<QueryReaderResult> ExecuteReaderAsync(string query, CancellationToken ct = default);
+    Task<QueryReaderResult> ExecuteReaderAsync(
+        string query,
+        CancellationToken ct = default,
+        bool includePlan = false);
 }

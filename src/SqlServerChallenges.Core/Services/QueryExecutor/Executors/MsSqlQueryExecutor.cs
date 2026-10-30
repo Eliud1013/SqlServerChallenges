@@ -1,4 +1,5 @@
 using System.Data;
+using System.Xml.Linq;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Logging;
 using SqlServerChallenges.Core.Data.Entities.ChallengeSolutions;
@@ -67,7 +68,7 @@ public class MsSqlQueryExecutor : IQueryExecutor
                 }
 
                 QueryOutputResult result = table;
-
+    
                 if (includePlan && result.IsSuccess)
                 {
                     await reader.NextResultAsync(ct);
@@ -75,8 +76,8 @@ public class MsSqlQueryExecutor : IQueryExecutor
 
                     if (reader.HasRows)
                     {
-                        var plan = reader.GetString(0);
-                        result.OutputTable.WithPlan(plan);
+                        var planXml = reader.GetString(0);
+                        result.QueryOutput.SetPlan(ParsePlan(planXml));
                     }
                 }
 
@@ -94,14 +95,17 @@ public class MsSqlQueryExecutor : IQueryExecutor
         }
         finally
         {
-            if (_connection.State == ConnectionState.Open && includePlan)
-                await ExecuteNonQueryAsync("SET STATISTICS XML OFF", ct);
+            if (includePlan)
+                await DisableStatisticsXmlAsync(ct);
 
             await _connection.CloseAsync();
         }
     }
 
-    public async Task<QueryReaderResult> ExecuteReaderAsync(string query, CancellationToken ct = default)
+    public async Task<QueryReaderResult> ExecuteReaderAsync(
+        string query,
+        CancellationToken ct = default,
+        bool includePlan = false)
     {
         var command = new SqlCommand();
         command.CommandText = query;
@@ -110,24 +114,47 @@ public class MsSqlQueryExecutor : IQueryExecutor
         try
         {
             await _connection.OpenAsync(ct);
+
+            if (includePlan)
+                await ExecuteNonQueryAsync("SET STATISTICS XML ON", ct);
+
             command.Connection = _connection;
 
             var dataReader = await command.ExecuteReaderAsync(ct);
 
-            return new QueryReaderResult(_connection, command, dataReader);
+            Func<ValueTask>? planCleanupFunc = null;
+            Func<string, QueryPlanInfo>? planParseFunc = null;
+
+            if (includePlan)
+            {
+                planCleanupFunc = async () => await DisableStatisticsXmlAsync(CancellationToken.None);
+                planParseFunc = ParsePlan;
+            }
+
+            return new QueryReaderResult(
+                _connection,
+                command,
+                dataReader,
+                planCleanupFunc,
+                planParseFunc);
         }
         catch (SqlException ex)
         {
+            if (includePlan)
+                await DisableStatisticsXmlAsync(ct);
+
             await command.DisposeAsync();
 
             if (_connection.State == ConnectionState.Open)
                 await _connection.CloseAsync();
 
-
             return MapToQueryError(ex.Number, ex.Message);
         }
         catch (Exception ex)
         {
+            if (includePlan)
+                await DisableStatisticsXmlAsync(ct);
+
             await command.DisposeAsync();
 
             if (_connection.State == ConnectionState.Open)
@@ -136,6 +163,30 @@ public class MsSqlQueryExecutor : IQueryExecutor
             _logger.LogCritical(ex, "An exception occurred while running user query");
             return new QueryError(QueryErrorType.Unknown, "An error occurred while executing your query");
         }
+    }
+
+    private static QueryPlanInfo ParsePlan(string planXml)
+    {
+            var doc = XDocument.Parse(planXml);
+
+            var rootRelOp = doc.Descendants()
+                .FirstOrDefault(e => e.Name.LocalName == "RelOp");
+
+           ArgumentNullException.ThrowIfNull(rootRelOp);
+
+            var runtimeCounters = rootRelOp
+                .Descendants()
+                .Where(e => e.Name.LocalName == "RunTimeCountersPerThread")
+                .ToList();
+
+            return new QueryPlanInfo(
+                rootRelOp.Attribute("PhysicalOp")?.Value,
+                rootRelOp.Attribute("LogicalOp")?.Value,
+                SumAttribute(runtimeCounters, "ActualRows"),
+                ParseDouble(rootRelOp.Attribute("EstimateIO")?.Value),
+                ParseDouble(rootRelOp.Attribute("EstimateCPU")?.Value),
+                SumAttribute(runtimeCounters, "ActualCPUms"),
+                MaxAttribute(runtimeCounters, "ActualElapsedms"));
     }
 
     private QueryError MapToQueryError(int number, string message)
@@ -152,10 +203,53 @@ public class MsSqlQueryExecutor : IQueryExecutor
         };
     }
 
+    private async Task DisableStatisticsXmlAsync(CancellationToken ct)
+    {
+        if (_connection.State != ConnectionState.Open)
+            return;
+
+        try
+        {
+            await ExecuteNonQueryAsync("SET STATISTICS XML OFF", ct);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to disable SQL Server execution plan collection");
+        }
+    }
+
     private async Task ExecuteNonQueryAsync(string sql, CancellationToken ct)
     {
         await using var command = new SqlCommand(sql, _connection);
         command.CommandTimeout = 6;
         await command.ExecuteNonQueryAsync(ct);
+    }
+    
+    private static double? ParseDouble(string? value)
+        => value is not null && double.TryParse(value, out var d) ? d : null;
+
+    private static long? ParseLong(string? value)
+        => value is not null && long.TryParse(value, out var l) ? l : null;
+
+    private static long? SumAttribute(IEnumerable<XElement> elements, string attributeName)
+    {
+        var values = elements
+            .Select(element => ParseLong(element.Attribute(attributeName)?.Value))
+            .Where(value => value.HasValue)
+            .Select(value => value!.Value)
+            .ToList();
+
+        return values.Count == 0 ? null : values.Sum();
+    }
+
+    private static long? MaxAttribute(IEnumerable<XElement> elements, string attributeName)
+    {
+        var values = elements
+            .Select(element => ParseLong(element.Attribute(attributeName)?.Value))
+            .Where(value => value.HasValue)
+            .Select(value => value!.Value)
+            .ToList();
+
+        return values.Count == 0 ? null : values.Max();
     }
 }

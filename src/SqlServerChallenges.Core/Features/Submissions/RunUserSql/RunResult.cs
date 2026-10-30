@@ -1,5 +1,6 @@
 using SqlServerChallenges.Core.Services;
 using SqlServerChallenges.Core.Services.QueryExecutor;
+using SqlServerChallenges.Core.Services.QueryExecutor.Models;
 
 namespace SqlServerChallenges.Core.Features.Submissions.RunUserSql;
 
@@ -48,23 +49,30 @@ public sealed record RunResult
         ExpectedRows = [];
     }
 
-    private RunResult(OutputTable userResult, OutputTable expectedResult)
+    private RunResult(QueryOutput userQueryOutput, QueryOutput expectedQueryOutput)
     {
         IsSuccess = true;
-        UserColumns = userResult.Columns;
-        ExpectedColumns = expectedResult.Columns;
+
+        var userOutputTable = userQueryOutput.OutputTable;
+        var userQueryPlan = userQueryOutput.QueryPlan;
         
-        UserComparedRowCount = userResult.Rows.Count;
-        ExpectedComparedRowCount = expectedResult.Rows.Count;
+        var expectedOutputTable = expectedQueryOutput.OutputTable;
+        var expectedQueryPlan = expectedQueryOutput.QueryPlan;
         
-        UserRows = userResult.Rows.ToList();
-        ExpectedRows = expectedResult.Rows.ToList();
+        UserColumns = userOutputTable.Columns;
+        ExpectedColumns = expectedOutputTable.Columns;
+        
+        UserComparedRowCount = userOutputTable.Rows.Count;
+        ExpectedComparedRowCount = expectedOutputTable.Rows.Count;
+        
+        UserRows = userOutputTable.Rows.ToList();
+        ExpectedRows = expectedOutputTable.Rows.ToList();
 
         ColumnCountMatch = UserColumns.Count == ExpectedColumns.Count;
         ColumnsMatch = UserColumns.SequenceEqual(ExpectedColumns, StringComparer.OrdinalIgnoreCase);
 
-        UserTotalRowCount = userResult.Plan?.EstimateRows;
-        ExpectedTotalRowCount = expectedResult.Plan?.EstimateRows;
+        UserTotalRowCount = userQueryPlan?.ActualRows;
+        ExpectedTotalRowCount = expectedQueryPlan?.ActualRows;
 
         var maxRows = Math.Min(UserComparedRowCount, ExpectedComparedRowCount);
         RowMatchCount = 0;
@@ -78,8 +86,8 @@ public sealed record RunResult
 
     public static RunResult FromQueryError(QueryErrorType type, string message) => new(type, message);
     public static RunResult FromSyntaxError(IReadOnlyList<SqlSyntaxError> errors) => new (errors);
-    public static RunResult FromResults(OutputTable userResult, OutputTable expectedResult) =>
-        new(userResult, expectedResult);
+    public static RunResult FromResults(QueryOutput userQueryOutput, QueryOutput expectedQueryOutput) =>
+        new(userQueryOutput, expectedQueryOutput);
 
     public bool IsRowMatch(int index)
     {

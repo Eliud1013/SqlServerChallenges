@@ -7,6 +7,7 @@ using SqlServerChallenges.Core.Common.Results;
 using SqlServerChallenges.Core.Data;
 using SqlServerChallenges.Core.Services;
 using SqlServerChallenges.Core.Services.QueryExecutor;
+using SqlServerChallenges.Core.Services.QueryExecutor.Models;
 
 namespace SqlServerChallenges.Core.Features.Submissions.RunUserSql;
 
@@ -53,20 +54,21 @@ public class RunUserSqlHandler : ICommandHandler<RunUserSqlCommand, RunResult>
 
         var queryExecutor = _executorDispatcher.GetQueryExecutor(dbProvider);
         
-        var queryResult = await queryExecutor
+        var userQueryResult = await queryExecutor
             .ExecuteQueryAsync(userQuery, defaultRowLimit, includePlan: true, ct: cancellationToken);
 
-        if (!queryResult.IsSuccess)
-            return RunResult.FromQueryError(queryResult.ErrorType, queryResult.ErrorMessage);
+        if (!userQueryResult.IsSuccess)
+            return RunResult.FromQueryError(userQueryResult.ErrorType, userQueryResult.ErrorMessage);
 
-        var queryTable = queryResult.OutputTable;
+        var userQueryOutput = userQueryResult.QueryOutput;
+        var userOutputTable = userQueryOutput.OutputTable;
 
-        if (!challenge.RequiresOrdering && queryTable.Rows.Any())
-            queryTable.OrderRows();
+        if (!challenge.RequiresOrdering && userOutputTable.Rows.Any())
+            userOutputTable.OrderRows();
 
         var cacheKey = CacheKeys.Challenges.ExpectedOutput(request.ChallengeId, dbProvider);
 
-        if (!_cache.TryGetValue(cacheKey, out OutputTable? expectedOutput))
+        if (!_cache.TryGetValue(cacheKey, out QueryOutput? expectedQueryOutput))
         {
             var expected = await _dbContext.Solutions
                 .Where(s => s.ChallengeId == request.ChallengeId && s.DatabaseProvider == dbProvider)
@@ -76,32 +78,32 @@ public class RunUserSqlHandler : ICommandHandler<RunUserSqlCommand, RunResult>
             if (expected is null)
                 return SubmissionErrors.ChallengeNotFound;
 
-            var expectedResult =
+            var expectedQueryOutputResult =
                 await queryExecutor.ExecuteQueryAsync(
                     query: expected,
                     rowLimit: defaultRowLimit,
                     includePlan: true,
                     ct: cancellationToken);
 
-            if (!expectedResult.IsSuccess)
+            if (!expectedQueryOutputResult.IsSuccess)
             {
                 _logger.LogCritical(
                     $"Solution query execution failed. challengeId: {challenge.Id} provider: {dbProvider}");
-                return RunResult.FromQueryError(expectedResult.ErrorType, "An error occurred");
+               
+                return RunResult.FromQueryError(expectedQueryOutputResult.ErrorType, "An error occurred");
             }
 
+            expectedQueryOutput = expectedQueryOutputResult.QueryOutput;
+            
             if (!challenge.RequiresOrdering)
-                expectedResult.OutputTable.OrderRows();
-
-            expectedOutput = expectedResult.OutputTable;
-
-            _cache.Set(cacheKey, expectedOutput, new MemoryCacheEntryOptions
+                expectedQueryOutput.OutputTable.OrderRows();
+            
+            _cache.Set(cacheKey, expectedQueryOutput, new MemoryCacheEntryOptions
             {
-                Priority = CacheItemPriority.High,
-                Size = 0,
+                Priority = CacheItemPriority.High
             });
         }
 
-        return RunResult.FromResults(queryTable, expectedOutput!);
+        return RunResult.FromResults(userQueryOutput, expectedQueryOutput!);
     }
 }

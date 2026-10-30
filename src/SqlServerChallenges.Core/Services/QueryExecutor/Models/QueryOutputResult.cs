@@ -5,13 +5,15 @@ namespace SqlServerChallenges.Core.Services.QueryExecutor.Models;
 public sealed record QueryOutputResult
 {
     public bool IsSuccess { get; }
-    private readonly OutputTable? _outputTable;
+    private readonly QueryOutput? _queryOutput;
     private readonly QueryError? _queryError;
 
     private QueryOutputResult(IReadOnlyList<string> columns, IReadOnlyList<IReadOnlyDictionary<string, object?>> rows)
     {
         IsSuccess = true;
-        _outputTable = new(columns, rows);
+        var outputTable = new OutputTable(columns, rows);
+
+        _queryOutput = new QueryOutput(outputTable);
     }
 
     private QueryOutputResult(QueryErrorType errorType, string message)
@@ -20,14 +22,21 @@ public sealed record QueryOutputResult
         _queryError = new QueryError(errorType, message);
     }
 
+    public QueryOutput QueryOutput =>
+        _queryOutput ?? throw new InvalidOperationException("The result does not contain a query output");
+
     public OutputTable OutputTable =>
-        _outputTable ?? throw new InvalidOperationException("The result does not contain a table.");
+        _queryOutput?.OutputTable ?? throw new InvalidOperationException("The result does not contain a table.");
+
+    public QueryPlanInfo QueryPlan =>
+        _queryOutput?.QueryPlan ?? throw new InvalidOperationException("The result does not contain a table.");
 
     public IReadOnlyList<string> Columns =>
-        _outputTable?.Columns ?? throw new InvalidOperationException("The result does not contain a table.");
+        _queryOutput?.OutputTable.Columns ??
+        throw new InvalidOperationException("The result does not contain a table.");
 
     public IReadOnlyList<IReadOnlyDictionary<string, object?>> Rows =>
-        _outputTable?.Rows ?? throw new InvalidOperationException("The result does not contain a table.");
+        _queryOutput?.OutputTable.Rows ?? throw new InvalidOperationException("The result does not contain a table.");
 
     public QueryError QueryError =>
         _queryError ?? throw new InvalidOperationException("The result does not contain an error.");
