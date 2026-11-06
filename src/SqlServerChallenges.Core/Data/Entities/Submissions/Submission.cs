@@ -1,3 +1,5 @@
+using SqlServerChallenges.Core.Data.Entities.QueryPlans;
+
 namespace SqlServerChallenges.Core.Data.Entities.Submissions;
 
 public class Submission
@@ -8,5 +10,6 @@ public class Submission
     public required bool Passed { get; init; }
     public required string SubmittedSql { get; init; }
     public required SubmissionOutcome Outcome { get; init; }
+    public SubmissionPlan? Plan { get; init; }
     public required DateTime SubmittedAtUtc { get; init; }
 }

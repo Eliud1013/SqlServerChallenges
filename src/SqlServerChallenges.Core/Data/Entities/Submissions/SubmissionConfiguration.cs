@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using SqlServerChallenges.Core.Data.Entities.QueryPlans;
 
 namespace SqlServerChallenges.Core.Data.Entities.Submissions;
 
@@ -27,5 +28,11 @@ public class SubmissionConfiguration : IEntityTypeConfiguration<Submission>
 
         builder.Property(x => x.SubmittedAtUtc)
             .IsRequired();
+
+        builder.HasOne(x => x.Plan)
+            .WithOne()
+            .HasForeignKey<SubmissionPlan>(x => x.SubmissionId)
+            .OnDelete(DeleteBehavior.Cascade);
+
     }
 }

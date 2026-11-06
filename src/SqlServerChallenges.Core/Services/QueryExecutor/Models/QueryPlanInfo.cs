@@ -5,6 +5,4 @@ public sealed record QueryPlanInfo(
     string? LogicalOp,
     long? ActualRows,
     double? EstimateIO,
-    double? EstimateCPU,
-    long? ActualCPUms,
-    long? ActualElapsedMs);
+    double? EstimateCPU);

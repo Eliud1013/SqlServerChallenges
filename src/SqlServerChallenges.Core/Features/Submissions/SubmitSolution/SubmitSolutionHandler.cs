@@ -10,6 +10,7 @@ using SqlServerChallenges.Core.Common.Cache;
 using SqlServerChallenges.Core.Common.CQRS;
 using SqlServerChallenges.Core.Common.Results;
 using SqlServerChallenges.Core.Data;
+using SqlServerChallenges.Core.Data.Entities.QueryPlans;
 using SqlServerChallenges.Core.Data.Entities.Submissions;
 using SqlServerChallenges.Core.Services;
 using SqlServerChallenges.Core.Services.QueryExecutor;
@@ -131,7 +132,7 @@ public class SubmitSolutionHandler : ICommandHandler<SubmitSolutionCommand, Subm
 
                 return SubmissionErrors.UnknownError;
             }
-
+ 
             var failureOutcome = MapQueryErrorToOutcome(userReaderResult.ErrorType);
 
             await SaveSubmissionResultAsync(
@@ -158,19 +159,39 @@ public class SubmitSolutionHandler : ICommandHandler<SubmitSolutionCommand, Subm
             solutionRows[k]--;
         }
 
-        var passed = solutionRows.Values.All(v => v == 0);
-        var submissionOutcome = passed
-            ? SubmissionOutcome.Accepted
-            : SubmissionOutcome.WrongAnswer;
+        if (solutionRows.Values.Any(v => v != 0))
+        {
+            await SaveSubmissionResultAsync(
+                challengeId: challengeId,
+                passed: false,
+                sql: userQuery,
+                outcome: SubmissionOutcome.WrongAnswer,
+                submissionPlan: null,
+                ct: ct);
+            
+            return SubmissionResult.FromComparisionResult(false);
+        }
+
+        var queryPlan = await userReaderResult.GetExecutionPlanAsync(ct);
+        
+        var submissionPlan = new SubmissionPlan
+        {
+            Provider = dbProvider,
+            PhysicalOperation = queryPlan.PhysicalOp,
+            LogicalOperation = queryPlan.LogicalOp,
+            EstimateIO = queryPlan.EstimateIO,
+            EstimateCPU = queryPlan.EstimateCPU,
+        };
 
         await SaveSubmissionResultAsync(
             challengeId: challengeId,
-            passed: passed,
+            passed: true,
             sql: userQuery,
-            outcome: submissionOutcome,
+            outcome: SubmissionOutcome.Accepted,
+            submissionPlan: submissionPlan,
             ct: ct);
 
-        return SubmissionResult.FromComparisionResult(passed);
+        return SubmissionResult.FromComparisionResult(true, queryPlan);
     }
 
     private async Task SaveSubmissionResultAsync(
@@ -178,7 +199,8 @@ public class SubmitSolutionHandler : ICommandHandler<SubmitSolutionCommand, Subm
         bool passed,
         string sql,
         SubmissionOutcome outcome,
-        CancellationToken ct)
+        CancellationToken ct,
+        SubmissionPlan? submissionPlan = null)
     {
         _dbContext.Submissions.Add(new Submission
         {
@@ -188,6 +210,7 @@ public class SubmitSolutionHandler : ICommandHandler<SubmitSolutionCommand, Subm
             Passed = passed,
             Outcome = outcome,
             SubmittedAtUtc = _dateTimeProvider.UtcNow,
+            Plan = submissionPlan
         });
         await _dbContext.SaveChangesAsync(ct);
     }

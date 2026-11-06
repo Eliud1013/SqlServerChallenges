@@ -114,22 +114,20 @@ public class MsSqlQueryExecutor : IQueryExecutor
         try
         {
             await _connection.OpenAsync(ct);
-
-            if (includePlan)
-                await ExecuteNonQueryAsync("SET STATISTICS XML ON", ct);
-
             command.Connection = _connection;
-
-            var dataReader = await command.ExecuteReaderAsync(ct);
-
+            
             Func<ValueTask>? planCleanupFunc = null;
             Func<string, QueryPlanInfo>? planParseFunc = null;
-
+            
             if (includePlan)
             {
+                await ExecuteNonQueryAsync("SET STATISTICS XML ON", ct);
+                
                 planCleanupFunc = async () => await DisableStatisticsXmlAsync(CancellationToken.None);
                 planParseFunc = ParsePlan;
             }
+
+            var dataReader = await command.ExecuteReaderAsync(ct);
 
             return new QueryReaderResult(
                 _connection,
@@ -184,9 +182,7 @@ public class MsSqlQueryExecutor : IQueryExecutor
                 rootRelOp.Attribute("LogicalOp")?.Value,
                 SumAttribute(runtimeCounters, "ActualRows"),
                 ParseDouble(rootRelOp.Attribute("EstimateIO")?.Value),
-                ParseDouble(rootRelOp.Attribute("EstimateCPU")?.Value),
-                SumAttribute(runtimeCounters, "ActualCPUms"),
-                MaxAttribute(runtimeCounters, "ActualElapsedms"));
+                ParseDouble(rootRelOp.Attribute("EstimateCPU")?.Value));
     }
 
     private QueryError MapToQueryError(int number, string message)
